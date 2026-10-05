@@ -25,14 +25,14 @@ try{
   await page.getByRole('textbox',{name:'Buscar ejercicios del libro'}).fill('');await noOverflow('book catalog on phone');
   await page.screenshot({path:'tmp/qa/book-catalog-mobile.png',fullPage:true,animations:'disabled'});
   await button('Elegir un inciso').click();await button('Resolver 1e · página 18').click();
-  await page.getByText(/Cargá el PDF que compartiste/).waitFor();
-  // An unrelated PDF must never masquerade as the original scanned problem.
-  await page.getByLabel('PDF original de precalculo').setInputFiles(pdfFixture());await page.getByText(/Usá el mismo PDF original/).waitFor();assert.equal(await page.locator('.original-preview').count(),0);
+  await page.getByText(/Cargá cualquier PDF de tu libro/).waitFor();
+  // Another edition can still be useful: show its complete page, never pretend it is a precise crop.
+  await page.getByLabel('PDF original de precalculo').setInputFiles(pdfFixture(20));await page.getByText(/Esta edición no es la referencia exacta/).waitFor();assert.equal(await page.locator('.original-preview').count(),1);await button('Ampliar página completa').click();await page.getByRole('dialog',{name:'Página de tu libro'}).waitFor();await page.keyboard.press('Escape');
   if(process.env.TEST_PRECALC_BOOK){
-    await page.getByLabel('PDF original de precalculo').setInputFiles(process.env.TEST_PRECALC_BOOK);await button('Ampliar recorte original').waitFor();
+    await page.getByLabel('PDF original de precalculo').setInputFiles(process.env.TEST_PRECALC_BOOK);await button('Ampliar ejercicio original').waitFor();
     assert.ok((await page.locator('.original-preview img').getAttribute('src')).startsWith('data:image/png'));
-    await button('Ampliar recorte original').click();await page.getByRole('dialog',{name:'Recorte original del libro'}).waitFor();await page.keyboard.press('Escape');
-    assert.equal(await button('Ampliar recorte original').evaluate(el=>el===document.activeElement),true);
+    await button('Ampliar ejercicio original').click();await page.getByRole('dialog',{name:'Ejercicio de tu libro'}).waitFor();await page.keyboard.press('Escape');
+    assert.equal(await button('Ampliar ejercicio original').evaluate(el=>el===document.activeElement),true);
   }
   await button(/Verdadero$/).click();await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await finish();
   await openExercise('precalculo','1e',42);await button('Teclado del teléfono').click();await page.getByRole('textbox',{name:'Tu respuesta',exact:true}).fill('8-y^3');await button('Comprobar').click();await page.getByText(/falta escribirla como producto/).waitFor();
@@ -41,16 +41,18 @@ try{
   await button('Ver leyes').click();await page.getByRole('dialog',{name:'Reglas de Precálculo'}).waitFor();await button('Volver al ejercicio').click();
   await page.setViewportSize({width:1280,height:800});await noOverflow('book and answer side by side');assert.equal(await page.locator('.book-exercise-layout').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length),2);
   await page.getByRole('complementary',{name:'Ejercicio original del libro'}).waitFor();
-  if(process.env.TEST_PRECALC_BOOK)await button('Ampliar recorte original').waitFor();
+  if(process.env.TEST_PRECALC_BOOK)await button('Ampliar ejercicio original').waitFor();
   await page.screenshot({path:'tmp/qa/book-exercise-tablet.png',fullPage:true,animations:'disabled'});await button('Comprobar').click();await page.getByText('+5 XP',{exact:true}).waitFor();await finish();
   await openExercise('discreta','2',123);
-  if(process.env.TEST_DISCRETA_BOOK){await page.getByLabel('PDF original de discreta').setInputFiles(process.env.TEST_DISCRETA_BOOK);await button('Ampliar recorte original').waitFor();}
+  if(process.env.TEST_DISCRETA_BOOK){await page.getByLabel('PDF original de discreta').setInputFiles(process.env.TEST_DISCRETA_BOOK);await button('Ampliar ejercicio original').waitFor();}
   for(const x of ['a','d','e','f'])await button(x).tap();await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await finish();
   await openExercise('discreta','6b',124);for(const x of ['1','2','3','4','5','6','7'])await button(x).tap();await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await finish();
   await openExercise('discreta','2c-tabla',56);for(const [i,v] of ['V','V','F','V'].entries())await button(`Fila ${i+1}: ${v}`).tap();await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await finish();
-  await openExercise('discreta','1b',73);
-  for(const step of ['¬R · Modus ponens (premisas 1 y 3)','P · Silogismo disyuntivo (premisa 2 y ¬R)','P∧Q · Conjunción (P y premisa 3)'])await button(step).tap();
-  await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await finish();
+  await openExercise('discreta','1a',73);
+  for(const [expression,rule] of [['¬R','Modus tollens'],['¬R∨¬S','Adición'],['¬(R∧S)','De Morgan'],['¬(¬P∨¬Q)','Modus tollens'],['P∧Q','De Morgan + doble negación'],['P','Simplificación']]){
+    await page.getByRole('textbox',{name:'Nueva línea de la demostración'}).fill(expression);await button(rule).click();await button('Comprobar este paso').click();
+  }
+  await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await finish();
   for(const size of [{width:390,height:844},{width:800,height:1280},{width:1280,height:800}]){
     await page.setViewportSize(size);await nav('Ajustes');await page.getByLabel('Modo oscuro').check();await page.getByLabel('Tamaño de letra').fill('1.3');await page.getByLabel('Reducir movimiento').check();await nav('Practicar');await noOverflow(`book catalog dark ${size.width}`);
     await catalog.getByRole('combobox',{name:'Bloque del libro'}).selectOption('S4 · Conjuntos');assert.ok(await catalog.locator('.book-topic').count()>0);

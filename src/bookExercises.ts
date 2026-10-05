@@ -1382,8 +1382,8 @@ export const bookExercises: BookExercise[] = [
     "lessonTitle": "Demostraciones y falacias",
     "question": {
       "id": "discreta-libro-73-1a",
-      "type": "order",
-      "prompt": "Premisas: 1) (¬P∨¬Q)→(R∧S); 2) R→T; 3) ¬T.\nOrdená la cadena de inferencias que demuestra P.",
+      "type": "guidedproof",
+      "prompt": "Demostrá P a partir de las premisas. Escribí cada conclusión y justificá la regla antes de pasar al siguiente paso.",
       "answer": [
         "¬R · Modus tollens (premisas 2 y 3)",
         "¬R∨¬S · Adición",
@@ -1413,13 +1413,28 @@ export const bookExercises: BookExercise[] = [
         },
         "adaptation": "Demostración guiada: ordenar una cadena válida con sus leyes."
       },
+      "premises": [
+        "(¬P∨¬Q)→(R∧S)",
+        "R→T",
+        "¬T"
+      ],
+      "guidedSteps": [
+        { "expression": "¬R", "rule": "Modus tollens", "hint": "Usá R→T junto con ¬T: si R fuera verdadero, T tendría que serlo." },
+        { "expression": "¬R∨¬S", "rule": "Adición", "hint": "Desde ¬R podés agregar una alternativa disyuntiva sin perder verdad." },
+        { "expression": "¬(R∧S)", "rule": "De Morgan", "hint": "Convertí la disyunción de negaciones en la negación de una conjunción." },
+        { "expression": "¬(¬P∨¬Q)", "rule": "Modus tollens", "hint": "Aplicá modus tollens a la primera premisa: negaste su consecuente R∧S." },
+        { "expression": "P∧Q", "rule": "De Morgan + doble negación", "hint": "Negar (¬P∨¬Q) produce una conjunción; luego se eliminan las dobles negaciones." },
+        { "expression": "P", "rule": "Simplificación", "hint": "De una conjunción verdadera podés tomar uno de sus componentes." }
+      ],
       "options": [
-        "¬R · Modus tollens (premisas 2 y 3)",
-        "¬R∨¬S · Adición",
-        "¬(R∧S) · De Morgan",
-        "¬(¬P∨¬Q) · Modus tollens (premisa 1)",
-        "P∧Q · De Morgan y doble negación",
-        "P · Simplificación"
+        "Modus tollens",
+        "Adición",
+        "De Morgan",
+        "De Morgan + doble negación",
+        "Simplificación",
+        "Modus ponens",
+        "Silogismo disyuntivo",
+        "Conjunción"
       ]
     }
   },

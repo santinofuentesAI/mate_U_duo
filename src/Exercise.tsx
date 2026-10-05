@@ -6,8 +6,10 @@ import { grade, shuffle, truthRows } from './engine';
 import { SymbolInput } from './Keyboard';
 import { Laws } from './Workbench';
 import { AnswerFeedback } from './AnswerFeedback';
+import { GuidedProofExercise } from './GuidedProofExercise';
 import katex from 'katex';
 export function Exercise({question:q,course,coins,onSpend,onAttempt,onNext,draftKey,rewardAvailable=false}:{question:Question;course:Course;coins:number;onSpend:(n:number)=>void;onAttempt:(correct:boolean,assisted:boolean,details:AnswerDetails)=>void;onNext:()=>void;draftKey?:string;rewardAvailable?:boolean}) {
+  if(q.type==='guidedproof')return <GuidedProofExercise question={q} course={course} coins={coins} onSpend={onSpend} onAttempt={onAttempt} onNext={onNext} rewardAvailable={rewardAvailable}/>;
   const [restored]=useState(()=>loadAnswerDraft(q,draftKey));
   const [value,setValue]=useState<string|string[]>(restored.value);
   const [exclusions,setExclusions]=useState(restored.exclusions);const [hint,setHint]=useState(restored.hint);const [feedback,setFeedback]=useState<{correct:boolean;error?:string}|null>(restored.feedback);const [rules,setRules]=useState(false);const [retried,setRetried]=useState(restored.retried);const [draftError,setDraftError]=useState('');

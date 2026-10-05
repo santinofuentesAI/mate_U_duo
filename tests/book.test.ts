@@ -63,6 +63,9 @@ test('guided original proofs have a valid dependency chain and book sessions sur
   assert.ok(checkInference(['Q→¬R','Q'],'¬R','Modus ponens'));assert.ok(checkInference(['P∨R','¬R'],'P','Silogismo disyuntivo'));
   assert.ok(checkInference(['R→T','¬T'],'¬R','Modus tollens'));assert.ok(checkInference(['¬R'],'¬R∨¬S','Adición'));
   assert.ok(checkLaw('¬R∨¬S','¬(R∧S)','De Morgan'));assert.ok(checkInference(['(¬P∨¬Q)→(R∧S)','¬(R∧S)'],'¬(¬P∨¬Q)','Modus tollens'));
+  const proof=question('discreta-libro-73-1a');
+  assert.equal(proof.type,'guidedproof');assert.equal(proof.guidedSteps?.length,6);
+  assert.deepEqual(proof.guidedSteps?.map(s=>s.expression),['¬R','¬R∨¬S','¬(R∧S)','¬(¬P∨¬Q)','P∧Q','P']);
   const item=bank(lessons,'precalculo').find(i=>i.question.id==='precalculo-libro-42-1e')!;
   const saved=decodeSession({id:'12345678-1234-1234-1234-123456789012',mode:'book',title:'Libro',ids:[item.question.id],index:0,started:'2026-10-05T12:00:00Z',startingXP:0});
   assert.equal(saved?.session.items[0].question.bookSource?.page,42);
