@@ -15,6 +15,8 @@ Aprendizaje de Matemática Discreta desde el inicio hasta conjuntos (página imp
 - Práctica mixta, diagnóstico formativo y simulacro de 18 preguntas del banco; no son predicciones de nota del examen.
 - Visor de PDF privado: importar el libro en el dispositivo, abrir páginas reales por semana, ampliar y guardar notas. Todos los incisos de una página se pueden consultar; los cuadernos permiten trabajar junto a ella.
 - Progreso local, copia JSON, modo oscuro, tamaño de letra y movimiento reducido. Fechas de estudio en America/Costa_Rica.
+- Cuatro colores (violeta, azul, verde y rosa) con contraste de texto comprobado en modo claro y oscuro.
+- Recortes privados del PDF mediante un gesto táctil, guardados en IndexedDB. En tablet horizontal, el enunciado queda junto al cuaderno; en vertical, arriba. Se pueden fijar, descargar y borrar. Los borradores del libro se separan por curso.
 - Build preparado para funcionar sin conexión tras completar la instalación del service worker. PDF.js y las fuentes se sirven desde la app, sin CDN. Instalar requiere HTTPS o localhost y depende del navegador.
 
 ## Ejecutar
@@ -40,11 +42,12 @@ Para la prueba de navegador, instalar Chromium de Playwright. El script levanta 
 npx playwright install chromium
 node tests/browser.mjs
 node tests/offline.mjs
+node tests/tablet.mjs
 ```
 
 Variables opcionales: `TEST_URL`, `TEST_BOOK` (ruta a un PDF propio), `TEST_CHROMIUM_PATH`, `TEST_PRECALC_BOOK` (segundo PDF para verificar el límite 1–63). Las capturas de verificación quedan en `tmp/qa/`, fuera del repositorio.
 
-Validado en esta versión: compilación TypeScript/Vite; ocho pruebas de lógica, álgebra, leyes, inferencias, contenido, repaso, fórmulas y cobertura de páginas; recorrido móvil de lección y teclado; consulta de leyes y Biblioteca; importación y recuperación de ambos libros; límite de página 63 y exploración fuera del temario; ajustes y escritorio; recarga sin conexión, carga del visor y renderizado del PDF local sin red. La prueba offline necesita ejecutar el build primero. La prueba visual usa un navegador automatizado; no sustituye la comprobación en el teléfono real del estudiante.
+Las pruebas verifican compilación TypeScript/Vite; nueve pruebas de lógica, álgebra, leyes, inferencias, contenido, repaso, fórmulas, cobertura y contraste; recorrido móvil de lección y teclado; consulta de leyes y Biblioteca; importación y recuperación de ambos libros; límite de página 63 y exploración fuera del temario; ajustes y escritorio; recarga sin conexión, carga del visor y renderizado del PDF local sin red. La prueba de tablet cubre 1280×800, 1024×768, 800×1280 y 1440×900, letra grande, colores, selección y cursor táctil, rotación del PDF, recorte mediante gesto real, recuperación tras recarga, actualización de IndexedDB y separación de cursos. Si no recibe un PDF, usa material de prueba original generado en memoria. La prueba offline necesita ejecutar el build primero. La prueba visual usa un navegador automatizado; no sustituye la comprobación en el dispositivo real del estudiante.
 
 ## Libros y prácticas
 
@@ -83,6 +86,14 @@ Se señalan errores del material: equivalencia falsa en S1, inversión de abiert
 ## Publicación
 
 Este repositorio contiene el código. No implica que exista una app desplegada. Publicar `dist/` en un hosting estático con HTTPS. El service worker respeta el subdirectorio y precarga los archivos del build. Antes de afirmar soporte offline en un nuevo hosting, probar la instalación completa y la recarga sin red.
+
+### Vercel
+
+Importar `santinofuentesAI/mate_U_duo` desde GitHub en Vercel, usando la raíz del repositorio, preset **Vite**, instalación `npm ci`, build `npm run build` y salida `dist`. No requiere claves ni variables de entorno. `vercel.json` configura el build y evita cachear de forma permanente el service worker. Elegir Node 24 en los ajustes del proyecto. Los cambios en la rama conectada pueden generar nuevos despliegues automáticamente.
+
+### Ciclo de calidad
+
+En cada push a `main` y cada pull request, `.github/workflows/quality.yml` ejecuta pruebas matemáticas, compilación y recorridos de celular, tablet y uso sin conexión. Conserva las capturas de la app durante siete días. Los libros reales nunca se suben a CI: se usa un PDF original de prueba. El ciclo comprueba regresiones; no modifica ni publica código por sí solo. Las correcciones requieren una revisión y una nueva ejecución hasta pasar las pruebas.
 
 ## Próxima ampliación del banco
 

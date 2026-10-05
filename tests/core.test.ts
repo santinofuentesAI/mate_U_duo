@@ -7,6 +7,13 @@ import { dayKey, freshProgress, lessonMastery, recordAttempt, streak, validatePr
 import { bookScope } from '../src/bookScope';
 import { bookRoutes, readerPages } from '../src/bookIndex';
 import katex from 'katex';
+import { palettes, validPalette } from '../src/palettes';
+test('palette contrast: readable buttons and accent text in light and dark themes',()=>{
+  function luminance(hex:string){const rgb=hex.slice(1).match(/../g)!.map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722;}
+  function ratio(a:string,b:string){const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
+  for(const p of Object.values(palettes)){assert.ok(ratio(p.main,'#ffffff')>=4.5,`${p.label} button`);assert.ok(ratio(p.main,p.soft)>=4.5,`${p.label} light accent`);assert.ok(ratio(p.dark,p.night)>=4.5,`${p.label} dark accent`);}
+  assert.equal(validPalette('__proto__'),'violet');assert.equal(validateProgress({...freshProgress(),palette:'missing'}).palette,'violet');
+});
 test('logic: all four implication rows, precedence, counterexamples and invalid input',()=>{
   assert.deepEqual(truthRows('P→Q').map(r=>r.result),[true,false,true,true]);
   assert.equal(classify('P∨¬P'),'Tautología');assert.equal(classify('P∧¬P'),'Contradicción');

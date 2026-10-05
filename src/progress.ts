@@ -1,4 +1,5 @@
 import type { Progress, Question, Lesson } from './types';
+import { validPalette } from './palettes';
 export const STORAGE_KEY = 'mate-u-duo.v1';
 export const freshProgress = (): Progress => ({ version: 1, attempts: [], completed: [], skills: {}, xp: 0, days: [], course: 'discreta', dark: false, fontScale: 1, sound: false, reduceMotion: false, goal: 8 });
 export function dayKey(now = new Date()) { return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Costa_Rica', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now); }
@@ -10,7 +11,7 @@ export function validateProgress(v: unknown): Progress {
   if (p.attempts.length > 100000 || p.attempts.some(a => !a || typeof a.questionId !== 'string' || typeof a.lessonId !== 'string' || typeof a.correct !== 'boolean' || typeof a.assisted !== 'boolean' || !Number.isFinite(Date.parse(a.date)))) throw new Error('El historial contiene entradas inválidas.');
   if (p.completed.some(x => typeof x !== 'string') || p.days.some(x => typeof x !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(x))) throw new Error('Datos de avance inválidos.');
   for (const s of Object.values(p.skills)) if (!s || !Number.isInteger(s.stage) || s.stage < 0 || s.stage > 4 || !Number.isInteger(s.successes) || s.successes < 0 || !Number.isFinite(Date.parse(s.due)) || !Number.isFinite(Date.parse(s.last))) throw new Error('Calendario de repaso inválido.');
-  return { ...freshProgress(), ...p, fontScale: Math.min(1.3, Math.max(1, Number(p.fontScale) || 1)), goal: Math.min(30, Math.max(4, Number(p.goal) || 8)), dark: !!p.dark, sound: !!p.sound, reduceMotion: !!p.reduceMotion };
+  return { ...freshProgress(), ...p, palette: validPalette(p.palette), fontScale: Math.min(1.3, Math.max(1, Number(p.fontScale) || 1)), goal: Math.min(30, Math.max(4, Number(p.goal) || 8)), dark: !!p.dark, sound: !!p.sound, reduceMotion: !!p.reduceMotion };
 }
 export function loadProgress(): Progress { try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? validateProgress(JSON.parse(raw)) : freshProgress(); } catch { return freshProgress(); } }
 export function recordAttempt(p: Progress, lesson: Lesson, q: Question, correct: boolean, assisted: boolean, now = new Date()): Progress {

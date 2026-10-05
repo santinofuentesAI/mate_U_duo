@@ -18,5 +18,5 @@ export interface SkillProgress { successes: number; stage: number; due: string; 
 export interface Progress {
   version: 1; attempts: Attempt[]; completed: string[]; skills: Record<string, SkillProgress>;
   xp: number; spentCoins?: number; days: string[]; course: Course; dark: boolean; fontScale: number;
-  sound: boolean; reduceMotion: boolean; goal: number;
+  sound: boolean; reduceMotion: boolean; goal: number; palette?: import('./palettes').Palette;
 }
