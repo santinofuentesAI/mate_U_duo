@@ -1,10 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BookOpen, Check, Plus, RotateCcw } from 'lucide-react';
 import { SymbolInput } from './Keyboard';
 import { checkLaw, laws, inference } from './laws';
 import { equivalentAlgebra, classify, truthRows } from './engine';
 import { useDraft, validText } from './drafts';
-export function Laws({onClose}:{onClose:()=>void}) { return <div className="modal-backdrop" onClick={onClose}><section className="modal" role="dialog" aria-modal="true" aria-label="Leyes y reglas" onClick={e=>e.stopPropagation()}><div className="row"><h2>Tu caja de herramientas</h2><button autoFocus onClick={onClose} aria-label="Cerrar leyes">✕</button></div><p>Las leyes transforman expresiones equivalentes. Las inferencias derivan conclusiones desde premisas.</p><h3>Leyes lógicas</h3>{laws.map(l=><div className="law" key={l.name}><b>{l.name}</b>{l.patterns.map(([a,b])=><code key={a}>{a} ≡ {b}</code>)}<small>{l.text}</small></div>)}<h3>Reglas de inferencia</h3>{inference.map(([name,pattern])=><div className="law" key={name}><b>{name}</b><code>{pattern}</code></div>)}<button className="primary" onClick={onClose}>Volver al ejercicio</button></section></div>; }
+export function Laws({onClose}:{onClose:()=>void}) {
+  const modal=useRef<HTMLElement>(null),close=useRef(onClose);close.current=onClose;
+  useEffect(()=>{
+    const previous=document.activeElement as HTMLElement|null,overflow=document.body.style.overflow;
+    document.body.style.overflow='hidden';modal.current?.querySelector<HTMLButtonElement>('button')?.focus();
+    const keyboard=(e:KeyboardEvent)=>{
+      if(e.key==='Escape'){e.preventDefault();close.current();}
+      if(e.key==='Tab'){
+        const buttons=modal.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)');if(!buttons?.length)return;
+        const first=buttons[0],last=buttons[buttons.length-1];
+        if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+        else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+      }
+    };
+    document.addEventListener('keydown',keyboard);return()=>{document.removeEventListener('keydown',keyboard);document.body.style.overflow=overflow;previous?.focus();};
+  },[]);
+  return <div className="modal-backdrop" onClick={onClose}><section ref={modal} className="modal" role="dialog" aria-modal="true" aria-label="Leyes y reglas" onClick={e=>e.stopPropagation()}><div className="row"><h2>Tu caja de herramientas</h2><button onClick={onClose} aria-label="Cerrar leyes">✕</button></div><p>Las leyes transforman expresiones equivalentes. Las inferencias derivan conclusiones desde premisas.</p><h3>Leyes lógicas</h3>{laws.map(l=><div className="law" key={l.name}><b>{l.name}</b>{l.patterns.map(([a,b])=><code key={a}>{a} ≡ {b}</code>)}<small>{l.text}</small></div>)}<h3>Reglas de inferencia</h3>{inference.map(([name,pattern])=><div className="law" key={name}><b>{name}</b><code>{pattern}</code></div>)}<button className="primary" onClick={onClose}>Volver al ejercicio</button></section></div>;
+}
 export function Workbench({initial='¬(P∧Q)',compact=false,initialMode='logic',draftPrefix='mate-draft'}:{initial?:string;compact?:boolean;initialMode?:'logic'|'algebra';draftPrefix?:string}) {
   const [mode,setMode]=useDraft<'logic'|'algebra'>(`${draftPrefix}-mode`,initialMode,v=>v==='logic'||v==='algebra');const [start,setStart,draftError]=useDraft(`${draftPrefix}-start`,initialMode==='algebra'?'(x^2-1)/(x-1)':initial,validText);const [lines,setLines]=useDraft<{expr:string;law:string}[]>(`${draftPrefix}-lines`,[],v=>Array.isArray(v)&&v.length<200&&v.every(x=>x&&validText(x.expr)&&validText(x.law)));const [next,setNext]=useDraft(`${draftPrefix}-next`,'',validText);const [law,setLaw]=useState('De Morgan');const [message,setMessage]=useState('');const [showLaws,setShowLaws]=useState(false);const [table,setTable]=useState(false);
   const current=lines.at(-1)?.expr||start;

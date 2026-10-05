@@ -1,0 +1,20 @@
+import { useState } from 'react';
+import { ArrowRight, Bookmark, Check, Search, Sparkles } from 'lucide-react';
+import type { Lesson, Progress } from './types';
+import { lessonMastery } from './progress';
+import { TopicIcon } from './TopicIcon';
+export function LearningPath({path,progress:p,onStart,onFavorite}:{path:Lesson[];progress:Progress;onStart:(l:Lesson)=>void;onFavorite:(id:string)=>void}) {
+  const [unit,setUnit]=useState('all'),[search,setSearch]=useState(''),[onlySaved,setOnlySaved]=useState(false);
+  const units=[...new Set(path.map(l=>l.unit))],next=path.find(l=>!p.completed.includes(l.id))||path[0];
+  const normal=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const filtered=path.filter(l=>(unit==='all'||l.unit===unit)&&(!onlySaved||p.favorites?.includes(l.id))&&normal(`${l.title} ${l.unit} ${l.description}`).includes(normal(search)));
+  return <section className="learning-route"><div className="row route-heading"><div><span className="eyebrow">CADA NIVEL CONECTA UNA IDEA</span><h2>Tu ruta de aprendizaje</h2></div><span>{path.filter(l=>p.completed.includes(l.id)).length} / {path.length}</span></div>
+    <div className="route-tools"><label className="route-search"><Search size={18}/><input aria-label="Buscar un nivel" placeholder="¿Qué tema necesitás hoy?" value={search} onChange={e=>setSearch(e.target.value)}/></label><button aria-label="Guardados" title="Ver temas guardados" className={onlySaved?'selected':''} aria-pressed={onlySaved} onClick={()=>setOnlySaved(!onlySaved)}><Bookmark size={18}/><span>Guardados</span></button></div>
+    <div className="unit-pills" role="group" aria-label="Bloques de aprendizaje"><button className={unit==='all'?'selected':''} aria-pressed={unit==='all'} onClick={()=>setUnit('all')}>Todos</button>{units.map(u=><button key={u} className={unit===u?'selected':''} aria-pressed={unit===u} onClick={()=>setUnit(u)}>{u.split(' · ')[0]}<span>{u.split(' · ')[1]}</span></button>)}</div>
+    <p className="route-note">Elegí cualquier nivel. Guardá los temas que querés llevar en tu próxima pausa.</p>
+    {units.filter(u=>filtered.some(l=>l.unit===u)).map((u,ui)=>{const list=filtered.filter(l=>l.unit===u),done=path.filter(l=>l.unit===u&&p.completed.includes(l.id)).length,total=path.filter(l=>l.unit===u).length;return <section className="level-unit" key={u}><header className="level-unit-header"><div className="unit-number">{units.indexOf(u)+1}</div><div><small>{u.split(' · ')[0]}</small><h3>{u.split(' · ')[1]}</h3></div><span>{done}/{total}</span></header><div className="level-grid">{list.map(l=>{const mastery=lessonMastery(p,l),complete=p.completed.includes(l.id),saved=p.favorites?.includes(l.id);return <article className={`level-card ${l.id===next.id?'is-next':''} ${complete?'is-complete':''}`} key={l.id}>
+      <button className="level-open" aria-label={`Abrir ${l.title}`} onClick={()=>onStart(l)}><span className="level-orb">{complete?<Check size={26}/>:<TopicIcon name={l.icon} size={26}/>}</span><div><span className="level-kicker">NIVEL {path.indexOf(l)+1}{l.id===next.id&&<><Sparkles size={11}/>SIGUIENTE</>}</span><h4>{l.title}</h4><small>{l.questions.length} ejercicios · {l.minutes} min</small></div><ArrowRight size={17}/></button><footer><span>{mastery===100?'Dominado':complete?'Completado · seguir repasando':'Listo para explorar'}</span><button aria-label={`${saved?'Quitar':'Guardar'} ${l.title}`} aria-pressed={!!saved} onClick={()=>onFavorite(l.id)}><Bookmark size={18} fill={saved?'currentColor':'none'}/></button></footer>{complete&&<div className="level-mastery" aria-label={`Dominio ${mastery}%`}><span style={{width:`${mastery}%`}}/></div>}
+    </article>;})}</div></section>;})}
+    {!filtered.length&&<div className="card empty-state"><Search size={28}/><h3>No hay niveles con ese filtro.</h3><p>Probá otro tema o quitá los filtros para volver a ver la ruta.</p><button onClick={()=>{setUnit('all');setSearch('');setOnlySaved(false);}}>Ver todos los niveles</button></div>}
+  </section>;
+}

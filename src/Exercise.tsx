@@ -1,17 +1,20 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, BookOpen, Check, Lightbulb, Coins } from 'lucide-react';
-import type { Question } from './types';
+import type { Question, AnswerDetails } from './types';
+import { loadAnswerDraft } from './exerciseDraft';
 import { grade, shuffle, truthRows } from './engine';
 import { SymbolInput } from './Keyboard';
 import { Laws } from './Workbench';
-export function Exercise({question:q,coins,onSpend,onAttempt,onNext}:{question:Question;coins:number;onSpend:(n:number)=>void;onAttempt:(correct:boolean,assisted:boolean)=>void;onNext:()=>void}) {
-  const [value,setValue]=useState<string|string[]>(['table','synthetic'].includes(q.type)?(q.answer as string[]).map(()=> ''):q.type==='order'||q.type==='set'||q.type==='venn'?[]:'');
-  const [exclusions,setExclusions]=useState('');const [hint,setHint]=useState(0);const [feedback,setFeedback]=useState<{correct:boolean;error?:string}|null>(null);const [rules,setRules]=useState(false);const [retried,setRetried]=useState(false);
+export function Exercise({question:q,coins,onSpend,onAttempt,onNext,draftKey}:{question:Question;coins:number;onSpend:(n:number)=>void;onAttempt:(correct:boolean,assisted:boolean,details:AnswerDetails)=>void;onNext:()=>void;draftKey?:string}) {
+  const [restored]=useState(()=>loadAnswerDraft(q,draftKey));
+  const [value,setValue]=useState<string|string[]>(restored.value);
+  const [exclusions,setExclusions]=useState(restored.exclusions);const [hint,setHint]=useState(restored.hint);const [feedback,setFeedback]=useState<{correct:boolean;error?:string}|null>(restored.feedback);const [rules,setRules]=useState(false);const [retried,setRetried]=useState(restored.retried);const [draftError,setDraftError]=useState('');
+  useEffect(()=>{if(!draftKey)return;try{localStorage.setItem(draftKey,JSON.stringify({value,exclusions,hint,feedback,retried}));setDraftError('');}catch{setDraftError('No se pudo guardar el borrador de esta respuesta.');}},[draftKey,value,exclusions,hint,feedback,retried]);
   const options=useMemo(()=>shuffle(q.options||[]),[q]); const selected=Array.isArray(value)?value:[];
   function toggle(s:string){setValue(selected.includes(s)?selected.filter(x=>x!==s):[...selected,s]);setFeedback(null);}
   function update(s:string){setValue(s);setFeedback(null);}
   const canCheck=Array.isArray(value)?(['table','synthetic'].includes(q.type)?value.every(s=>s.trim()!==''):q.type==='order'?value.length===q.options?.length:true):value.trim().length>0;
-  function check(){const result=grade(q,value,exclusions.split(/[,;]/).map(s=>s.trim()).filter(Boolean));setFeedback(result);onAttempt(result.correct,hint>0||retried);if(!result.correct)setRetried(true);}
+  function check(){const domains=exclusions.split(/[,;]/).map(s=>s.trim()).filter(Boolean);const result=grade(q,value,domains);setFeedback(result);onAttempt(result.correct,hint>0||retried,{answer:Array.isArray(value)?[...value]:value,exclusions:domains,error:result.error});if(!result.correct)setRetried(true);}
   const rows=q.type==='table'?truthRows(q.expression!,q.variables):[];
   const vennRegions=[{code:'100',x:86,y:89},{code:'010',x:222,y:89},{code:'001',x:155,y:207},{code:'110',x:155,y:77},{code:'101',x:111,y:156},{code:'011',x:200,y:156},{code:'111',x:155,y:129},{code:'000',x:280,y:235}];
   return <section className="exercise"><div className="row"><span className="eyebrow">{({choice:'ELEGÍ',logic:'CONSTRUÍ',table:'COMPLETÁ',set:'SELECCIONÁ',order:'ORDENÁ',venn:'EXPLORÁ',algebra:'RESOLVÉ',synthetic:'CALCULÁ',text:'RESPONDÉ'} as Record<string,string>)[q.type]}</span><button className="text-button" onClick={()=>setRules(true)}><BookOpen size={16}/>Ver leyes</button></div><h2>{q.prompt}</h2>
@@ -26,5 +29,5 @@ export function Exercise({question:q,coins,onSpend,onAttempt,onNext}:{question:Q
     <div className="help-row"><button className="secondary" disabled={hint>=1} onClick={()=>setHint(1)}><Lightbulb size={17}/>Consejo gratis</button><button className="secondary" disabled={hint>=2||coins<5} onClick={()=>{onSpend(5);setHint(2);}}><Coins size={17}/>Ayuda guiada · 5</button><small>{coins} monedas ficticias · intentos ∞</small></div>
     {hint>0&&<aside className="hint" role="status"><b>{hint===1?'Una pista para empezar':'Veámoslo paso a paso'}</b><p>{q.hints[hint-1]}</p><small>Con ayuda, este ejercicio queda pendiente de repaso sin pistas.</small></aside>}
     {feedback&&<div className={`feedback ${feedback.correct?'success':'retry'}`} role="status"><h3>{feedback.correct?'¡Bien razonado!':'Todavía no. Probá otra vez.'}</h3><p>{feedback.error||q.explanation}</p>{!feedback.correct&&<small>Usá las leyes o una pista. Los errores no quitan vidas.</small>}</div>}
-    <button className="primary wide" disabled={!canCheck} onClick={feedback?.correct?onNext:check}>{feedback?.correct?'Continuar':'Comprobar'}<ArrowRight size={18}/></button>{rules&&<Laws onClose={()=>setRules(false)}/>}</section>;
+    {draftError&&<p className="notice" role="alert">{draftError}</p>}<button className="primary wide" disabled={!canCheck} onClick={feedback?.correct?onNext:check}>{feedback?.correct?'Continuar':'Comprobar'}<ArrowRight size={18}/></button>{rules&&<Laws onClose={()=>setRules(false)}/>}</section>;
 }

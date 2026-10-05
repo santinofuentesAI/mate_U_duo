@@ -13,10 +13,11 @@ export interface Lesson {
   theory: string[]; formulas: string[]; example: { title: string; steps: string[] };
   questions: Question[];
 }
-export interface Attempt { questionId: string; lessonId: string; correct: boolean; assisted: boolean; date: string; }
+export interface AnswerDetails { answer: string|string[]; exclusions?: string[]; error?: string; }
+export interface Attempt extends Partial<AnswerDetails> { questionId: string; lessonId: string; correct: boolean; assisted: boolean; date: string; }
 export interface SkillProgress { successes: number; stage: number; due: string; last: string; }
 export interface Progress {
   version: 1; attempts: Attempt[]; completed: string[]; skills: Record<string, SkillProgress>;
   xp: number; spentCoins?: number; days: string[]; course: Course; dark: boolean; fontScale: number;
-  sound: boolean; reduceMotion: boolean; goal: number; palette?: import('./palettes').Palette;
+  sound: boolean; reduceMotion: boolean; goal: number; palette?: import('./palettes').Palette; favorites?: string[];
 }

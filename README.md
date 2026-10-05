@@ -12,7 +12,11 @@ Aprendizaje de Matemática Discreta desde el inicio hasta conjuntos (página imp
 - Referencia de 14 leyes y 10 reglas de inferencia durante los ejercicios.
 - Intentos ilimitados, consejo gratis y ayuda guiada por 5 monedas ficticias. Se empieza con 20 monedas; cada 5 XP aporta una. Sin compras ni pagos.
 - Repasos a 1, 3, 7, 14 y 30 días. Los errores y las ayudas vuelven al repaso en 10 minutos. Una repetición inmediata no confirma dominio. El XP de una pregunta se otorga una sola vez.
-- Práctica mixta, diagnóstico formativo y simulacro de 18 preguntas del banco; no son predicciones de nota del examen.
+- Ruta de niveles con buscador, filtros por bloque, temas guardados, estados de avance y acceso libre a cualquier nivel.
+- Práctica personalizada de 3, 8 o 15 ejercicios con filtros por tema y dificultad. Prioriza repasos vencidos, errores y contenidos nuevos. Reto diario de 5 preguntas estable durante el día y simulacro de 18 preguntas del banco; no son predicciones de nota del examen.
+- Diario de errores: conserva la respuesta que se ingresó, sus restricciones, explicación y un acceso para reintentar esa pregunta. Distingue un acierto posterior sin ayuda del dominio a largo plazo.
+- Pausar y retomar la sesión tras una recarga: ejercicio, respuesta, restricciones, pistas ya pagadas y retroalimentación. Empezar otra sesión reemplaza la anterior. Resumen de primeros aciertos, reintentos y ayudas al terminar.
+- Exploradores táctiles: conectores con valores V/F y fila activa de la tabla; conjuntos con pertenencia y operaciones en vivo; ecuaciones con coeficientes deslizables, gráfica, raíces y explicación del discriminante, incluidos los casos lineales y degenerados.
 - Visor de PDF privado: importar el libro en el dispositivo, abrir páginas reales por semana, ampliar y guardar notas. Todos los incisos de una página se pueden consultar; los cuadernos permiten trabajar junto a ella.
 - Progreso local, copia JSON, modo oscuro, tamaño de letra y movimiento reducido. Fechas de estudio en America/Costa_Rica.
 - Cuatro colores (violeta, azul, verde y rosa) con contraste de texto comprobado en modo claro y oscuro.
@@ -43,11 +47,12 @@ npx playwright install chromium
 node tests/browser.mjs
 node tests/offline.mjs
 node tests/tablet.mjs
+node tests/experience.mjs
 ```
 
 Variables opcionales: `TEST_URL`, `TEST_BOOK` (ruta a un PDF propio), `TEST_CHROMIUM_PATH`, `TEST_PRECALC_BOOK` (segundo PDF para verificar el límite 1–63). Las capturas de verificación quedan en `tmp/qa/`, fuera del repositorio.
 
-Las pruebas verifican compilación TypeScript/Vite; nueve pruebas de lógica, álgebra, leyes, inferencias, contenido, repaso, fórmulas, cobertura y contraste; recorrido móvil de lección y teclado; consulta de leyes y Biblioteca; importación y recuperación de ambos libros; límite de página 63 y exploración fuera del temario; ajustes y escritorio; recarga sin conexión, carga del visor y renderizado del PDF local sin red. La prueba de tablet cubre 1280×800, 1024×768, 800×1280 y 1440×900, letra grande, colores, selección y cursor táctil, rotación del PDF, recorte mediante gesto real, recuperación tras recarga, actualización de IndexedDB y separación de cursos. Si no recibe un PDF, usa material de prueba original generado en memoria. La prueba offline necesita ejecutar el build primero. La prueba visual usa un navegador automatizado; no sustituye la comprobación en el dispositivo real del estudiante.
+Las pruebas verifican compilación TypeScript/Vite; 14 pruebas de lógica, álgebra, leyes, inferencias, contenido, repaso, fórmulas, cobertura, contraste, selección adaptativa, retos, errores y recuperación de sesiones; recorrido móvil de lección y teclado; consulta de leyes y Biblioteca; importación y recuperación de ambos libros; límite de página 63 y exploración fuera del temario; ajustes y escritorio; recarga sin conexión, carga del visor, prácticas, exploradores y renderizado del PDF local sin red. La prueba de tablet cubre 1280×800, 1024×768, 800×1280 y 1440×900, letra grande, colores, selección y cursor táctil, rotación del PDF, recorte mediante gesto real, recuperación tras recarga, actualización de IndexedDB y separación de cursos. Si no recibe un PDF, usa material de prueba original generado en memoria. El recorrido de experiencia comprueba niveles guardados, sesión y pistas tras recarga, respuestas reales del diario, filtros, cambios matemáticos en vivo y accesibilidad del diálogo. La prueba offline necesita ejecutar el build primero. La prueba visual usa un navegador automatizado; no sustituye la comprobación en el dispositivo real del estudiante.
 
 ## Libros y prácticas
 
@@ -75,7 +80,7 @@ El banco de 141 preguntas es curado y adaptado de los temas; **no contiene una c
 
 El motor proposicional no valida expresiones cuantificadas. El motor algebraico compara identidades racionales mediante expansión de polinomios, con coeficientes numéricos y límites de tamaño; no certifica que la forma esté factorizada ni comprueba radicales. Las restricciones se verifican por separado en preguntas que las exigen. El simulacro es una sesión de aprendizaje con reintentos, no un examen cerrado.
 
-Los borradores del cuaderno y las notas de páginas se guardan automáticamente en este dispositivo. Cambiar de modo del cuaderno reinicia la zona de trabajo. El progreso se guarda al comprobar una respuesta. La copia JSON contiene progreso y monedas, pero no los PDF, notas ni borradores. Borrar datos del navegador puede borrar estos materiales locales.
+Los borradores del cuaderno, las respuestas de la sesión y las notas de páginas se guardan automáticamente en este dispositivo. Cambiar de modo del cuaderno reinicia la zona de trabajo. El progreso se guarda al comprobar una respuesta. La copia JSON contiene progreso, respuestas comprobadas, temas guardados y monedas, pero no la sesión activa, los PDF, notas ni borradores. Borrar datos del navegador puede borrar estos materiales locales.
 
 ## Materiales y correcciones
 
