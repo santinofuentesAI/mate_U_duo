@@ -24,7 +24,10 @@ async function write(store: string, key: string, value?: unknown) {
   }); } finally { db.close(); }
 }
 export const storedBook = (course: Course) => read<ArrayBuffer | undefined>('books', course);
-export const saveBook = (course: Course, data: ArrayBuffer) => write('books', course, data);
+export async function saveBook(course: Course, data: ArrayBuffer) {
+  await write('books', course, data);
+  window.dispatchEvent(new CustomEvent('mate-book-changed', { detail: course }));
+}
 export async function storedClips(course: Course) { return (await read<BookClip[]>('clips')).filter(c => c.course === course).sort((a,b) => b.created-a.created); }
 export const saveClip = (clip: BookClip) => write('clips', clip.id, clip);
 export const deleteClip = (id: string) => write('clips', id);

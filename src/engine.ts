@@ -78,6 +78,24 @@ export function parseAlgebra(input: string): Rational {
   const result = sum(); if (at !== expanded.length || !result.den.size) throw new Error('La expresión no es válida.'); return result;
 }
 export function equivalentAlgebra(a: string, b: string) { const aa = parseAlgebra(a), bb = parseAlgebra(b); return !add(mul(aa.num, bb.den), mul(bb.num, aa.den), -1).size; }
+// Equivalence alone would also accept the unchanged, unfactored problem.
+export function isFactored(input: string) {
+  let raw=input.toLowerCase().replace(/\s/g,'').replace(/[×·]/g,'*').replace(/[−–]/g,'-');
+  function unwrap(s:string):string {
+    if(s[0]!=='('||s.at(-1)!==')')return s;
+    let depth=0;for(let i=0;i<s.length-1;i++){if(s[i]==='(')depth++;if(s[i]===')')depth--;if(depth===0)return s;}
+    return unwrap(s.slice(1,-1));
+  }
+  raw=unwrap(raw).replace(/([a-z0-9)])\(/g,'$1*(').replace(/\)([a-z])/g,')*$1');
+  let depth=0,start=0;const factors:string[]=[];
+  for(let i=0;i<raw.length;i++){if(raw[i]==='(')depth++;if(raw[i]===')')depth--;if(raw[i]==='*'&&depth===0){factors.push(raw.slice(start,i));start=i+1;}}
+  factors.push(raw.slice(start));let count=0;
+  for(const factor of factors){const p=parseAlgebra(factor);if([...p.num.keys()].some(k=>k.length)&&[...p.den.keys()].every(k=>!k.length)){
+    const power=unwrap(factor).match(/^\((.+)\)\^([2-8])$/);
+    count+=power&&/[+-]/.test(power[1].slice(1))?Number(power[2]):1;
+  }}
+  return count>=2;
+}
 export function synthetic(coefficients: number[], root: number) { const result = [coefficients[0]]; for (let i = 1; i < coefficients.length; i++) result.push(coefficients[i] + root * result[i - 1]); return result; }
 export function normalize(s: string) { return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase().replace(/\s+/g, ' ').replace(/[−–]/g, '-'); }
 function elements(s: string | string[]) { return [...new Set((Array.isArray(s) ? s : s.replace(/[{}]/g, '').split(/[;,]/)).map(x => normalize(x)).filter(Boolean))].sort(); }
@@ -85,7 +103,7 @@ export function sameSet(a: string | string[], b: string | string[]) { return JSO
 export function grade(q: Question, value: string | string[], exclusions: string[] = []): { correct: boolean; error?: string } {
   try {
     if (q.type === 'logic') return { correct: equivalentLogic(String(value), String(q.answer)) };
-    if (q.type === 'algebra') { const equivalent = equivalentAlgebra(String(value), String(q.answer)); const domains = sameSet(exclusions, q.exclusions || []); return { correct: equivalent && domains, error: equivalent && !domains ? 'La expresión es equivalente, pero revisá las restricciones del dominio original.' : undefined }; }
+    if (q.type === 'algebra') { const equivalent = equivalentAlgebra(String(value), String(q.answer)); const domains = sameSet(exclusions, q.exclusions || []); const form=q.requiredForm!=='factored'||isFactored(String(value)); return { correct: equivalent && domains && form, error: equivalent && !domains ? 'La expresión es equivalente, pero revisá las restricciones del dominio original.' : equivalent&&!form?'Es equivalente, pero falta escribirla como producto de factores. Consultá las reglas de factorización.':undefined }; }
     if (q.type === 'set' || q.type === 'venn') return { correct: sameSet(value, q.answer) };
     if (q.type === 'order' || q.type === 'table' || q.type === 'synthetic') return { correct: JSON.stringify((value as string[]).map(normalize)) === JSON.stringify((q.answer as string[]).map(normalize)) };
     return { correct: normalize(String(value)) === normalize(String(q.answer)) };

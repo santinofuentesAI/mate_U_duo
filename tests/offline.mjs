@@ -16,4 +16,12 @@ await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByR
 await page.getByRole('button',{name:'Abrir explorador',exact:true}).click();await page.getByRole('button',{name:'Cambiar Q',exact:true}).click();assert.equal(await page.locator('.logic-output b').textContent(),'V');
 await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');await page.getByRole('heading',{name:'2 soluciones reales',exact:true}).waitFor();
 await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Biblioteca',exact:true}).click();await page.getByRole('button',{name:'Leyes y reglas',exact:true}).click();await page.getByRole('dialog',{name:'Reglas de Precálculo',exact:true}).waitFor();await page.getByRole('button',{name:'Productos notables',exact:true}).click();await page.getByRole('heading',{name:'Cuadrado de una suma',exact:true}).waitFor();assert.equal(await page.locator('.katex-error').count(),0);
-await browser.close();await new Promise(resolve=>server.httpServer.close(resolve));console.log('Offline QA passed: reload, lazy book viewer, local PDF render, library, math fonts, adaptive practice and live explorers.');
+await page.getByRole('button',{name:'Volver al ejercicio',exact:true}).click();
+await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Practicar',exact:true}).click();
+await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');
+await page.getByRole('button',{name:'Elegir un inciso',exact:true}).click();await page.getByRole('button',{name:'Resolver 1b · página 73',exact:true}).click();
+await page.getByRole('complementary',{name:'Ejercicio original del libro'}).waitFor();
+if(process.env.TEST_BOOK)await page.getByRole('button',{name:'Ampliar recorte original',exact:true}).waitFor();
+for(const step of ['¬R · Modus ponens (premisas 1 y 3)','P · Silogismo disyuntivo (premisa 2 y ¬R)','P∧Q · Conjunción (P y premisa 3)'])await page.getByRole('button',{name:step,exact:true}).click();
+await page.getByRole('button',{name:'Comprobar',exact:true}).click();await page.getByRole('heading',{name:'¡Bien razonado!',exact:true}).waitFor();
+await browser.close();await new Promise(resolve=>server.httpServer.close(resolve));console.log('Offline QA passed: reload, lazy book viewer, local PDF render, library, math fonts, adaptive practice, live explorers and graded original book practice.');

@@ -1,7 +1,15 @@
 import type { Course, Lesson, Progress, Question } from './types';
 import { dayKey } from './progress';
+import { bookExercises } from './bookExercises';
 export interface PracticeItem { lesson: Lesson; question: Question; }
-export const bank = (lessons: Lesson[], course: Course): PracticeItem[] => lessons.filter(l=>l.course===course).flatMap(lesson=>lesson.questions.map(question=>({lesson,question})));
+export const bank = (lessons: Lesson[], course: Course): PracticeItem[] => {
+  const path=lessons.filter(l=>l.course===course);
+  return [...path.flatMap(lesson=>lesson.questions.map(question=>({lesson,question}))),
+    ...bookExercises.filter(e=>e.course===course).flatMap(e=>{
+      const lesson=path.find(l=>l.title===e.lessonTitle);
+      return lesson?[{lesson,question:e.question}]:[];
+    })];
+};
 export function seedNumber(value:string) { let n=2166136261;for(const c of value)n=Math.imul(n^c.charCodeAt(0),16777619);return n>>>0; }
 export function dailyChallenge(items:PracticeItem[], course:Course, now=new Date()) {
   const seed=`${dayKey(now)}-${course}`;

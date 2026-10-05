@@ -1,11 +1,17 @@
 export type Course = 'discreta' | 'precalculo';
 export type QuestionType = 'choice' | 'text' | 'logic' | 'table' | 'set' | 'order' | 'venn' | 'algebra' | 'synthetic';
+export interface BookSource {
+  course: Course; page: number; printedPage: number; section: string; exercise: string;
+  crop: { x: number; y: number; width: number; height: number };
+  adaptation?: string;
+}
 export interface Question {
   id: string; type: QuestionType; prompt: string; math?: string;
   options?: string[]; answer: string | string[]; explanation: string;
   hints: string[]; tag: string; difficulty: 1 | 2 | 3;
   expression?: string; variables?: string[]; universe?: string[];
   exclusions?: string[]; coefficients?: number[]; root?: number;
+  bookSource?: BookSource; requiredForm?: 'factored';
 }
 export interface Lesson {
   id: string; course: Course; unit: string; title: string; icon: string;

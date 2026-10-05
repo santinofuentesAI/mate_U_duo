@@ -165,10 +165,10 @@ export const courseInfo = {
   precalculo: { name:'Precálculo', subtitle:'Libro · páginas 1–63 · Desde las bases hasta ecuaciones', emoji:'🌱', color:'#168979' },
 };
 export const sourceNotes = [
-  'Cobertura temática ampliada: Precálculo páginas 1–63; Discreta desde el inicio hasta ejercicios de cardinalidad, página impresa 150 / PDF 152. Los bloques de Precálculo organizan temas del libro, no asignan semanas del docente. El banco curado no es una transcripción de cada inciso.',
+  'Cobertura temática ampliada: Precálculo páginas 1–63; Discreta desde el inicio hasta ejercicios de cardinalidad, página impresa 150 / PDF 152. Los bloques de Precálculo organizan temas del libro, no asignan semanas del docente. El banco incluye 59 actividades seleccionadas de incisos originales, además de las 141 preguntas de lecciones; no es una transcripción de cada inciso.',
   'Discreta S1: una equivalencia propuesta no es válida; la lección de contraejemplos muestra una fila que la refuta.',
   'Discreta S2: la convención abierto/cerrado está invertida respecto de la física habitual. Se usa 1 = conduce. Algunas demostraciones requieren revisar premisas; no se inventaron premisas faltantes.',
   'Discreta S4: las leyes de complemento deben ser A ∪ Aᶜ = Ω y A ∩ Aᶜ = ∅. Hay ejercicios con C sin definir y expresiones ambiguas que no se autocorrigen aquí.',
-  'Precálculo S4: los incisos del folio de problemas se pueden consultar ahora en el libro, páginas PDF 42–53. Aún no todos tienen corrección automática. Las respuestas de álgebra se comparan por equivalencia; no certifican que se haya usado el método pedido.',
+  'Precálculo S4: los incisos del folio de problemas se pueden consultar ahora en el libro, páginas PDF 42–53. Aún no todos tienen corrección automática. Las respuestas de álgebra se comparan por equivalencia; los nuevos incisos de factorización exigen además una forma de producto, sin certificar cada ley que se usó.',
   'Los PDF originales no se publican en este repositorio. Las páginas indicadas corresponden al orden del documento, no necesariamente a la numeración impresa.',
 ];

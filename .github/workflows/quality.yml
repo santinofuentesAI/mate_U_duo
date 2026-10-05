@@ -20,6 +20,7 @@ jobs:
       - run: node tests/tablet.mjs
       - run: node tests/experience.mjs
       - run: node tests/math-ui.mjs
+      - run: node tests/book-practice.mjs
       - run: node tests/offline.mjs
       - uses: actions/upload-artifact@v4
         if: always()
