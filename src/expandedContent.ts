@@ -1,0 +1,171 @@
+import type { Course, Lesson, Question } from './types';
+type Builder=(course:Course,unit:string,title:string,icon:string,pages:string,theory:string[],formulas:string[],steps:string[],questions:Question[])=>Lesson;
+const choose=(prompt:string,options:string[],answer:string,explanation:string):Question=>({id:'',type:'choice',prompt,options,answer,explanation,hints:['Relacioná los datos con la regla del ejemplo resuelto.',explanation],tag:'',difficulty:1});
+const write=(type:Question['type'],prompt:string,answer:Question['answer'],explanation:string,extra:Partial<Question>={}):Question=>({id:'',type,prompt,answer,explanation,hints:['Separá las operaciones y conservá las condiciones del problema.',explanation],tag:'',difficulty:2,...extra});
+export function buildExpandedContent(make:Builder):Lesson[]{
+  const P=(unit:string,title:string,pages:string,theory:string[],formulas:string[],steps:string[],q:Question[])=>({...make('precalculo',unit,title,'🧮',pages,theory,formulas,steps,q),source:'Libro Precálculo 2024 · contenido adaptado'});
+  const D=(unit:string,title:string,pages:string,theory:string[],formulas:string[],steps:string[],q:Question[])=>({...make('discreta',unit,title,'🧩',pages.replace(/\d+/g,n=>String(Number(n)+2)),theory,formulas,steps,q),source:'Introducción a la Matemática Discreta · 4.ª edición · contenido adaptado'});
+  return [
+    P('B1 · Números reales','Conjuntos numéricos','7–9',
+      ['Los naturales, enteros y racionales están contenidos en los reales. En esta app ℕ incluye 0.', 'Un racional se expresa como a/b con enteros a, b y b ≠ 0. Su decimal termina o es periódico.', 'Un irracional real no admite esa forma; √2 y π son ejemplos. √9 es racional porque vale 3.'],
+      ['\\mathbb N\\subseteq\\mathbb Z\\subseteq\\mathbb Q\\subseteq\\mathbb R'],
+      ['−3 es entero y también racional: −3 = −3/1.', '1/2 es racional, pero no entero.', '√2 es irracional; √9 = 3 es natural, entero y racional.'],[
+        choose('¿Cuál número es irracional?',['√2','√9','−3/2'],'√2','√2 no es una razón de enteros. √9 = 3 sí lo es.'),
+        choose('¿Todo número natural es entero y racional?',['Sí','No'],'Sí','Un natural n es un entero y se puede expresar como n/1.'),
+        choose('¿Cuál es el conjunto más pequeño de la lista que contiene −7?',['ℕ','ℤ','Irracionales'],'ℤ','−7 no es natural, pero sí entero.')]),
+    P('B1 · Números reales','Signos y jerarquía de operaciones','9–10',
+      ['En productos y cocientes, signos iguales dan positivo y distintos dan negativo.', 'Para sumar números de distinto signo, restá magnitudes y conservá el signo de la mayor.', 'Respetá agrupaciones, potencias y raíces, multiplicaciones/divisiones y finalmente sumas/restas. Las operaciones de igual prioridad se hacen de izquierda a derecha.'],
+      ['(-a)(-b)=ab','-3^2=-9,\\quad(-3)^2=9'],
+      ['En −3² + 2(5 − 1), primero 5 − 1 = 4.', 'La potencia actúa sobre 3: −3² = −9. El producto es 8.', 'Sumá: −9 + 8 = −1.'],[
+        write('text','Calculá −3² + 2(5 − 1).','-1','Primero paréntesis y potencia; luego producto; finalmente suma.'),
+        write('text','Calculá (−12)/(−3) · (−2).','-8','El cociente es 4; 4 por −2 da −8.'),
+        choose('¿Cuánto vale (−3)²?',['9','−9','6'],'9','El signo forma parte de la base entre paréntesis; negativo por negativo da positivo.')]),
+    P('B1 · Números reales','Fracciones numéricas','10–12',
+      ['Para sumar fracciones, usá un denominador común y operá los numeradores.', 'Para multiplicar, multiplicá numeradores y denominadores; podés simplificar factores antes.', 'Para dividir, multiplicá por el recíproco de una fracción no nula.'],
+      ['\\frac ab+\\frac cd=\\frac{ad+bc}{bd}','\\frac ab\\div\\frac cd=\\frac{ad}{bc},\\quad b,c,d\\ne0'],
+      ['1/2 + 2/3: el mínimo común denominador es 6.', 'Convertí a 3/6 + 4/6.', 'Resultado 7/6; no se suman los denominadores.'],[
+        write('algebra','Calculá 1/2 + 2/3.','7/6','3/6 + 4/6 = 7/6. Se aceptan fracciones equivalentes.'),
+        write('algebra','Calculá (3/4) ÷ (2/5).','15/8','Multiplicá 3/4 por 5/2.'),
+        write('algebra','Calculá 5/6 − 1/4.','7/12','10/12 − 3/12 = 7/12.')]),
+    P('B1 · Números reales','Leyes de potencias','12–15',
+      ['Al multiplicar potencias de igual base se suman exponentes; al dividir se restan, con base no nula.', 'Una potencia de otra potencia multiplica exponentes. El exponente cero da 1 si la base no es cero.', 'Un exponente negativo indica recíproco. Escribí las respuestas del teclado con denominador y exponentes positivos.'],
+      ['a^ma^n=a^{m+n}','(a^m)^n=a^{mn}','a^{-n}=\\frac1{a^n},\\quad a\\ne0'],
+      ['x³ · x² / x⁴, con x ≠ 0.', 'Sumá 3 + 2 y restá 4: exponente 1.', 'Queda x, conservando x ≠ 0 del cociente original.'],[
+        write('algebra','Simplificá x³ · x² / x⁴ e indicá el valor excluido de x.','x','3 + 2 − 4 = 1; x = 0 estaba excluido.',{exclusions:['0']}),
+        write('algebra','Expresá x⁻² con exponentes positivos. Indicá el valor excluido.','1/x^2','El exponente negativo indica el recíproco, no un signo negativo.',{exclusions:['0']}),
+        write('text','Calculá 2³ · 2².','32','2⁵ = 32.')]),
+    P('B1 · Números reales','Raíces y valor absoluto','15–17',
+      ['La raíz cuadrada principal es no negativa. √(x²) = |x|, no siempre x.', 'Una raíz de índice par real exige radicando no negativo; las raíces impares admiten radicandos negativos.', 'Para combinar radicales, deben tener el mismo índice y el mismo radicando después de simplificar.'],
+      ['\\sqrt{x^2}=|x|','\\sqrt[3]{-8}=-2'],
+      ['Si x = −3, entonces √(x²) = √9 = 3.', 'Por eso √(x²) es |x|; reemplazarlo por x daría −3, que es incorrecto.', '√12 + √27 = 2√3 + 3√3 = 5√3.'],[
+        choose('Para todo x real, ¿a qué equivale √(x²)?',['|x|','x','−x'],'|x|','La raíz principal siempre es no negativa.'),
+        write('text','Calculá la raíz cúbica de −8.','-2','(−2)³ = −8.'),
+        choose('Simplificá √12 + √27.',['5√3','√39','5√6'],'5√3','Extraé cuadrados perfectos: 2√3 + 3√3.')]),
+    P('B2 · Expresiones algebraicas','Variables y valor numérico','21–23',
+      ['Una constante fija un valor; una variable representa valores de un conjunto.', 'Los términos se separan por sumas y restas exteriores. Un producto puede contener varias variables y seguir siendo un solo término.', 'Para evaluar una expresión, sustituí con paréntesis y después respetá la jerarquía.'],
+      ['P(x)=2x^2-3x+1'],
+      ['Evaluá P(−2): 2(−2)² − 3(−2) + 1.', 'La potencia da 4; los productos dan 8 y +6.', 'Resultado: 8 + 6 + 1 = 15.'],[
+        write('text','P(x)=2x²−3x+1. Hallá P(−2).','15','2·4 − 3·(−2) + 1 = 15.'),
+        write('text','¿Cuántos términos tiene 5a²b − 3pq?','2','Hay dos productos separados por una resta exterior.'),
+        write('text','Evaluá (−xy−b)/b para x=−2, y=3, b=−1/4.','-25','−xy = 6; el numerador es 25/4. Dividir por −1/4 da −25.')]),
+    P('B2 · Expresiones algebraicas','Monomios y términos semejantes','24–27',
+      ['Un monomio tiene un solo término con exponentes enteros no negativos en las variables.', 'Los monomios semejantes tienen la misma parte literal; se suman sus coeficientes.', 'El grado de un monomio es la suma de sus exponentes. El grado de un polinomio es el mayor grado de sus términos no nulos.'],
+      ['3x^2y+5x^2y=8x^2y'],
+      ['En 3x²y − 5x²y + 2xy, los dos primeros términos son semejantes.', 'Sumá sus coeficientes: 3 − 5 = −2.', 'Resultado −2x²y + 2xy. No se pueden juntar esos dos términos.'],[
+        write('algebra','Reducí 3x²y − 5x²y + 2xy.','-2x^2y+2xy','Solo los términos con x²y son semejantes.'),
+        write('text','¿Cuál es el grado de −7a³b²?','5','Sumá los exponentes: 3 + 2 = 5.'),
+        choose('¿Cuál NO es un monomio en x?',['1/x','3x²','−5'],'1/x','Tiene x en el denominador, es decir, un exponente negativo.')]),
+    P('B2 · Expresiones algebraicas','Suma y resta de polinomios','28–29',
+      ['Agrupá los términos de igual potencia y sumá sus coeficientes.', 'Restar un polinomio cambia el signo de todos sus términos.', 'Un coeficiente cero indica que el término desaparece, no que falte una variable del problema.'],
+      ['(2x^2+3x-1)-(x^2-2x+4)=x^2+5x-5'],
+      ['Distribuí el signo menos: 2x² + 3x − 1 − x² + 2x − 4.', 'Agrupá cuadrados, términos lineales y constantes.', 'Resultado: x² + 5x − 5.'],[
+        write('algebra','Restá (2x²+3x−1) − (x²−2x+4).','x^2+5x-5','El menos cambia −2x a +2x y +4 a −4.'),
+        write('algebra','Sumá (x²+2x) + (3x²−2x+5).','4x^2+5','Los términos lineales se anulan.'),
+        choose('¿Qué pasa al quitar −(a−b+c)?',['−a+b−c','−a−b+c','a−b+c'],'−a+b−c','El factor −1 multiplica cada término del paréntesis.')]),
+    P('B2 · Expresiones algebraicas','Multiplicación y productos notables','29–31',
+      ['Cada término de un factor multiplica a todos los del otro.', 'El cuadrado de una suma incluye el término cruzado 2ab.', 'La suma por la diferencia produce una diferencia de cuadrados.'],
+      ['(a+b)^2=a^2+2ab+b^2','(a+b)(a-b)=a^2-b^2'],
+      ['(x + 3)(x − 2) = x² − 2x + 3x − 6.', 'Reducí los términos semejantes −2x + 3x = x.', 'Resultado: x² + x − 6.'],[
+        write('algebra','Desarrollá (x+3)(x−2).','x^2+x-6','Multiplicá los cuatro pares y reducí los términos lineales.'),
+        write('algebra','Desarrollá (2x−3)².','4x^2-12x+9','El término cruzado es 2·2x·(−3) = −12x.'),
+        write('algebra','Desarrollá (x+5)(x−5).','x^2-25','Es una suma por una diferencia.')]),
+    P('B2 · Expresiones algebraicas','División de polinomios','32',
+      ['Ordená dividendo y divisor por potencias descendentes.', 'Dividí términos principales, multiplicá por el divisor y restá. Repetí hasta que el resto tenga grado menor que el divisor.', 'La comprobación es dividendo = divisor·cociente + resto.'],
+      ['P(x)=D(x)Q(x)+R(x),\\quad\\deg R<\\deg D'],
+      ['Dividí 2x³ − x² − 8x − 2 entre 2x + 3.', 'Los términos del cociente son x², −2x y −1; el resto es 1.', 'Comprobá: (2x + 3)(x² − 2x − 1) + 1 reproduce el dividendo.'],[
+        write('algebra','Para esa división, escribí el cociente.','x^2-2x-1','Los términos principales sucesivos dan x², −2x y −1.'),
+        write('text','¿Cuál es el resto de esa división?','1','Al restar el último producto queda 1.'),
+        choose('Si el divisor tiene grado 2, ¿qué grado puede tener un resto no nulo?',['0 o 1','2','3'],'0 o 1','El resto debe tener grado estrictamente menor.')]),
+    P('B3 · Factorización','Factor común y agrupación','34–38',
+      ['Extraé el máximo factor común de coeficientes y variables.', 'En agrupación, formá grupos que produzcan un mismo factor binomial.', 'Comprobá distribuyendo. Sacar factor común no cambia una expresión ni permite dividir una ecuación por una variable que podría ser cero.'],
+      ['6x^3y+9x^2y^2=3x^2y(2x+3y)','ax+ay+bx+by=(a+b)(x+y)'],
+      ['Agrupá ax + ay + bx + by como a(x + y) + b(x + y).', 'El binomio x + y es común.', 'Extraelo: (a + b)(x + y).'],[
+        write('algebra','Factorizá 6x³y + 9x²y² (se aceptan formas equivalentes).','3x^2y*(2x+3y)','El factor común máximo es 3x²y.'),
+        write('algebra','Factorizá ax + ay + bx + by.','(a+b)*(x+y)','Agrupá por a y b, luego extraé x + y.'),
+        choose('Al extraer x de x²−3x, ¿qué queda?',['x(x−3)','x(x²−3)','x−3'],'x(x−3)','Cada término debe dividirse entre el factor extraído.')]),
+    P('B3 · Factorización','Trinomios y diferencias de cuadrados','39–41',
+      ['En x² + bx + c buscá dos números que sumen b y multipliquen c.', 'Con coeficiente principal distinto de 1, comprobá también los términos cruzados.', 'Una diferencia de cuadrados es a² − b² = (a − b)(a + b); una suma de cuadrados no sigue esa regla en ℝ.'],
+      ['x^2+5x+6=(x+2)(x+3)','a^2-b^2=(a-b)(a+b)'],
+      ['En x² + 5x + 6, los números 2 y 3 suman 5 y multiplican 6.', 'Proponé (x + 2)(x + 3).', 'Expandí para comprobar los tres coeficientes.'],[
+        write('algebra','Factorizá x²+5x+6.','(x+2)*(x+3)','2 + 3 = 5 y 2·3 = 6.'),
+        write('algebra','Factorizá 4x²−9.','(2x-3)*(2x+3)','Es (2x)² − 3².'),
+        write('algebra','Factorizá 2x²+7x+3.','(2x+1)*(x+3)','Los términos cruzados 6x y x suman 7x.')]),
+    P('B3 · Factorización','Suma y diferencia de cubos','42',
+      ['Identificá los dos cubos antes de aplicar la identidad.', 'En una suma, el primer factor lleva + y el término cruzado del segundo lleva −.', 'En una diferencia, el primer factor lleva − y los tres términos del segundo son positivos.'],
+      ['a^3+b^3=(a+b)(a^2-ab+b^2)','a^3-b^3=(a-b)(a^2+ab+b^2)'],
+      ['x³ − 8 = x³ − 2³.', 'Aplicá diferencia de cubos: (x − 2)(x² + 2x + 4).', 'Comprobá multiplicando: los términos intermedios se cancelan.'],[
+        write('algebra','Factorizá x³−8.','(x-2)*(x^2+2x+4)','Las bases son x y 2.'),
+        write('algebra','Factorizá x³+27.','(x+3)*(x^2-3x+9)','Las bases son x y 3; el término cruzado lleva signo negativo.'),
+        choose('¿Cuál segundo factor acompaña a (a−b) al factorizar a³−b³?',['a²+ab+b²','a²−ab+b²','a²−b²'],'a²+ab+b²','Es la identidad de diferencia de cubos.')]),
+    P('B5 · Ecuaciones','Ecuaciones lineales y equivalencia','54–56',
+      ['Una ecuación pide los valores que hacen verdadera una igualdad.', 'Sumar lo mismo a ambos lados o multiplicar por una constante no nula conserva las soluciones.', 'Una identidad tiene todos los valores permitidos como soluciones; una contradicción no tiene ninguna.'],
+      ['3(x-2)=2x+1\\quad\\Longrightarrow\\quad x=7'],
+      ['Distribuí: 3x − 6 = 2x + 1.', 'Restá 2x y sumá 6 en ambos lados.', 'x = 7. Sustituí: ambos lados valen 15.'],[
+        write('text','Resolvé 3(x−2)=2x+1. Escribí el valor de x.','7','3x − 6 = 2x + 1; x = 7.'),
+        choose('¿Qué soluciones tiene 2(x+1)=2x+2 en ℝ?',['Todos los reales','Solo x=0','Ninguna'],'Todos los reales','Ambos lados son idénticos para cualquier x.'),
+        choose('¿Qué soluciones tiene x+1=x+2?',['Ninguna','Todos los reales','Solo x=1'],'Ninguna','Restar x produce 1 = 2, una contradicción.')]),
+    P('B5 · Ecuaciones','Ecuaciones cuadráticas','57–58',
+      ['Llevá la ecuación a ax² + bx + c = 0 con a ≠ 0.', 'Podés factorizar, completar cuadrados o usar la fórmula general.', 'El discriminante determina dos, una o ninguna raíz real. En un producto cero, al menos un factor debe ser cero.'],
+      ['x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}'],
+      ['x² − 5x + 6 = 0 se factoriza como (x − 2)(x − 3) = 0.', 'Igualá cada factor a cero: x = 2 o x = 3.', 'El conjunto solución es {2,3}.'],[
+        write('set','Resolvé x²−5x+6=0. Seleccioná todas las raíces.',['2','3'],'Los factores x − 2 y x − 3 dan las dos soluciones.',{universe:['-3','-2','0','2','3','5']}),
+        write('text','Calculá el discriminante de 2x²+3x+1=0.','1','3² − 4·2·1 = 1.'),
+        choose('¿Cuántas soluciones reales tiene x²+1=0?',['Ninguna','Una','Dos'],'Ninguna','El cuadrado de un real nunca es −1.')]),
+    P('B5 · Ecuaciones','Ecuaciones de grado superior','59',
+      ['Buscá factor común, raíces racionales o una sustitución que reduzca el grado.', 'No dividás por x sin separar el caso x = 0; podrías perder una solución.', 'En una bicuadrada, t = x² exige t ≥ 0 para obtener x real.'],
+      ['x^4-5x^2+4=0\\quad\\rightsquigarrow\\quad t^2-5t+4=0'],
+      ['Usá t = x². Factorizá (t − 1)(t − 4) = 0.', 't = 1 o t = 4, ambas no negativas.', 'x = ±1 o x = ±2.'],[
+        write('set','Resolvé x⁴−5x²+4=0 en ℝ.',['-2','-1','1','2'],'x² vale 1 o 4; cada valor positivo tiene dos raíces.',{universe:['-4','-2','-1','0','1','2','4']}),
+        write('set','Resolvé x³−4x=0.',['-2','0','2'],'x(x−2)(x+2)=0. No perdás la raíz cero.',{universe:['-4','-2','0','2','4']}),
+        write('set','Libro p.63, 1d: 4x⁴+12x³−x²−3x=0.',['-3','-1/2','0','1/2'],'x(x+3)(4x²−1)=0. Cada factor aporta sus raíces.',{universe:['-3','-1','-1/2','0','1/2','1','3']})]),
+    P('B5 · Ecuaciones','Ecuaciones racionales','60–61',
+      ['Excluí primero los ceros de TODOS los denominadores originales.', 'Multiplicá por el mínimo común denominador en el dominio permitido.', 'Comprobá los candidatos en la ecuación original. Un candidato excluido nunca es solución.'],
+      ['\\frac{x+1}{x-2}=3,\\quad x\\ne2'],
+      ['Con x ≠ 2, multiplicá por x − 2: x + 1 = 3x − 6.', 'Resolvé: 7 = 2x, de modo que x = 7/2.', '7/2 no está excluido y al sustituir el cociente vale 3.'],[
+        choose('Resolvé (x+1)/(x−2)=3.',['x = 7/2','x = 2','x = −7/2'],'x = 7/2','x + 1 = 3x − 6; x = 7/2, distinto de 2.'),
+        choose('En 1/(x−1)=2/(x−1), ¿hay alguna solución?',['No','Sí, x=1','Todos los reales salvo 1'],'No','x = 1 está excluido. Para el resto, multiplicar da 1 = 2.'),
+        write('algebra','Libro p.63, 1j: resolvé (3x−4)/(2x+1)=(3x−2)/(2x+3). Escribí el valor de x e indicá los valores excluidos.','5','Excluí −1/2 y −3/2. Multiplicar en cruz da 6x²+x−12 = 6x²−x−2; 2x = 10, así que x = 5.',{exclusions:['-1/2','-3/2']})]),
+    P('B5 · Ecuaciones','Ecuaciones con radicales','62–63',
+      ['Antes de elevar a una potencia par, imponé el dominio y el signo de la raíz aislada.', 'Elevar al cuadrado puede introducir soluciones extrañas. Los resultados intermedios son candidatos.', 'Sustituí cada candidato en la ecuación original, no solo en la ecuación elevada al cuadrado.'],
+      ['x+2\\sqrt{x+7}=8'],
+      ['Dominio x ≥ −7. Aislá 2√(x + 7) = 8 − x; también se exige x ≤ 8.', 'Elevá al cuadrado: 4x + 28 = (8 − x)². Queda x² − 20x + 36 = 0.', 'Candidatos 2 y 18. Solo 2 cumple x ≤ 8 y la igualdad original: 2 + 2·3 = 8.'],[
+        write('set','Libro p.63, 2a: resolvé x+2√(x+7)=8.',['2'],'Los candidatos son 2 y 18; 18 es extraño y se descarta.',{universe:['-7','0','2','8','18']}),
+        write('set','Libro p.63, 2c: resolvé √(2x+1)=x−7.',['12'],'x ≥ 7. Al cuadrar salen 4 y 12; únicamente 12 cumple la ecuación original.',{universe:['-1/2','4','7','12']}),
+        choose('¿Dónde se comprueban los candidatos después de elevar al cuadrado?',['En la ecuación original','Solo en la ecuación cuadrada','No hace falta comprobar'],'En la ecuación original','La operación no es reversible sin controlar el signo.')]),
+    P('B5 · Ecuaciones','Plantear problemas de aplicación','63',
+      ['Definí qué representa la variable y en qué unidades se mide.', 'Traducí las relaciones del enunciado a una ecuación antes de operar.', 'Verificá la solución en el contexto: edad no negativa, cantidades coherentes y unidades correctas. La p.63 presenta el método; los problemas de la p.64 quedan fuera del alcance solicitado.'],
+      ['x+(x+1)=25'],
+      ['Dos enteros consecutivos suman 25. Llamá x al menor y x + 1 al siguiente.', 'La ecuación es 2x + 1 = 25, por lo que x = 12.', 'Los números son 12 y 13; comprobá su suma y que sean consecutivos.'],[
+        write('text','Dos enteros consecutivos suman 25. ¿Cuál es el menor?','12','x + (x + 1) = 25 da x = 12.'),
+        choose('¿Qué debe definirse al elegir x en un problema?',['Qué cantidad representa y sus unidades','Solo la letra','El resultado antes de resolver'],'Qué cantidad representa y sus unidades','Eso permite traducir y comprobar el modelo.'),
+        write('text','Un rectángulo mide x de ancho y x+3 de largo. Su perímetro es 26. Hallá x.','5','2x + 2(x + 3) = 26; 4x = 20; x = 5.')]),
+    D('S1 · Lógica proposicional','Introducción y razonamiento lógico','27–43',
+      ['La lógica estudia cuándo una conclusión está justificada por sus premisas.', 'Un ejemplo favorable no prueba una afirmación universal; un contraejemplo sí basta para refutarla.', 'Los acertijos iniciales entrenan consistencia: distinguí lo que se afirma, lo que se supone y lo que se concluye.'],
+      ['\\text{premisas verdaderas}\\Longrightarrow\\text{conclusión verdadera}'],
+      ['Se afirma “todos los enteros son positivos”.', 'El entero −1 es un contraejemplo.', 'No hace falta revisar cada entero: la afirmación universal ya quedó refutada.'],[
+        choose('¿Qué refuta “todos los enteros son positivos”?',['El entero −1','El entero 5','Probar diez enteros positivos'],'El entero −1','Un solo entero que no sea positivo contradice el universal.'),
+        choose('Una persona dice “esta oración es falsa”. ¿Tiene un valor clásico consistente si se interpreta literalmente?',['No','Sí, es verdadera','Sí, es falsa'],'No','Si es verdadera, afirma su falsedad; si es falsa, afirma una falsedad que la haría verdadera.'),
+        choose('¿Basta probar tres casos para demostrar una afirmación sobre todos los naturales?',['No','Sí'],'No','Puede fallar en un caso no revisado. Se necesita una demostración general.')]),
+    D('S1 · Lógica proposicional','Formas normales','77–80',
+      ['La forma normal disyuntiva es una disyunción de conjunciones de literales.', 'La forma normal conjuntiva es una conjunción de disyunciones de literales.', 'Un literal es una variable o su negación. Eliminá → y ↔ y llevá las negaciones hacia las variables antes de distribuir.'],
+      ['(P\\land Q)\\lor(\\neg P\\land R)\\quad\\text{FND}','(P\\lor Q)\\land(\\neg P\\lor R)\\quad\\text{FNC}'],
+      ['P → (Q ∧ R) equivale a ¬P ∨ (Q ∧ R).', 'Distribuí ∨ sobre ∧.', 'FNC: (¬P ∨ Q) ∧ (¬P ∨ R).'],[
+        choose('¿Cuál expresión está en forma normal conjuntiva?',['(P∨Q)∧(¬P∨R)','(P∧Q)∨R','P→Q'],'(P∨Q)∧(¬P∨R)','Es una conjunción exterior de disyunciones de literales.'),
+        write('logic','Convertí P→(Q∧R) a una fórmula equivalente sin →.','(¬P∨Q)∧(¬P∨R)','Eliminá la implicación y distribuí. Se compara equivalencia, no se certifica el formato normal.'),
+        choose('¿Cuál es un literal?',['¬P','P∧Q','P→Q'],'¬P','Un literal es una variable o su negación.')]),
+    D('S3 · Predicados y cuantificadores','Inferencias cuantificadas','96–98',
+      ['De ∀x P(x) se puede obtener P(a) si a pertenece al universo.', 'De un caso P(a) se puede concluir ∃x P(x), pero no ∀x P(x).', 'Un testigo existencial no debe tratarse como un individuo ya fijado sin justificación. El cuaderno proposicional no verifica estas reglas.'],
+      ['\\forall x P(x)\\vdash P(a)','P(a)\\vdash\\exists x P(x)'],
+      ['Todo estudiante del grupo practica: ∀x E(x), con universo el grupo.', 'Ana pertenece al grupo; entonces E(Ana) por instanciación universal.', 'Desde E(Ana) se puede concluir que alguien practica, no que todo el mundo practica.'],[
+        choose('∀x∈ℤ: P(x). ¿Se puede concluir P(3)?',['Sí','No'],'Sí','3 pertenece al universo de enteros.'),
+        choose('Desde P(3), ¿qué conclusión está justificada sobre ℤ?',['∃x P(x)','∀x P(x)'],'∃x P(x)','3 es un testigo; no demuestra todos los casos.'),
+        choose('∃x P(x). ¿Se puede concluir directamente P(Ana)?',['No','Sí'],'No','El testigo podría ser alguien distinto de Ana.')]),
+    D('S2 · Circuitos e inferencia','Métodos de demostración','99–108',
+      ['Una demostración directa parte de las hipótesis y deriva la conclusión.', 'La contraposición demuestra ¬Q → ¬P en lugar de P → Q.', 'Por contradicción se supone la negación de lo que se busca y se deriva una imposibilidad. Separá la estrategia de la justificación de cada paso.'],
+      ['P\\to Q\\equiv\\neg Q\\to\\neg P','n=2k\\Longrightarrow n^2=2(2k^2)'],
+      ['Queremos probar que si n es par, n² es par.', 'Por definición, n = 2k para un entero k.', 'n² = 4k² = 2(2k²). Como 2k² es entero, n² es par.'],[
+        choose('¿Qué definición permite empezar a demostrar que el cuadrado de un entero par es par?',['n=2k con k entero','n=2k+1','n=k/2'],'n=2k con k entero','Eso traduce la hipótesis “n es par”.'),
+        write('logic','Escribí la contrapositiva de P→Q.','¬Q→¬P','Se invierte el orden y se niegan las dos partes.'),
+        choose('¿Qué se supone al probar Q por contradicción?',['¬Q','Q','Una conclusión diferente'],'¬Q','Desde la negación se intenta derivar una imposibilidad.')]),
+  ];
+}

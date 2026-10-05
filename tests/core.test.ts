@@ -4,6 +4,9 @@ import { classify, equivalentLogic, equivalentAlgebra, grade, synthetic, truthRo
 import { lessons } from '../src/content';
 import { checkLaw, checkInference } from '../src/laws';
 import { dayKey, freshProgress, lessonMastery, recordAttempt, streak, validateProgress } from '../src/progress';
+import { bookScope } from '../src/bookScope';
+import { bookRoutes, readerPages } from '../src/bookIndex';
+import katex from 'katex';
 test('logic: all four implication rows, precedence, counterexamples and invalid input',()=>{
   assert.deepEqual(truthRows('P→Q').map(r=>r.result),[true,false,true,true]);
   assert.equal(classify('P∨¬P'),'Tautología');assert.equal(classify('P∧¬P'),'Contradicción');
@@ -33,9 +36,20 @@ test('named law validation distinguishes correct rule and verifies subexpression
   assert.equal(checkLaw('¬¬R','R','Doble negación'),true);
 });
 test('curriculum integrity: unique ids, valid choice keys, every saved answer grades correctly',()=>{
-  assert.equal(lessons.length,24);const ids=new Set<string>();
+  assert.equal(lessons.length,47);const ids=new Set<string>();
   for(const l of lessons){assert.ok(!ids.has(l.id));ids.add(l.id);assert.ok(l.questions.length>=3);for(const q of l.questions){assert.ok(!ids.has(q.id));ids.add(q.id);assert.equal(grade(q,q.answer,q.exclusions).correct,true, q.id);if(q.type==='choice')assert.ok(q.options?.includes(String(q.answer)));if(q.type==='synthetic')assert.deepEqual(synthetic(q.coefficients!,q.root!).map(String),q.answer);if(q.type==='table')assert.deepEqual(truthRows(q.expression!,q.variables).map(r=>r.result?'V':'F'),q.answer);}}
-  assert.equal(ids.size,96);
+  assert.equal(ids.size,188);
+});
+test('book scope: all pages covered by reading or practice, stops at current topic',()=>{
+  assert.equal(bookScope.precalculo.lastPage,63);assert.equal(bookScope.discreta.lastPage,152);
+  for(const course of ['precalculo','discreta'] as const){const ranges=[...readerPages[course],...bookRoutes[course]];for(let page=1;page<=bookScope[course].lastPage;page++)assert.ok(ranges.some(r=>page>=r.page&&page<=r.end),`${course} page ${page} missing`);for(const r of ranges)assert.ok(r.page>=1&&r.end<=bookScope[course].lastPage);}
+  assert.ok(lessons.some(l=>l.title==='Ecuaciones con radicales'));
+  const q=lessons.flatMap(l=>l.questions).find(q=>q.prompt.includes('2c: resolvé'))!;assert.equal(grade(q,['4','12']).correct,false);assert.equal(grade(q,['12']).correct,true);
+});
+test('all curriculum formulas render and expanded book solutions reject spurious roots',()=>{
+  for(const l of lessons)for(const formula of l.formulas)assert.doesNotThrow(()=>katex.renderToString(formula,{throwOnError:true,strict:false}),l.title);
+  const qs=lessons.flatMap(l=>l.questions);const radical=qs.find(q=>q.prompt.includes('2a: resolvé'))!;assert.equal(grade(radical,['2','18']).correct,false);assert.equal(grade(radical,['2']).correct,true);
+  const rational=qs.find(q=>q.prompt.includes('1j: resolvé'))!;assert.equal(grade(rational,'5',['-1/2','-3/2']).correct,true);assert.equal(grade(rational,'5',[]).correct,false);assert.equal(grade(rational,'1',['-1/2','-3/2']).correct,false);
 });
 test('inference checker verifies cited premises and rejects common fallacies',()=>{
   assert.equal(checkInference(['P','P→Q'],'Q','Modus ponens'),true);
