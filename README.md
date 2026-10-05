@@ -10,6 +10,9 @@ Aprendizaje de Matemática Discreta desde el inicio hasta conjuntos (página imp
 - Tablas de verdad, selección de conjuntos, regiones de Venn, orden de demostraciones y división sintética.
 - Cuaderno de transformaciones: verifica una ley lógica por paso, incluso dentro de una subexpresión. Cuaderno de inferencias: verifica las diez reglas y las líneas citadas.
 - Referencia de 14 leyes y 10 reglas de inferencia durante los ejercicios.
+- Referencias según el curso: Precálculo muestra 32 reglas de potencias, productos notables, factorización, fracciones, raíces y ecuaciones, con condiciones y ejemplos. Se usa también en Biblioteca, Mi libro y el cuaderno algebraico; el diccionario de símbolos cambia con el curso.
+- Editor visual de álgebra: exponentes elevados en el campo que se edita, botones de cuadrado y cubo, plantilla de paréntesis y fracción, cursor táctil, deshacer y opción de teclado del teléfono. Conserva la notación del motor para comprobar respuestas sin alterar su significado.
+- Respuesta al acertar con animación breve, XP real del intento y avance inmediato de la barra; oculta el teclado para dejar espacio a la explicación. Respeta movimiento reducido y no vuelve a dar XP por repetir una pregunta.
 - Intentos ilimitados, consejo gratis y ayuda guiada por 5 monedas ficticias. Se empieza con 20 monedas; cada 5 XP aporta una. Sin compras ni pagos.
 - Repasos a 1, 3, 7, 14 y 30 días. Los errores y las ayudas vuelven al repaso en 10 minutos. Una repetición inmediata no confirma dominio. El XP de una pregunta se otorga una sola vez.
 - Ruta de niveles con buscador, filtros por bloque, temas guardados, estados de avance y acceso libre a cualquier nivel.
@@ -48,11 +51,12 @@ node tests/browser.mjs
 node tests/offline.mjs
 node tests/tablet.mjs
 node tests/experience.mjs
+node tests/math-ui.mjs
 ```
 
 Variables opcionales: `TEST_URL`, `TEST_BOOK` (ruta a un PDF propio), `TEST_CHROMIUM_PATH`, `TEST_PRECALC_BOOK` (segundo PDF para verificar el límite 1–63). Las capturas de verificación quedan en `tmp/qa/`, fuera del repositorio.
 
-Las pruebas verifican compilación TypeScript/Vite; 14 pruebas de lógica, álgebra, leyes, inferencias, contenido, repaso, fórmulas, cobertura, contraste, selección adaptativa, retos, errores y recuperación de sesiones; recorrido móvil de lección y teclado; consulta de leyes y Biblioteca; importación y recuperación de ambos libros; límite de página 63 y exploración fuera del temario; ajustes y escritorio; recarga sin conexión, carga del visor, prácticas, exploradores y renderizado del PDF local sin red. La prueba de tablet cubre 1280×800, 1024×768, 800×1280 y 1440×900, letra grande, colores, selección y cursor táctil, rotación del PDF, recorte mediante gesto real, recuperación tras recarga, actualización de IndexedDB y separación de cursos. Si no recibe un PDF, usa material de prueba original generado en memoria. El recorrido de experiencia comprueba niveles guardados, sesión y pistas tras recarga, respuestas reales del diario, filtros, cambios matemáticos en vivo y accesibilidad del diálogo. La prueba offline necesita ejecutar el build primero. La prueba visual usa un navegador automatizado; no sustituye la comprobación en el dispositivo real del estudiante.
+Las pruebas verifican compilación TypeScript/Vite; 17 pruebas de lógica, álgebra, leyes, inferencias, contenido, repaso, fórmulas, cobertura, contraste, selección adaptativa, retos, errores y recuperación de sesiones; recorrido móvil de lección y teclado; consulta de leyes y Biblioteca; importación y recuperación de ambos libros; límite de página 63 y exploración fuera del temario; ajustes y escritorio; recarga sin conexión, carga del visor, prácticas, exploradores y renderizado del PDF local sin red. La prueba de tablet cubre 1280×800, 1024×768, 800×1280 y 1440×900, letra grande, colores, selección y cursor táctil, rotación del PDF, recorte mediante gesto real, recuperación tras recarga, actualización de IndexedDB y separación de cursos. Si no recibe un PDF, usa material de prueba original generado en memoria. El recorrido de experiencia comprueba niveles guardados, sesión y pistas tras recarga, respuestas reales del diario, filtros, cambios matemáticos en vivo y accesibilidad del diálogo. La prueba offline necesita ejecutar el build primero. La prueba visual usa un navegador automatizado; no sustituye la comprobación en el dispositivo real del estudiante.
 
 ## Libros y prácticas
 

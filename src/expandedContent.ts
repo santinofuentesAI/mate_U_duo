@@ -94,8 +94,8 @@ export function buildExpandedContent(make:Builder):Lesson[]{
       ['Identificá los dos cubos antes de aplicar la identidad.', 'En una suma, el primer factor lleva + y el término cruzado del segundo lleva −.', 'En una diferencia, el primer factor lleva − y los tres términos del segundo son positivos.'],
       ['a^3+b^3=(a+b)(a^2-ab+b^2)','a^3-b^3=(a-b)(a^2+ab+b^2)'],
       ['x³ − 8 = x³ − 2³.', 'Aplicá diferencia de cubos: (x − 2)(x² + 2x + 4).', 'Comprobá multiplicando: los términos intermedios se cancelan.'],[
-        write('algebra','Factorizá x³−8.','(x-2)*(x^2+2x+4)','Las bases son x y 2.'),
-        write('algebra','Factorizá x³+27.','(x+3)*(x^2-3x+9)','Las bases son x y 3; el término cruzado lleva signo negativo.'),
+        write('algebra','Factorizá x³−8.','(x-2)*(x^2+2x+4)','8 = 2³. Aplicá a³ − b³ = (a − b)(a² + ab + b²): queda (x − 2)(x² + 2x + 4). Al multiplicar, los términos intermedios se cancelan.'),
+        write('algebra','Factorizá x³+27.','(x+3)*(x^2-3x+9)','27 = 3³. Aplicá a³ + b³ = (a + b)(a² − ab + b²): queda (x + 3)(x² − 3x + 9). La suma del primer factor cambia a − en el producto del segundo.'),
         choose('¿Cuál segundo factor acompaña a (a−b) al factorizar a³−b³?',['a²+ab+b²','a²−ab+b²','a²−b²'],'a²+ab+b²','Es la identidad de diferencia de cubos.')]),
     P('B5 · Ecuaciones','Ecuaciones lineales y equivalencia','54–56',
       ['Una ecuación pide los valores que hacen verdadera una igualdad.', 'Sumar lo mismo a ambos lados o multiplicar por una constante no nula conserva las soluciones.', 'Una identidad tiene todos los valores permitidos como soluciones; una contradicción no tiene ninguna.'],
