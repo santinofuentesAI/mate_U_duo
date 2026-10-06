@@ -1,4 +1,4 @@
-import { Fragment, useId, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Delete, Keyboard, Undo2, ArrowDown } from 'lucide-react';
 import { canonicalMath, mathParts, replaceMathSelection } from './mathNotation';
 
@@ -6,6 +6,7 @@ const keys=['x','y','a','b','(',')','7','8','9','+','−','power','4','5','6','*
 export function AlgebraInput({value,onChange,label,disabled=false,compact=false,onNextLine}:{value:string;onChange:(value:string)=>void;label:string;disabled?:boolean;compact?:boolean;onNextLine?:()=>void}) {
   const id=useId(),field=useRef<HTMLDivElement>(null),nativeInput=useRef<HTMLInputElement>(null),pending=useRef<number|null>(null);
   const [native,setNative]=useState(false),[expanded,setExpanded]=useState(!compact),[selection,setSelection]=useState({start:value.length,end:value.length}),[undo,setUndo]=useState<{value:string;start:number;end:number}[]>([]);
+  useEffect(()=>{pending.current=null;setSelection({start:0,end:0});setUndo([]);},[label]);
   const cursor=Math.min(selection.start,value.length),end=Math.min(selection.end,value.length),parts=mathParts(value);
   function focus(){(native?nativeInput.current:field.current)?.focus({preventScroll:true});}
   useLayoutEffect(()=>{if(pending.current!==null){const pos=pending.current;setSelection({start:pos,end:pos});nativeInput.current?.setSelectionRange(pos,pos);pending.current=null;focus();}},[value,native]);
