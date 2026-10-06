@@ -30,9 +30,9 @@ export function GuidedProofExercise({question:q,course,coins,onSpend,onAttempt,o
     {!complete&&<><SymbolInput value={expression} onChange={v=>{setExpression(v);setMessage('');}} mode="logic" label="Nueva línea de la demostración"/>
       <fieldset className="proof-rules"><legend>¿Qué regla aplicaste?</legend><div>{rules.map(r=><button type="button" key={r} aria-pressed={rule===r} className={rule===r?'selected':''} onClick={()=>{setRule(r);setMessage('');}}>{r}</button>)}</div></fieldset>
       <div className="help-row"><button className="secondary" disabled={help>=1} onClick={()=>reveal(1)}><Lightbulb size={17}/>Pista del paso</button><button className="secondary" disabled={help>=2||coins<5} onClick={()=>reveal(2)}><Coins size={17}/>Mostrar línea · 5</button><small>{coins} monedas ficticias · intentos ∞</small></div>
-      <AnswerReveal question={q} open={showAnswer} onToggle={()=>{const next=!showAnswer;setShowAnswer(next);if(next)setRevealedAnswer(true);}}/>
       {help>0&&<aside className="hint" role="status"><b>{help===1?'Pensá primero en esto':'La línea que buscamos'}</b><p>{help===1?step.hint:<><code>{step.expression}</code> mediante <b>{step.rule}</b>.</>}</p></aside>}
       {message&&<p className="notice" role="status">{message}</p>}<button className="primary wide" disabled={!expression||!rule} onClick={check}>Comprobar este paso<ArrowRight size={18}/></button></>}
     {complete&&<><AnswerFeedback correct error={message||q.explanation} explanation={q.explanation} xp={rewardAvailable?(assisted||mistakes>0?5:10):0} celebrate/><div className="row wrap"><button className="secondary" onClick={reset}><RotateCcw size={16}/>Resolver de nuevo</button><button className="primary" onClick={onNext}>Continuar<ArrowRight size={18}/></button></div></>}
+    <AnswerReveal question={q} open={showAnswer} onToggle={()=>{const next=!showAnswer;setShowAnswer(next);if(next)setRevealedAnswer(true);}}/>
     {showLaws&&<Laws mode={course==='precalculo'?'algebra':'logic'} onClose={()=>setShowLaws(false)}/>}</section>;
 }
