@@ -33,6 +33,6 @@ export function GuidedProofExercise({question:q,course,coins,onSpend,onAttempt,o
       {help>0&&<aside className="hint" role="status"><b>{help===1?'Pensá primero en esto':'La línea que buscamos'}</b><p>{help===1?step.hint:<><code>{step.expression}</code> mediante <b>{step.rule}</b>.</>}</p></aside>}
       {message&&<p className="notice" role="status">{message}</p>}<button className="primary wide" disabled={!expression||!rule} onClick={check}>Comprobar este paso<ArrowRight size={18}/></button></>}
     {complete&&<><AnswerFeedback correct error={message||q.explanation} explanation={q.explanation} xp={rewardAvailable?(assisted||mistakes>0?5:10):0} celebrate/><div className="row wrap"><button className="secondary" onClick={reset}><RotateCcw size={16}/>Resolver de nuevo</button><button className="primary" onClick={onNext}>Continuar<ArrowRight size={18}/></button></div></>}
-    <AnswerReveal question={q} open={showAnswer} onToggle={()=>{const next=!showAnswer;setShowAnswer(next);if(next)setRevealedAnswer(true);}}/>
+    <AnswerReveal question={q} open={showAnswer} completed={complete} onToggle={()=>{const next=!showAnswer;setShowAnswer(next);if(next)setRevealedAnswer(true);}}/>
     {showLaws&&<Laws mode={course==='precalculo'?'algebra':'logic'} onClose={()=>setShowLaws(false)}/>}</section>;
 }
