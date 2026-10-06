@@ -1,5 +1,5 @@
 export type Course = 'discreta' | 'precalculo';
-export type QuestionType = 'choice' | 'text' | 'logic' | 'table' | 'set' | 'order' | 'venn' | 'algebra' | 'synthetic' | 'guidedproof';
+export type QuestionType = 'choice' | 'text' | 'logic' | 'table' | 'set' | 'order' | 'venn' | 'algebra' | 'synthetic' | 'guidedproof' | 'examproof';
 export interface BookSource {
   course: Course; page: number; printedPage: number; section: string; exercise: string;
   crop: { x: number; y: number; width: number; height: number };
@@ -11,8 +11,9 @@ export interface Question {
   hints: string[]; tag: string; difficulty: 1 | 2 | 3;
   expression?: string; variables?: string[]; universe?: string[];
   exclusions?: string[]; coefficients?: number[]; root?: number;
-  bookSource?: BookSource; requiredForm?: 'factored';
+  bookSource?: BookSource; requiredForm?: 'factored'|'expanded';
   premises?: string[];
+  translation?:string;
   guidedSteps?: { expression: string; rule: string; hint: string }[];
 }
 export interface Lesson {
