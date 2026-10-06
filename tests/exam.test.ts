@@ -26,9 +26,11 @@ for(const course of ['discreta','precalculo'] as const){
         if(q.type==='choice')assert(q.options?.includes(String(q.answer)));
         if(q.type==='set')assert((q.answer as string[]).every(a=>q.universe?.includes(a)));
       }
-      const raw={id:seed,title:'Examen',mode:'exam',started:new Date().toISOString(),startingXP:0,index:0,ids:items.map(i=>i.question.id),examSeed:seed,examUnits:selected,examCourse:course};
+      const raw={id:seed,title:'Examen',mode:'exam',started:new Date().toISOString(),startingXP:0,index:0,ids:items.map(i=>i.question.id),examSeed:seed,examUnits:selected,examCourse:course,examVersion:2};
       assert.equal(decodeSession(raw)?.session.items.length,35);
       assert.equal(decodeSession({...raw,ids:[...raw.ids.slice(1),raw.ids[0]]}),null,'tampered order cannot resume');
+      const old=generateExam(course,selected,seed,lessons,35,1);
+      assert.deepEqual(decodeSession({...raw,examVersion:undefined,ids:old.map(i=>i.question.id)})?.session.items,old,'an earlier saved exam remains resumable');
     }
   });
 }
