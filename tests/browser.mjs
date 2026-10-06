@@ -11,7 +11,7 @@ const context=await browser.newContext({viewport:{width:390,height:844},deviceSc
 const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
 page.on('dialog',d=>d.accept());
 const url=process.env.TEST_URL||'http://127.0.0.1:5173/';
-await page.goto(url);await page.getByRole('button',{name:'Continuar mi ruta'}).waitFor();
+await page.goto(url);await page.getByRole('heading',{name:'Tu ruta de aprendizaje'}).waitFor();await page.getByRole('button',{name:'Abrir Introducción y razonamiento lógico'}).waitFor();
 fs.mkdirSync('tmp/qa',{recursive:true});
 await page.screenshot({path:'tmp/qa/mobile-home.png',fullPage:true});
 assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'mobile overflow');
