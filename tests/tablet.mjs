@@ -20,14 +20,14 @@ try {
   await nav('Ajustes').click();
   for(const dark of [false,true]) {
     await page.getByLabel('Modo oscuro').setChecked(dark);
-    for(const color of ['violet','ocean','forest','rose']) {
-      await page.getByRole('combobox',{name:'Color principal'}).selectOption(color);
+    for(const [color,label] of [['violet','Violeta'],['ocean','Azul'],['forest','Verde'],['rose','Rosa']]) {
+      await page.getByRole('group',{name:'Color principal'}).getByRole('button',{name:label}).click();
       assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('mate-u-duo.v1')).palette),color);
       await noOverflow(`${color} ${dark?'dark':'light'}`);
     }
   }
-  await page.getByRole('combobox',{name:'Color principal'}).selectOption('forest'); await page.getByLabel('Modo oscuro').uncheck();
-  await page.reload(); await nav('Ajustes').click(); assert.equal(await page.getByRole('combobox',{name:'Color principal'}).inputValue(),'forest');
+  await page.getByRole('group',{name:'Color principal'}).getByRole('button',{name:'Verde'}).click(); await page.getByLabel('Modo oscuro').uncheck();
+  await page.reload(); await nav('Ajustes').click(); assert.equal(await page.getByRole('group',{name:'Color principal'}).getByRole('button',{name:'Verde'}).getAttribute('aria-pressed'),'true');
   await page.getByLabel('Tamaño de letra').fill('1.3');
   for(const size of [{width:1280,height:800},{width:1024,height:768},{width:800,height:1280},{width:1440,height:900}]) {
     await page.setViewportSize(size);
@@ -73,7 +73,7 @@ try {
     await page.setViewportSize({width:800,height:1280}); await page.locator('.book-workspace').scrollIntoViewIfNeeded(); await noOverflow('portrait crop'); await page.screenshot({path:'tmp/qa/tablet-portrait-workspace.png'});
     await page.setViewportSize({width:1280,height:800}); await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo'); assert.equal(await page.locator('.pinned-clip').count(),0,'course clips separated');
     await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta'); await page.getByRole('heading',{name:'Leyes · ejercicio real',exact:true}).waitFor();
-    await page.getByRole('button',{name:'Borrar recorte Leyes · ejercicio real',exact:true}).tap(); await page.waitForFunction(()=>!document.querySelector('.pinned-clip'));
+    await page.getByRole('button',{name:'Borrar recorte Leyes · ejercicio real',exact:true}).tap();await page.getByRole('dialog',{name:'¿Borrar este recorte?'}).getByRole('button',{name:'Borrar recorte'}).click(); await page.waitForFunction(()=>!document.querySelector('.pinned-clip'));
   }
   assert.deepEqual(errors,[],'tablet browser exceptions');
   console.log('Tablet QA passed: 4 sizes, large fonts, 4 palettes, dark mode, touch symbols/caret, PDF rotation, touch crop, side-by-side work, persistence, course separation and delete.');
