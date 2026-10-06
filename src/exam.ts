@@ -13,6 +13,12 @@ const situations=[
   ['leo el enunciado','formulo la proposición','confundo el conector','valido el resultado'],
   ['separo los conjuntos','encuentro la intersección','repito un elemento','describo la unión'],
   ['simplifico la expresión','aplico la regla correcta','invierto un signo','llego a la solución'],
+  ['comparo dos proposiciones','encuentro una equivalencia','confundo la negación','justifico el resultado'],
+  ['interpreto el cuantificador','encuentro un testigo','ignoro el universo','pruebo la afirmación'],
+  ['calculo la intersección','identifico los elementos comunes','repito un valor','describo el conjunto'],
+  ['compruebo la implicación','reconozco la premisa','invierto el condicional','obtengo la conclusión'],
+  ['evalúo la fila','determino el valor lógico','salto una columna','completo la tabla'],
+  ['factorizo la expresión','identifico los factores','pierdo un signo','verifico el producto'],
 ];
 const raised=(n:number)=>String(n).replace(/\d/g,d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[Number(d)]);
 function random(seed:string){let x=seedNumber(seed)||1;return (min:number,max:number)=>{x^=x<<13;x^=x>>>17;x^=x<<5;return min+(x>>>0)%(max-min+1);};}
@@ -64,9 +70,9 @@ function precalc(unit:string,variant:number,id:string,pick:(a:number,b:number)=>
 export function generateExam(course:Course,selectedUnits:string[],seed:string,allLessons:Lesson[],count=35):PracticeItem[]{
   const courseLessons=allLessons.filter(l=>l.course===course),validUnits=[...new Set(selectedUnits)].filter(u=>courseLessons.some(l=>l.unit===u));
   if(!validUnits.length)throw new Error('Elegí al menos un tema para el examen.');
-  const pick=random(seed),items:PracticeItem[]=[];
+  const pick=random(seed),offset=pick(0,29),items:PracticeItem[]=[];
   for(let i=0;i<count;i++){
-    const unit=validUnits[i%validUnits.length],variant=Math.floor(i/validUnits.length),id=`exam-${seed}-${i}`;
+    const unit=validUnits[i%validUnits.length],variant=offset+Math.floor(i/validUnits.length),id=`exam-${seed}-${i}`;
     const {q,topic}=course==='discreta'?discrete(unit,variant,id,pick):precalc(unit,variant,id,pick);
     const candidates=courseLessons.filter(l=>l.unit===unit),lesson=candidates.find(l=>l.title===topic)||candidates[variant%candidates.length];
     items.push({lesson,question:{...q,tag:`Examen · ${unit}`,hints:[`Pensá en ${topic.toLowerCase()} antes de completar la respuesta.`,q.explanation]}});
