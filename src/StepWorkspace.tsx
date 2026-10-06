@@ -38,7 +38,7 @@ export function StepWorkspace({lines,onChange,mode,disabled=false}:Props){
       </button>
       {!disabled&&lines.length>1&&<button type="button" className="step-workspace-delete" aria-label={`Borrar línea ${i+1}`} onClick={()=>remove(i)}><Trash2 size={16}/></button>}
     </li>)}</ol>
-    <div className="step-workspace-editor"><SymbolInput key={`${mode}-${current}`} value={lines[current]} onChange={update} mode={mode} label={`Editar línea ${current+1}`} disabled={disabled} onNextLine={descend}/>
+    <div className="step-workspace-editor"><SymbolInput value={lines[current]} onChange={update} mode={mode} label={`Editar línea ${current+1}`} disabled={disabled} onNextLine={descend}/>
       {!disabled&&<div className="step-workspace-actions"><button type="button" className="secondary" onClick={descend}><ArrowDown size={18}/>Bajar línea</button>{mode==='algebra'&&current>0&&<button type="button" className="secondary" disabled={!lines[current-1]?.trim()||!lines[current]?.trim()} onClick={checkPrevious}><Check size={17}/>¿Son equivalentes?</button>}</div>}
       {notice&&<p className={`step-workspace-notice ${checked===current?'checked':''}`} role="status">{notice}</p>}
     </div>
