@@ -13,7 +13,7 @@ function answerLines(question:Question):string[] {
   return answer;
 }
 
-export function AnswerReveal({question,open,onToggle}:{question:Question;open:boolean;onToggle:()=>void}) {
+export function AnswerReveal({question,open,onToggle,completed=false}:{question:Question;open:boolean;onToggle:()=>void;completed?:boolean}) {
   const lines=answerLines(question);
   return <section className="answer-reveal">
     <button type="button" className="secondary answer-reveal-trigger" aria-expanded={open} onClick={onToggle}>
@@ -25,7 +25,7 @@ export function AnswerReveal({question,open,onToggle}:{question:Question;open:bo
       {question.exclusions?.length?<p className="answer-reveal-domains"><b>Restricciones:</b> {question.exclusions.join(', ')}</p>:null}
       <p>{question.explanation}</p>
       {question.guidedSteps?.length? <ol>{question.guidedSteps.map((step,index)=><li key={`${index}-${step.expression}`}><code>{step.expression}</code> — {step.rule}</li>)}</ol>:null}
-      <small>Al revelar la respuesta, el acierto se registra con ayuda y vuelve a aparecer en tus repasos.</small>
+      <small>{completed?'Ya comprobaste este ejercicio. Podés consultar la explicación cuando quieras.':'Al revelar la respuesta antes de acertar, el acierto se registra con ayuda y vuelve a aparecer en tus repasos.'}</small>
     </div>}
   </section>;
 }
