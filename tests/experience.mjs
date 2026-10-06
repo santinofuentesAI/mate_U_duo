@@ -16,11 +16,10 @@ const progress=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('mate-u-duo
 const noOverflow=async label=>assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,label);
 try {
   await page.goto('http://127.0.0.1:5176/');await button('Continuar mi ruta').waitFor();
-  const route=page.locator('details.route-disclosure');assert.equal(await route.getAttribute('open'),null,'full route stays collapsed to keep home calm');assert.equal(await route.locator('.level-card').first().isVisible(),false);
-  await route.locator('summary').click();assert.equal(await route.locator('.level-card').count(),22);
+  const route=page.locator('.learning-route');assert.equal(await route.locator('.level-card').count(),22,'lessons are the first thing visible');assert.equal(await route.locator('.level-card').first().isVisible(),true);
   await button('Guardar Proposiciones y conectores').click();await button('Guardados').click();
   assert.equal(await page.locator('.level-card').count(),1);
-  await page.reload();const reloadedRoute=page.locator('details.route-disclosure');await reloadedRoute.locator('summary').click();await button('Guardados').click();assert.equal(await reloadedRoute.locator('.level-card').count(),1);
+  await page.reload();const reloadedRoute=page.locator('.learning-route');await button('Guardados').click();assert.equal(await reloadedRoute.locator('.level-card').count(),1);
   await button('Guardados').click();await page.getByRole('textbox',{name:'Buscar un nivel'}).fill('bicondicional');
   assert.equal(await page.locator('.level-card').count(),1);await page.getByRole('textbox',{name:'Buscar un nivel'}).fill('');
   await button('Abrir Proposiciones y conectores').click();await button('Ahora me toca practicar').click();
@@ -70,7 +69,7 @@ try {
     await page.screenshot({path:`tmp/qa/explorer-${size.width}.png`,fullPage:true});
     await nav('Practicar');await page.locator('.session-builder').waitFor();await noOverflow(`practice ${size.width}`);
     await page.screenshot({path:`tmp/qa/practice-${size.width}.png`,fullPage:true});
-    await nav('Aprender');const routeOnTablet=page.locator('details.route-disclosure');await routeOnTablet.locator('summary').click();assert.equal(await routeOnTablet.locator('.level-card').count(),25);await noOverflow(`levels ${size.width}`);
+    await nav('Aprender');const routeOnTablet=page.locator('.learning-route');assert.equal(await routeOnTablet.locator('.level-card').count(),25);await noOverflow(`levels ${size.width}`);
   }
   assert.deepEqual(errors,[],'uncaught browser exceptions');
   console.log('Experience QA passed: saved/searchable levels, touch answers, modal focus, paid hint and session recovery, actual-answer journal, adaptive filters, live logic/sets/equations, responsive tablet and large type.');

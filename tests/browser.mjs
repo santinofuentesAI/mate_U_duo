@@ -15,12 +15,11 @@ await page.goto(url);await page.getByRole('button',{name:'Continuar mi ruta'}).w
 fs.mkdirSync('tmp/qa',{recursive:true});
 await page.screenshot({path:'tmp/qa/mobile-home.png',fullPage:true});
 assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'mobile overflow');
-await page.locator('.route-disclosure > summary').click();
 await page.getByRole('button',{name:'Abrir Proposiciones y conectores',exact:true}).click();
 assert.equal(await page.locator('.katex-error').count(),0,'formula rendering');
 await page.getByRole('button',{name:'Ahora me toca practicar'}).click();
 await page.getByRole('button',{name:/2 \+ 2 = 4/}).click();await page.getByRole('button',{name:'Comprobar',exact:true}).click();
-await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await page.getByRole('button',{name:'Continuar',exact:true}).click();
+await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await page.getByRole('button',{name:'Ver respuesta',exact:true}).click();const revealed=page.getByRole('region',{name:'Respuesta explicada'});await revealed.waitFor();assert.ok((await revealed.innerText()).length>20,'answer and explanation are visible');await page.getByRole('button',{name:'Ocultar respuesta',exact:true}).click();await page.getByRole('button',{name:'Continuar',exact:true}).click();
 await page.getByRole('button',{name:'P',exact:true}).click();await page.getByRole('button',{name:'Conjunción',exact:true}).click();await page.getByRole('button',{name:'Negación',exact:true}).click();await page.getByRole('button',{name:'Q',exact:true}).click();
 assert.equal(await page.getByRole('textbox',{name:'Tu respuesta',exact:true}).inputValue(),'P∧¬Q');
 await page.screenshot({path:'tmp/qa/mobile-keyboard.png',fullPage:true});
