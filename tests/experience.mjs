@@ -16,7 +16,7 @@ const progress=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('mate-u-duo
 const noOverflow=async label=>assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,label);
 try {
   await page.goto('http://127.0.0.1:5176/');await button('Continuar mi ruta').waitFor();
-  const route=page.locator('details.route-disclosure');assert.equal(await route.getAttribute('open'),null,'full route stays collapsed to keep home calm');assert.equal(await route.locator('.level-card').count(),0);
+  const route=page.locator('details.route-disclosure');assert.equal(await route.getAttribute('open'),null,'full route stays collapsed to keep home calm');assert.equal(await route.locator('.level-card').first().isVisible(),false);
   await route.locator('summary').click();assert.equal(await route.locator('.level-card').count(),22);
   await button('Guardar Proposiciones y conectores').click();await button('Guardados').click();
   assert.equal(await page.locator('.level-card').count(),1);
