@@ -8,9 +8,11 @@ import { Laws } from './Workbench';
 import { AnswerFeedback } from './AnswerFeedback';
 import { GuidedProofExercise } from './GuidedProofExercise';
 import { AnswerReveal } from './AnswerReveal';
+import { ExamReasoningExercise } from './ExamReasoningExercise';
 import katex from 'katex';
 export function Exercise({question:q,course,coins,onSpend,onAttempt,onNext,draftKey,rewardAvailable=false}:{question:Question;course:Course;coins:number;onSpend:(n:number)=>void;onAttempt:(correct:boolean,assisted:boolean,details:AnswerDetails)=>void;onNext:()=>void;draftKey?:string;rewardAvailable?:boolean}) {
   if(q.type==='guidedproof')return <GuidedProofExercise question={q} course={course} coins={coins} onSpend={onSpend} onAttempt={onAttempt} onNext={onNext} rewardAvailable={rewardAvailable}/>;
+  if(q.type==='examproof')return <ExamReasoningExercise question={q} onAttempt={onAttempt} onNext={onNext} draftKey={draftKey} rewardAvailable={rewardAvailable}/>;
   const [restored]=useState(()=>loadAnswerDraft(q,draftKey));
   const [value,setValue]=useState<string|string[]>(restored.value);
   const [exclusions,setExclusions]=useState(restored.exclusions);const [hint,setHint]=useState(restored.hint);const [feedback,setFeedback]=useState<{correct:boolean;error?:string}|null>(restored.feedback);const [rules,setRules]=useState(false);const [retried,setRetried]=useState(restored.retried);const [revealed,setRevealed]=useState(restored.revealed);const [showAnswer,setShowAnswer]=useState(restored.revealed);const [draftError,setDraftError]=useState('');
