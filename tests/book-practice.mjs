@@ -37,7 +37,7 @@ try{
   await button(/Verdadero$/).click();await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await finish();
   await openExercise('precalculo','1e',42);await button('Teclado del teléfono').click();await page.getByRole('textbox',{name:'Tu respuesta',exact:true}).fill('8-y^3');await button('Comprobar').click();await page.getByText(/falta escribirla como producto/).waitFor();
   await page.getByRole('textbox',{name:'Tu respuesta',exact:true}).fill('(2-y)(y^2+2y+4)');
-  await button('Salir de la lección').click();await page.reload();await button('Retomar sesión').click();assert.equal(await page.getByRole('textbox',{name:'Tu respuesta',exact:true}).getAttribute('data-value'),'(2-y)(y^2+2y+4)');
+  await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();await page.reload();await button('Retomar sesión').click();assert.equal(await page.getByRole('textbox',{name:'Tu respuesta',exact:true}).getAttribute('data-value'),'(2-y)(y^2+2y+4)');
   await button('Ver leyes').click();await page.getByRole('dialog',{name:'Reglas de Precálculo'}).waitFor();await button('Volver al ejercicio').click();
   await page.setViewportSize({width:1280,height:800});await noOverflow('book and answer side by side');assert.equal(await page.locator('.book-exercise-layout').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length),2);
   await page.getByRole('complementary',{name:'Ejercicio original del libro'}).waitFor();
