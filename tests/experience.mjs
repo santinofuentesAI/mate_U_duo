@@ -34,7 +34,7 @@ try {
   await page.keyboard.press('Escape');assert.equal(await page.getByRole('dialog').count(),0);
   assert.equal(await button('Ver leyes').evaluate(el=>el===document.activeElement),true);
   await button('Ayuda guiada · 5').click();const spent=(await progress()).spentCoins;
-  await button('Salir de la lección').click();await button('Retomar sesión').waitFor();await page.reload();await button('Retomar sesión').click();
+  await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();await button('Retomar sesión').waitFor();await page.reload();await button('Retomar sesión').click();
   assert.equal(await answer.inputValue(),'P∧¬Q');assert.equal(await button('Ayuda guiada · 5').isDisabled(),true);
   assert.equal((await progress()).spentCoins,spent,'resuming does not charge the hint twice');
   await page.getByText('Veámoslo paso a paso',{exact:true}).waitFor();await page.screenshot({path:'tmp/qa/resumed-answer.png',fullPage:true});
@@ -50,7 +50,7 @@ try {
   const start=page.getByRole('button',{name:/Empezar \d+ ejercicios/});assert.equal(await start.isEnabled(),true);
   const size=Number((await start.textContent()).match(/\d+/)[0]);assert(size>0&&size<=8);
   await start.click();const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('mate-u-duo.session.v1')));assert.equal(saved.ids.length,size);
-  await button('Salir de la lección').click();await nav('Cuaderno');await button('Explorar').click();
+  await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();await nav('Cuaderno');await button('Explorar').click();
   await page.locator('.logic-output b').waitFor();assert.equal(await page.locator('.logic-output b').textContent(),'F');
   await button('Cambiar Q').tap();assert.equal(await page.locator('.logic-output b').textContent(),'V');assert.equal(await page.locator('.current-truth-row').count(),1);
   await button('Explorar De Morgan').click();assert.equal(await page.locator('.logic-output b').textContent(),'F');
