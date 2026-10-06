@@ -1,0 +1,12 @@
+import { ArrowRight, Check, GraduationCap, RotateCcw } from 'lucide-react';
+import type { Progress } from './types';
+import type { Session } from './sessions';
+import { MathExpression } from './MathExpression';
+
+export function ExamResults({session,progress,onLeave}:{session:Session;progress:Progress;onLeave:()=>void}){
+  const attempts=progress.attempts.filter(a=>Date.parse(a.date)>=Date.parse(session.started)&&session.items.some(i=>i.question.id===a.questionId));
+  const first=new Map<string,typeof attempts[number]>();for(const a of attempts)if(!first.has(a.questionId))first.set(a.questionId,a);
+  const clean=session.items.filter(i=>{const a=first.get(i.question.id);return a?.correct&&!a.assisted;}).length;
+  const helped=session.items.length-clean;
+  return <section className="exam-results"><div className="exam-results-hero"><GraduationCap size={46}/><span className="eyebrow">EXAMEN COMPLETADO</span><h1>Ya sabés qué dominás y qué repasar.</h1><p>Resolviste 35 variantes nuevas. Revisá las explicaciones por tema y volvé a practicar los pasos que te costaron.</p><div className="exam-result-numbers"><span><b>{clean}/35</b> sin ayuda al primer intento</span><span><b>{helped}</b> con ayuda o reintentos</span><span><b>+{progress.xp-session.startingXP}</b> XP</span></div></div><h2>Revisá cada solución</h2><div className="exam-review-list">{session.items.map((item,i)=>{const q=item.question,a=first.get(q.id);return <details key={q.id}><summary><span>{i+1}</span><div><b>{item.lesson.title}</b><small>{a?.correct&&!a.assisted?'Resuelto sin ayuda':'Para repasar'}</small></div>{a?.correct&&!a.assisted?<Check size={18}/>:<RotateCcw size={18}/>}</summary><div className="exam-review-content"><p>{q.prompt}</p><b>Respuesta comprobada</b>{q.translation&&<p><code>Traducción: {q.translation}</code></p>}<code>{Array.isArray(q.answer)?q.answer.join(' · '):q.type==='algebra'?<MathExpression value={q.answer}/>:q.answer}</code>{q.exclusions?.length?<p>Restricciones: {q.exclusions.join(', ')}</p>:null}{q.guidedSteps&&<ol>{q.guidedSteps.map((step,j)=><li key={j}><code>{step.expression}</code> · {step.rule}</li>)}</ol>}<p>{q.explanation}</p><small>Basado en el tema {item.lesson.title} · {item.lesson.source}, páginas {item.lesson.pages}. Variante original.</small></div></details>;})}</div><button className="primary" onClick={onLeave}>Volver a practicar<ArrowRight size={18}/></button></section>;
+}
