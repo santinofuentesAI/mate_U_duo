@@ -16,6 +16,8 @@ for(const course of ['discreta','precalculo'] as const){
       assert.equal(items.length,35);assert.equal(new Set(items.map(i=>i.question.id)).size,35);
       assert.equal(new Set(items.map(i=>i.question.prompt)).size,35,'no duplicate problem statements in the exam');
       assert.deepEqual(generateExam(course,selected,seed,lessons),items,'resume regenerates the same questions and answers');
+      const another=generateExam(course,selected,'c9bd1392-6af5-41d0-9ac3-47cbf582103e',lessons);
+      assert.notDeepEqual(another.map(i=>i.question.prompt),items.map(i=>i.question.prompt),'another attempt changes the problems');
       assert(items.every(i=>selected.includes(i.lesson.unit)),'no out-of-syllabus lesson');
       assert(items.every(i=>!existing.has(i.question.prompt)),'no existing book or lesson question copied as a new variant');
       for(const {question:q} of items){
