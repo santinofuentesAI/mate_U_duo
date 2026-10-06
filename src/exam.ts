@@ -25,8 +25,8 @@ function random(seed:string){let x=seedNumber(seed)||1;return (min:number,max:nu
 function question(id:string,type:Question['type'],prompt:string,answer:string|string[],explanation:string,extras:Partial<Question>={}):Question {
   return {id,type,prompt,answer,explanation,hints:['Separá los datos y escribí la primera transformación.','Usá la ley correspondiente y comprobá cada paso.'],tag:'Examen · variante original',difficulty:3,...extras};
 }
-function discrete(unit:string,variant:number,id:string,pick:(a:number,b:number)=>number):{q:Question;topic:string} {
-  const [p,q,r,t]=situations[variant%situations.length];
+function discrete(unit:string,variant:number,id:string,pick:(a:number,b:number)=>number,version:1|2):{q:Question;topic:string} {
+  const [p,q,r,t]=situations[variant%(version===1?7:situations.length)];
   const kind=variant%5;
   if(unit.startsWith('S1')){
     if(kind===0){const formula='(P∧¬R)∧(P→Q)∧(Q→T)';return {topic:'Reglas de inferencia',q:question(id,'examproof',`Leé el caso: “${p.charAt(0).toUpperCase()+p.slice(1)} y no ${r}; si ${p}, entonces ${q}; si ${q}, entonces ${t}”. Tomá P=“${p}”, Q=“${q}”, R=“${r}” y T=“${t}”. Traducí las tres premisas y luego demostrá T.`, 'T', 'Primero obtenés P por simplificación; dos aplicaciones de modus ponens llevan de P a Q y de Q a T.',{translation:formula,premises:['P∧¬R','P→Q','Q→T'],guidedSteps:[{expression:'P',rule:'Simplificación',hint:'La primera premisa contiene P como primer término.'},{expression:'Q',rule:'Modus ponens',hint:'Combiná P con P→Q.'},{expression:'T',rule:'Modus ponens',hint:'Combiná Q con Q→T.'}],options:['Simplificación','Modus ponens','Silogismo disyuntivo','De Morgan','Doble negación']})};}
@@ -37,7 +37,7 @@ function discrete(unit:string,variant:number,id:string,pick:(a:number,b:number)=
   }
   if(unit.startsWith('S2')){
     if(kind<2){const formulas=kind===0?['(P∧Q)∨R','(P∧R)∨Q','P∧(Q∨R)','(P∨Q)∧R','(P∨R)∧Q','(P∧Q)∨¬R','¬P∨(Q∧R)']:['(P∨Q)∧¬R','(P∨R)∧¬Q','(Q∨R)∧¬P','(P∧¬Q)∨R','P∨(Q∧¬R)','¬P∧(Q∨R)','(P∨¬Q)∧R'];const f=formulas[Math.floor(variant/5)%formulas.length];return {topic:'Circuitos lógicos',q:question(id,'table',`Una salida del circuito se modela con ${f}. Completá su tabla de verdad para las ocho entradas.`,parseRows(f),'En serie se usa ∧; en paralelo se usa ∨. Evaluá la negación antes de combinar entradas.',{expression:f,variables:['P','Q','R']})};}
-    const result=discrete('S1',variant*5+(kind-2),id,pick);result.q.prompt=`Inferencia del bloque de circuitos: ${result.q.prompt}`;return result;
+    const result=discrete('S1',variant*5+(kind-2),id,pick,version);result.q.prompt=`Inferencia del bloque de circuitos: ${result.q.prompt}`;return result;
   }
   if(unit.startsWith('S3')){
     const n=5+variant,even=Array.from({length:n},(_,i)=>i+1).filter(x=>x%2===0);
@@ -67,13 +67,13 @@ function precalc(unit:string,variant:number,id:string,pick:(a:number,b:number)=>
   }
   const a=2+variant%7,b=2+Math.floor(variant/7)%7,middle=b-a,term=middle>=0?`+${middle}x`:`−${-middle}x`;return {topic:'Ecuaciones cuadráticas',q:question(id,'set',`Seleccioná todas las soluciones reales de x²${term}−${a*b}=0.`,[String(a),String(-b)],`Factorizá (x−${a})(x+${b})=0: las dos raíces son ${a} y −${b}.`,{universe:[String(-b-1),String(-b),'0',String(a),String(a+1)]})};
 }
-export function generateExam(course:Course,selectedUnits:string[],seed:string,allLessons:Lesson[],count=35):PracticeItem[]{
+export function generateExam(course:Course,selectedUnits:string[],seed:string,allLessons:Lesson[],count=35,version:1|2=2):PracticeItem[]{
   const courseLessons=allLessons.filter(l=>l.course===course),validUnits=[...new Set(selectedUnits)].filter(u=>courseLessons.some(l=>l.unit===u));
   if(!validUnits.length)throw new Error('Elegí al menos un tema para el examen.');
-  const pick=random(seed),offset=pick(0,29),items:PracticeItem[]=[];
+  const pick=random(seed),offset=version===1?0:pick(0,29),items:PracticeItem[]=[];
   for(let i=0;i<count;i++){
     const unit=validUnits[i%validUnits.length],variant=offset+Math.floor(i/validUnits.length),id=`exam-${seed}-${i}`;
-    const {q,topic}=course==='discreta'?discrete(unit,variant,id,pick):precalc(unit,variant,id,pick);
+    const {q,topic}=course==='discreta'?discrete(unit,variant,id,pick,version):precalc(unit,variant,id,pick);
     const candidates=courseLessons.filter(l=>l.unit===unit),lesson=candidates.find(l=>l.title===topic)||candidates[variant%candidates.length];
     items.push({lesson,question:{...q,tag:`Examen · ${unit}`,hints:[`Pensá en ${topic.toLowerCase()} antes de completar la respuesta.`,q.explanation]}});
   }
