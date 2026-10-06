@@ -14,6 +14,7 @@ const situations=[
   ['separo los conjuntos','encuentro la intersección','repito un elemento','describo la unión'],
   ['simplifico la expresión','aplico la regla correcta','invierto un signo','llego a la solución'],
 ];
+const raised=(n:number)=>String(n).replace(/\d/g,d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[Number(d)]);
 function random(seed:string){let x=seedNumber(seed)||1;return (min:number,max:number)=>{x^=x<<13;x^=x>>>17;x^=x<<5;return min+(x>>>0)%(max-min+1);};}
 function question(id:string,type:Question['type'],prompt:string,answer:string|string[],explanation:string,extras:Partial<Question>={}):Question {
   return {id,type,prompt,answer,explanation,hints:['Separá los datos y escribí la primera transformación.','Usá la ley correspondiente y comprobá cada paso.'],tag:'Examen · variante original',difficulty:3,...extras};
@@ -43,7 +44,7 @@ function parseRows(expression:string):string[]{const variables=['P','Q','R'];ret
 function precalc(unit:string,variant:number,id:string,pick:(a:number,b:number)=>number):{q:Question;topic:string}{
   const kind=variant%5;
   if(unit.startsWith('B1')){
-    if(kind<3){const seq=Math.floor(variant/5)*3+kind,a=3+seq%3,b=2+Math.floor(seq/3)%3,c=1+Math.floor(seq/9)%3,result=a+b-c;return {topic:'Leyes de potencias',q:question(id,'algebra',`Simplificá x^${a} · x^${b} / x^${c}, con x≠0. Escribí la respuesta con exponente positivo.`,`x^${result}`,`Sumá ${a}+${b} y restá ${c}: x^${result}. Se conserva x≠0 en la expresión original.`)};}
+    if(kind<3){const seq=Math.floor(variant/5)*3+kind,a=3+seq%3,b=2+Math.floor(seq/3)%3,c=1+Math.floor(seq/9)%3,result=a+b-c;return {topic:'Leyes de potencias',q:question(id,'algebra',`Simplificá x${raised(a)} · x${raised(b)} / x${raised(c)}, con x≠0. Escribí la respuesta con exponente positivo.`,`x^${result}`,`Sumá ${a}+${b} y restá ${c}: x${raised(result)}. Se conserva x≠0 en la expresión original.`)};}
     const seq=Math.floor(variant/5)*2+kind-3,a=2+seq%6,b=3+Math.floor(seq/6)%5;return {topic:'Fracciones numéricas',q:question(id,'algebra',`Calculá ${a}/${b}+${b}/${a}. Escribí una sola fracción simplificada o equivalente.`,`${a*a+b*b}/${a*b}`,`El denominador común es ${a*b}; sumá ${a*a}+${b*b} sobre ese denominador.`)};
   }
   if(unit.startsWith('B2')){
