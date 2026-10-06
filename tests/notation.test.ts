@@ -4,6 +4,8 @@ import katex from 'katex';
 import { canonicalMath, mathParts, replaceMathSelection } from '../src/mathNotation';
 import { algebraRules } from '../src/algebraRules';
 import { equivalentAlgebra } from '../src/engine';
+import { initialAnswer, loadAnswerDraft } from '../src/exerciseDraft';
+import { lessons } from '../src/content';
 test('raised power notation preserves source positions, incomplete powers and grouped exponents',()=>{
   const p=mathParts('x^3+2^3');assert.equal(p.map(x=>x.text).join(''),'x3+23');
   assert.deepEqual(p.filter(x=>x.power).map(x=>[x.start,x.end,x.text]),[[1,3,'3'],[5,7,'3']]);
@@ -22,4 +24,17 @@ test('precalculus reference formulas render and do not confuse squares of sums w
   assert.equal(equivalentAlgebra('(a+b)^2','a^2+2*a*b+b^2'),true);
   assert.equal(equivalentAlgebra('(a+b)^2','a^2+b^2'),false);
   assert.equal(equivalentAlgebra('x^3-8','(x-2)*(x^2+2*x+4)'),true);
+});
+test('saved mobile working lines restore the final answer and reject corrupted drafts',()=>{
+  const question=lessons.flatMap(l=>l.questions).find(q=>q.type==='algebra')!;
+  const previous=globalThis.localStorage;
+  try{
+    const data=new Map<string,string>();
+    Object.defineProperty(globalThis,'localStorage',{configurable:true,value:{getItem:(key:string)=>data.get(key)||null}});
+    const draft={...initialAnswer(question),value:'x^6',steps:['x^5*x^2/x','x^7/x','x^6']};
+    data.set('working',JSON.stringify(draft));assert.deepEqual(loadAnswerDraft(question,'working').steps,draft.steps);
+    data.set('working',JSON.stringify({...draft,value:'x^5'}));assert.deepEqual(loadAnswerDraft(question,'working'),initialAnswer(question));
+    assert.equal(equivalentAlgebra('x^5*x^2/x','x^6'),true);
+    assert.equal(equivalentAlgebra('x^5*x^2/x','x^5'),false);
+  }finally{if(previous===undefined)delete (globalThis as {localStorage?:Storage}).localStorage;else Object.defineProperty(globalThis,'localStorage',{configurable:true,value:previous});}
 });
