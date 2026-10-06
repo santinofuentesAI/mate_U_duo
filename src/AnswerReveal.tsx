@@ -21,6 +21,7 @@ export function AnswerReveal({question,open,onToggle,completed=false}:{question:
     </button>
     {open&&<div className="answer-reveal-panel" role="region" aria-label="Respuesta explicada">
       <b>Respuesta</b>
+      {question.translation&&<p>Traducción: <code>{question.translation}</code></p>}
       {question.type==='order'?<ol>{lines.map((line,index)=><li key={`${index}-${line}`}>{line.slice(line.indexOf('. ')+2)}</li>)}</ol>:<p className="answer-reveal-value">{lines.map((line,index)=><code key={`${index}-${line}`}>{question.type==='algebra'?<MathExpression value={line}/>:line}</code>)}</p>}
       {question.exclusions?.length?<p className="answer-reveal-domains"><b>Restricciones:</b> {question.exclusions.join(', ')}</p>:null}
       <p>{question.explanation}</p>
