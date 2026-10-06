@@ -15,6 +15,7 @@ await page.goto(url);await page.getByRole('button',{name:'Continuar mi ruta'}).w
 fs.mkdirSync('tmp/qa',{recursive:true});
 await page.screenshot({path:'tmp/qa/mobile-home.png',fullPage:true});
 assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'mobile overflow');
+await page.getByRole('button',{name:/Explorar toda la ruta/}).click();
 await page.getByRole('button',{name:'Abrir Proposiciones y conectores',exact:true}).click();
 assert.equal(await page.locator('.katex-error').count(),0,'formula rendering');
 await page.getByRole('button',{name:'Ahora me toca practicar'}).click();
