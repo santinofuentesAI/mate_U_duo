@@ -7,9 +7,10 @@ import { dayKey } from './progress';
 import { TopicIcon } from './TopicIcon';
 import { MathExpression } from './MathExpression';
 import { BookPractice } from './BookPractice';
+import { BookExam } from './BookExam';
 import { ExamLobby } from './ExamLobby';
-interface Props { progress:Progress;onStart:(items:PracticeItem[],title:string,mode:string)=>void;onExam:(units:string[])=>void;onLesson:(l:Lesson)=>void;onExplore:()=>void; }
-export function PracticeHub({progress:p,onStart,onExam,onLesson,onExplore}:Props) {
+interface Props { progress:Progress;onStart:(items:PracticeItem[],title:string,mode:string)=>void;onExam:(units:string[])=>void;onLesson:(l:Lesson)=>void;onExplore:()=>void;onRead:(page:number)=>void; }
+export function PracticeHub({progress:p,onStart,onExam,onLesson,onExplore,onRead}:Props) {
   const [count,setCount]=useState(3),[unit,setUnit]=useState('all'),[difficulty,setDifficulty]=useState('all'),[view,setView]=useState<'practice'|'errors'>('practice'),[revealed,setRevealed]=useState<string[]>([]),[source,setSource]=useState('all'),[examOpen,setExamOpen]=useState(false);
   const items=bank(lessons,p.course),units=[...new Set(items.map(i=>i.lesson.unit))],last=latestAttempts(p),journal=mistakeJournal(items,p);
   const visited=new Set(p.attempts.map(a=>a.lessonId)),seenUnits=units.filter((u,i)=>i===0||lessons.some(l=>l.course===p.course&&l.unit===u&&(p.completed.includes(l.id)||visited.has(l.id))));
@@ -24,6 +25,7 @@ export function PracticeHub({progress:p,onStart,onExam,onLesson,onExplore}:Props
     <div className="hub-tabs" role="group" aria-label="Vista de práctica"><button aria-pressed={view==='practice'} className={view==='practice'?'active':''} onClick={()=>setView('practice')}><WandSparkles size={18}/>Mi práctica</button><button aria-pressed={view==='errors'} className={view==='errors'?'active':''} onClick={()=>setView('errors')}><Lightbulb size={18}/>Diario de errores<span>{journal.length}</span></button></div>
     {view==='practice'?<>
       <section className="exam-promo"><div className="exam-promo-art"><Target size={40}/><span>35</span></div><div><span className="eyebrow">NUEVO · MODO EXAMEN</span><h2>El examen llegó al aula.</h2><p>35 desafíos nuevos de los temas que ya viste. Incluye argumentos de varias líneas, traducción a símbolos y soluciones explicadas.</p><button className="primary" onClick={()=>setExamOpen(true)}>Entrar al examen<ArrowRight size={18}/></button></div></section>
+      <BookExam key={p.course} course={p.course} items={items.filter(i=>i.question.bookSource)} progress={p} onStart={onStart} onRead={onRead}/>
       <BookPractice items={items.filter(i=>i.question.bookSource)} progress={p} count={count} onStart={onStart}/>
       <section className="card session-builder"><div className="row"><div><span className="eyebrow">HECHO PARA EL BUS</span><h2>Armá tu próxima sesión.</h2></div><Clock size={28}/></div><div className="session-lengths" role="group" aria-label="Cantidad de ejercicios">{[[3,'Un ratito','3 ejercicios'],[8,'Una pausa','8 ejercicios'],[15,'Con calma','15 ejercicios']].map(([n,name,text])=><button key={n} className={count===n?'selected':''} aria-pressed={count===n} onClick={()=>setCount(Number(n))}><b>{name}</b><small>{text}</small></button>)}</div>
       <div className="builder-filters"><label>Banco<select aria-label="Banco de ejercicios" value={source} onChange={e=>setSource(e.target.value)}><option value="all">Toda la práctica</option><option value="book">Solo ejercicios del libro</option></select></label><label>Tema<select aria-label="Tema" value={unit} onChange={e=>setUnit(e.target.value)}><option value="all">Todos los temas del curso</option>{units.map(u=><option key={u}>{u}</option>)}</select></label><label>Dificultad<select aria-label="Dificultad" value={difficulty} onChange={e=>setDifficulty(e.target.value)}><option value="all">Variada</option><option value="1">Bases</option><option value="2">Conectar ideas</option><option value="3">Desafío</option></select></label></div>
