@@ -4,6 +4,7 @@ import { lessons } from '../src/content';
 import { bank } from '../src/learning';
 import { bookExamBlocks } from '../src/bookExam';
 import { bookScope } from '../src/bookScope';
+import catalog from '../src/bookProblemCatalog.json';
 
 test('Book Exam follows each source page in order and stays within the selected syllabus',()=>{
   for(const course of ['precalculo','discreta'] as const){
@@ -23,4 +24,18 @@ test('Book Exam follows each source page in order and stays within the selected 
     }
     assert.equal(covered.size,items.length);
   }
+});
+test('the original practice pages have individual free-response entries',()=>{
+  assert.equal(catalog.precalculo.length,156);
+  assert.equal(catalog.discreta.length,352);
+  for(const course of ['precalculo','discreta'] as const){
+    const ids=new Set<string>();
+    for(const problem of catalog[course]){
+      assert.ok(!ids.has(problem.id),problem.id);ids.add(problem.id);
+      assert.ok(problem.page<=bookScope[course].lastPage);
+      assert.ok(problem.text.trim().length>0);
+    }
+  }
+  assert.ok(catalog.precalculo.some(p=>p.page===63&&p.number===1&&p.part==='ñ'));
+  assert.ok(catalog.discreta.some(p=>p.page===73&&p.number===1&&p.part==='a'));
 });
