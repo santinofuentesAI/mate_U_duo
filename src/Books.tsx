@@ -12,7 +12,8 @@ GlobalWorkerOptions.workerSrc = workerUrl;
 
 export function Books({course, initialPage, onPageChange, onProblem}: {course: Course; initialPage?: number; onPageChange:(page:number)=>void; onProblem:(id:string)=>void}) {
   const scope=bookScope[course];
-  const [pdf,setPdf]=useState<PDFDocumentProxy|null>(null),[page,setPage]=useState(initialPage||bookRoutes[course][0].page);
+  const startPage=initialPage||bookRoutes[course].find(r=>r.week===(course==='discreta'?'S1':'S4'))?.page||bookRoutes[course][0].page;
+  const [pdf,setPdf]=useState<PDFDocumentProxy|null>(null),[page,setPage]=useState(startPage);
   const [fullBook,setFullBook]=useState((initialPage||0)>scope.lastPage),[status,setStatus]=useState(''),[loading,setLoading]=useState(false),[busy,setBusy]=useState(false);
   const [note,setNote]=useState(''),[width,setWidth]=useState(300),[clips,setClips]=useState<BookClip[]>([]);
   const canvas=useRef<HTMLCanvasElement>(null),viewer=useRef<HTMLDivElement>(null),documentRef=useRef<PDFDocumentProxy|null>(null),generation=useRef(0);
@@ -20,14 +21,14 @@ export function Books({course, initialPage, onPageChange, onProblem}: {course: C
   const related=bookCatalog[course].filter(problem=>problem.sourcePages.includes(page));
   useEffect(()=>onPageChange(page),[page,onPageChange]);
   useEffect(()=>{
-    const token=++generation.current;setPdf(null);setStatus('');setLoading(true);setFullBook((initialPage||0)>scope.lastPage);setPage(initialPage||bookRoutes[course][0].page);
+    const token=++generation.current;setPdf(null);setStatus('');setLoading(true);setFullBook((initialPage||0)>scope.lastPage);setPage(startPage);
     storedBook(course).then(async data=>{
       if(token!==generation.current)return;
       if(!data){setStatus('Cargá tu PDF una vez para leerlo aquí, también sin conexión.');return;}
       const exact=await matchesBook(data,course);
       const doc=await getDocument({data:new Uint8Array(data)}).promise;
       if(token!==generation.current){await doc.destroy();return;}
-      documentRef.current=doc;setPdf(doc);setPage(Math.min(initialPage||bookRoutes[course][0].page,doc.numPages,(initialPage||0)>scope.lastPage?doc.numPages:scope.lastPage));
+      documentRef.current=doc;setPdf(doc);setPage(Math.min(startPage,doc.numPages,(initialPage||0)>scope.lastPage?doc.numPages:scope.lastPage));
       if(!exact)setStatus('Edición diferente: comprobá las páginas en el PDF.');
     }).catch(()=>{if(token===generation.current)setStatus('No se pudo abrir el PDF guardado. Podés cargarlo de nuevo.');}).finally(()=>{if(token===generation.current)setLoading(false);});
     storedClips(course).then(items=>{if(token===generation.current)setClips(items);}).catch(()=>{});
@@ -60,7 +61,8 @@ export function Books({course, initialPage, onPageChange, onProblem}: {course: C
       doc=await getDocument({data:new Uint8Array(data.slice(0))}).promise;
       if(token!==generation.current){await doc.destroy();return;}
       await saveBook(course,data);void navigator.storage?.persist?.().catch(()=>false);
-      const old=documentRef.current;documentRef.current=doc;setPdf(doc);setFullBook(false);setPage(Math.min(initialPage||bookRoutes[course][0].page,doc.numPages,scope.lastPage));
+      if(token!==generation.current){await doc.destroy();return;}
+      const old=documentRef.current;documentRef.current=doc;setPdf(doc);setFullBook(false);setPage(Math.min(startPage,doc.numPages,scope.lastPage));
       if(old)setTimeout(()=>void old.destroy(),0);
       setStatus(exact?'PDF guardado en este dispositivo. Edición verificada.':'PDF guardado. Edición diferente: comprobá las páginas.');
     }catch(e){if(doc&&doc!==documentRef.current)await doc.destroy();if(token===generation.current)setStatus(e instanceof Error?e.message:'No se pudo cargar el PDF.');}

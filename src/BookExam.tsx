@@ -8,7 +8,7 @@ interface Props {course:Course;items:PracticeItem[];progress:Progress;onStart:(i
 export function BookExam({course,items,progress,onStart,onRead,initialProblem}:Props) {
   const all=bookCatalog[course];
   const initial=all.find(p=>p.id===(initialProblem||readBookPosition(course)?.id));
-  const [week,setWeek]=useState(initial?.week||'all'),[section,setSection]=useState(initial?.sectionCode||'all'),[topic,setTopic]=useState('all');
+  const [week,setWeek]=useState(initial?.week||(course==='discreta'?'S1':'S4')),[section,setSection]=useState(initial?.sectionCode||'all'),[topic,setTopic]=useState('all');
   const [selected,setSelected]=useState<string|null>(initial?.id||null),[message,setMessage]=useState('');
   const [lastPosition,setLastPosition]=useState(initial?.id||null);
   const [done,setDone]=useState<string[]>(()=>{try{const v=JSON.parse(localStorage.getItem(`mate-book-exam-done-${course}`)||'[]');return Array.isArray(v)?v.filter(id=>typeof id==='string'):[];}catch{return [];}});
