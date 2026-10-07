@@ -169,6 +169,6 @@ export const sourceNotes = [
   'Discreta S1: una equivalencia propuesta no es válida; la lección de contraejemplos muestra una fila que la refuta.',
   'Discreta S2: la convención abierto/cerrado está invertida respecto de la física habitual. Se usa 1 = conduce. Algunas demostraciones requieren revisar premisas; no se inventaron premisas faltantes.',
   'Discreta S4: las leyes de complemento deben ser A ∪ Aᶜ = Ω y A ∩ Aᶜ = ∅. Hay ejercicios con C sin definir y expresiones ambiguas que no se autocorrigen aquí.',
-  'Precálculo S4: los incisos del folio de problemas se pueden consultar ahora en el libro, páginas PDF 42–53. Aún no todos tienen corrección automática. Las respuestas de álgebra se comparan por equivalencia; los nuevos incisos de factorización exigen además una forma de producto, sin certificar cada ley que se usó.',
+  'Precálculo S4: los incisos del folio de problemas se pueden consultar ahora en el libro, práctica 3.3.5, páginas PDF 52–53. Los incisos 1g, 2f, 2l y 3k están asignados expresamente. Aún no todos tienen corrección automática. Las respuestas de álgebra se comparan por equivalencia; los nuevos incisos de factorización exigen además una forma de producto, sin certificar cada ley que se usó.',
   'Los PDF originales no se publican en este repositorio. Las páginas indicadas corresponden al orden del documento, no necesariamente a la numeración impresa.',
 ];

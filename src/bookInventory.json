@@ -1,0 +1,1603 @@
+[
+  {
+    "course": "discreta",
+    "page": 37,
+    "printedPage": 35,
+    "sectionCode": "1.1",
+    "section": "Introducción",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "1",
+      "2"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 38,
+    "printedPage": 36,
+    "sectionCode": "1.1",
+    "section": "Introducción",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 39,
+    "printedPage": 37,
+    "sectionCode": "1.1",
+    "section": "Introducción",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "7",
+      "8",
+      "9",
+      "10a",
+      "10b",
+      "10c",
+      "10d",
+      "10e",
+      "10f",
+      "11"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 40,
+    "printedPage": 38,
+    "sectionCode": "1.1",
+    "section": "Introducción",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18"
+    ],
+    "referencedBy": [
+      "1.1:19",
+      "1.1:20",
+      "1.4:7"
+    ],
+    "continuesOnNextPage": [
+      "18"
+    ],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 41,
+    "printedPage": 39,
+    "sectionCode": "1.1",
+    "section": "Introducción",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "19",
+      "20",
+      "21",
+      "22",
+      "23"
+    ],
+    "referencedBy": [
+      "1.1:18"
+    ],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [
+      "18"
+    ],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 42,
+    "printedPage": 40,
+    "sectionCode": "1.1",
+    "section": "Introducción",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "24",
+      "25",
+      "26",
+      "27",
+      "28"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [
+      "28"
+    ],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 43,
+    "printedPage": 41,
+    "sectionCode": "1.1",
+    "section": "Introducción",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "29",
+      "30",
+      "31"
+    ],
+    "referencedBy": [
+      "1.1:28"
+    ],
+    "continuesOnNextPage": [
+      "31"
+    ],
+    "continuesFromPreviousPage": [
+      "28"
+    ],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 44,
+    "printedPage": 42,
+    "sectionCode": "1.1",
+    "section": "Introducción",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "32"
+    ],
+    "referencedBy": [
+      "1.1:31"
+    ],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [
+      "31"
+    ],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 45,
+    "printedPage": 43,
+    "sectionCode": "1.1",
+    "section": "Introducción",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "33",
+      "34a",
+      "34b",
+      "34c",
+      "34d",
+      "34e"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 55,
+    "printedPage": 53,
+    "sectionCode": "1.2",
+    "section": "Conectivas",
+    "week": "S1",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S1"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 56,
+    "printedPage": 54,
+    "sectionCode": "1.2",
+    "section": "Conectivas",
+    "week": "S1",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "2a",
+      "2b",
+      "2c",
+      "2d",
+      "2e",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8a",
+      "8b",
+      "9"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S1"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 57,
+    "printedPage": 55,
+    "sectionCode": "1.2",
+    "section": "Conectivas",
+    "week": "S1",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "10a",
+      "10b",
+      "10c",
+      "10d",
+      "10e",
+      "10f",
+      "11a",
+      "11b",
+      "11c",
+      "11d",
+      "11e"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S1"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 58,
+    "printedPage": 56,
+    "sectionCode": "1.2",
+    "section": "Conectivas",
+    "week": "S1",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "12a",
+      "12b",
+      "12c",
+      "12d",
+      "13",
+      "14",
+      "15"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S1"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 63,
+    "printedPage": 61,
+    "sectionCode": "1.3",
+    "section": "Leyes de lógica",
+    "week": "S1",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S1"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 73,
+    "printedPage": 71,
+    "sectionCode": "1.4",
+    "section": "Inferencias",
+    "week": "S2",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "1d",
+      "1e",
+      "1f",
+      "1g",
+      "1h",
+      "1i",
+      "1j",
+      "1k",
+      "1l",
+      "1m"
+    ],
+    "referencedBy": [
+      "1.4:1n",
+      "1.4:1o",
+      "1.4:1p",
+      "1.4:1q"
+    ],
+    "continuesOnNextPage": [
+      "1"
+    ],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S2"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 74,
+    "printedPage": 72,
+    "sectionCode": "1.4",
+    "section": "Inferencias",
+    "week": "S2",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1n",
+      "1o",
+      "1p",
+      "1q",
+      "2a",
+      "2b",
+      "3a",
+      "3b",
+      "3c"
+    ],
+    "referencedBy": [
+      "1.4:3d",
+      "1.4:3e",
+      "1.4:3f",
+      "1.4:3g",
+      "1.4:3h",
+      "1.4:3i",
+      "1.4:3j",
+      "1.4:3k"
+    ],
+    "continuesOnNextPage": [
+      "3"
+    ],
+    "continuesFromPreviousPage": [
+      "1"
+    ],
+    "weeks": [
+      "S2"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 75,
+    "printedPage": 73,
+    "sectionCode": "1.4",
+    "section": "Inferencias",
+    "week": "S2",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "3d",
+      "3e",
+      "3f",
+      "3g",
+      "3h",
+      "3i"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [
+      "3i"
+    ],
+    "continuesFromPreviousPage": [
+      "3"
+    ],
+    "weeks": [
+      "S2"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 76,
+    "printedPage": 74,
+    "sectionCode": "1.4",
+    "section": "Inferencias",
+    "week": "S2",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "3j",
+      "3k",
+      "4",
+      "5",
+      "6"
+    ],
+    "referencedBy": [
+      "1.4:3i"
+    ],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [
+      "3i"
+    ],
+    "weeks": [
+      "S2"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 77,
+    "printedPage": 75,
+    "sectionCode": "1.4",
+    "section": "Inferencias",
+    "week": "S2",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [
+      "12"
+    ],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S2"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 78,
+    "printedPage": 76,
+    "sectionCode": "1.4",
+    "section": "Inferencias",
+    "week": "S2",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [],
+    "referencedBy": [
+      "1.4:12"
+    ],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [
+      "12"
+    ],
+    "weeks": [
+      "S2"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 82,
+    "printedPage": 80,
+    "sectionCode": "1.5",
+    "section": "Formas normales",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "1d",
+      "1e",
+      "2a",
+      "2b",
+      "2c",
+      "2d"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 93,
+    "printedPage": 91,
+    "sectionCode": "1.6",
+    "section": "Cuantificadores",
+    "week": "S3",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "1d",
+      "1e",
+      "1f"
+    ],
+    "referencedBy": [
+      "1.6:1g",
+      "1.6:1h",
+      "1.6:1i",
+      "1.6:1j",
+      "1.6:1k"
+    ],
+    "continuesOnNextPage": [
+      "1"
+    ],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S3"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 94,
+    "printedPage": 92,
+    "sectionCode": "1.6",
+    "section": "Cuantificadores",
+    "week": "S3",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1g",
+      "1h",
+      "1i",
+      "1j",
+      "1k",
+      "2a",
+      "2b.i",
+      "2b.ii",
+      "2b.iii",
+      "2b.iv",
+      "3a",
+      "3b",
+      "3c"
+    ],
+    "referencedBy": [
+      "1.6:4a",
+      "1.6:4b",
+      "1.6:4c"
+    ],
+    "continuesOnNextPage": [
+      "4"
+    ],
+    "continuesFromPreviousPage": [
+      "1"
+    ],
+    "weeks": [
+      "S3"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 95,
+    "printedPage": 93,
+    "sectionCode": "1.6",
+    "section": "Cuantificadores",
+    "week": "S3",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "4a",
+      "4b",
+      "4c",
+      "5a",
+      "5b",
+      "5c",
+      "5d",
+      "5e",
+      "6a",
+      "6b",
+      "6c",
+      "6d",
+      "6e",
+      "6f",
+      "6g"
+    ],
+    "referencedBy": [
+      "1.6:7a",
+      "1.6:7b",
+      "1.6:7c"
+    ],
+    "continuesOnNextPage": [
+      "7"
+    ],
+    "continuesFromPreviousPage": [
+      "4"
+    ],
+    "weeks": [
+      "S3"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 96,
+    "printedPage": 94,
+    "sectionCode": "1.6",
+    "section": "Cuantificadores",
+    "week": "S3",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "7a",
+      "7b",
+      "7c",
+      "8",
+      "9a",
+      "9b",
+      "10a",
+      "10b",
+      "10c",
+      "10d",
+      "10e",
+      "11",
+      "12"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [
+      "7"
+    ],
+    "weeks": [
+      "S3"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 97,
+    "printedPage": 95,
+    "sectionCode": "1.6",
+    "section": "Cuantificadores",
+    "week": "S3",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S3"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 100,
+    "printedPage": 98,
+    "sectionCode": "1.7",
+    "section": "Inferencias cuantificadas",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "1d",
+      "2a",
+      "2b",
+      "2c"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 110,
+    "printedPage": 108,
+    "sectionCode": "1.8",
+    "section": "Demostraciones",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 123,
+    "printedPage": 121,
+    "sectionCode": "2.1",
+    "section": "Conjuntos",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "2",
+      "3"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S4"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 124,
+    "printedPage": 122,
+    "sectionCode": "2.1",
+    "section": "Conjuntos",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "4a",
+      "4b",
+      "4c",
+      "5a",
+      "5b",
+      "5c",
+      "6a",
+      "6b",
+      "6c",
+      "7a",
+      "7b",
+      "8",
+      "9",
+      "10a"
+    ],
+    "referencedBy": [
+      "2.1:10b",
+      "2.1:10c"
+    ],
+    "continuesOnNextPage": [
+      "10"
+    ],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S4"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 125,
+    "printedPage": 123,
+    "sectionCode": "2.1",
+    "section": "Conjuntos",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "10b",
+      "10c",
+      "11a",
+      "11b",
+      "12",
+      "13a",
+      "13b",
+      "13c",
+      "14",
+      "15",
+      "16a"
+    ],
+    "referencedBy": [
+      "2.1:16b",
+      "2.1:16c.i",
+      "2.1:16c.ii"
+    ],
+    "continuesOnNextPage": [
+      "16"
+    ],
+    "continuesFromPreviousPage": [
+      "10"
+    ],
+    "weeks": [
+      "S4"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 126,
+    "printedPage": 124,
+    "sectionCode": "2.1",
+    "section": "Conjuntos",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "16b",
+      "16c.i",
+      "16c.ii",
+      "17a",
+      "17b",
+      "17c",
+      "17d",
+      "18a",
+      "18b",
+      "18c",
+      "18d",
+      "18e",
+      "18f",
+      "19a",
+      "19b",
+      "19c",
+      "19d"
+    ],
+    "referencedBy": [
+      "2.1:19e",
+      "2.1:19f",
+      "2.1:19g"
+    ],
+    "continuesOnNextPage": [
+      "19"
+    ],
+    "continuesFromPreviousPage": [
+      "16"
+    ],
+    "weeks": [
+      "S4"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 127,
+    "printedPage": 125,
+    "sectionCode": "2.1",
+    "section": "Conjuntos",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "19e",
+      "19f",
+      "19g",
+      "20a",
+      "20b",
+      "20c",
+      "21a",
+      "21b",
+      "22a",
+      "22b",
+      "22c",
+      "23a"
+    ],
+    "referencedBy": [
+      "2.1:23b"
+    ],
+    "continuesOnNextPage": [
+      "23"
+    ],
+    "continuesFromPreviousPage": [
+      "19"
+    ],
+    "weeks": [
+      "S4",
+      "S3"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 128,
+    "printedPage": 126,
+    "sectionCode": "2.1",
+    "section": "Conjuntos",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "23b"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [
+      "23"
+    ],
+    "weeks": [
+      "S4"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 133,
+    "printedPage": 131,
+    "sectionCode": "2.2",
+    "section": "Conjuntos numéricos",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "1d",
+      "1e",
+      "1f",
+      "1g",
+      "1h",
+      "1i",
+      "2a"
+    ],
+    "referencedBy": [
+      "2.2:2b",
+      "2.2:2c",
+      "2.2:2d",
+      "2.2:2e",
+      "2.2:2f",
+      "2.2:2g"
+    ],
+    "continuesOnNextPage": [
+      "2"
+    ],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 134,
+    "printedPage": 132,
+    "sectionCode": "2.2",
+    "section": "Conjuntos numéricos",
+    "week": "Apoyo",
+    "assignment": "support",
+    "inventoryReviewed": true,
+    "labels": [
+      "2b",
+      "2c",
+      "2d",
+      "2e",
+      "2f",
+      "2g",
+      "3",
+      "4a",
+      "4b"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [
+      "2"
+    ],
+    "weeks": [
+      "Apoyo"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 137,
+    "printedPage": 135,
+    "sectionCode": "2.3",
+    "section": "Venn",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1",
+      "2a",
+      "2b",
+      "2c",
+      "3",
+      "4"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S4"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 138,
+    "printedPage": 136,
+    "sectionCode": "2.3",
+    "section": "Venn",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S4"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 142,
+    "printedPage": 140,
+    "sectionCode": "2.4",
+    "section": "Leyes de conjuntos",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S4"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 148,
+    "printedPage": 146,
+    "sectionCode": "2.5",
+    "section": "Cardinalidad",
+    "week": "Por confirmar",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Por confirmar"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 149,
+    "printedPage": 147,
+    "sectionCode": "2.5",
+    "section": "Cardinalidad",
+    "week": "Por confirmar",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "2",
+      "3a",
+      "3b",
+      "4a",
+      "4b",
+      "4c",
+      "4d",
+      "4e"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Por confirmar"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 150,
+    "printedPage": 148,
+    "sectionCode": "2.5",
+    "section": "Cardinalidad",
+    "week": "Por confirmar",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "5a",
+      "5b",
+      "6a",
+      "6b",
+      "6c",
+      "7a",
+      "7b",
+      "7c",
+      "7d"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Por confirmar"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 151,
+    "printedPage": 149,
+    "sectionCode": "2.5",
+    "section": "Cardinalidad",
+    "week": "Por confirmar",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "8a",
+      "8b",
+      "9a",
+      "9b",
+      "9c",
+      "9d",
+      "10a",
+      "10b",
+      "10c",
+      "11a",
+      "11b",
+      "12",
+      "13a",
+      "13b"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Por confirmar"
+    ]
+  },
+  {
+    "course": "discreta",
+    "page": 152,
+    "printedPage": 150,
+    "sectionCode": "2.5",
+    "section": "Cardinalidad",
+    "week": "Por confirmar",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "14a",
+      "14b",
+      "15",
+      "16",
+      "17a",
+      "17b",
+      "17c",
+      "17d",
+      "17e",
+      "17f",
+      "18",
+      "19"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "Por confirmar"
+    ]
+  },
+  {
+    "course": "precalculo",
+    "page": 18,
+    "printedPage": 18,
+    "sectionCode": "1.4",
+    "section": "Números reales",
+    "week": "B1",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "1d",
+      "1e",
+      "1f",
+      "2",
+      "3a",
+      "3b",
+      "3c",
+      "3d",
+      "3e",
+      "3f",
+      "3g"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "B1"
+    ]
+  },
+  {
+    "course": "precalculo",
+    "page": 19,
+    "printedPage": 19,
+    "sectionCode": "1.4",
+    "section": "Números reales",
+    "week": "B1",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "4a",
+      "4b",
+      "4c",
+      "4d",
+      "5a",
+      "5b",
+      "5c",
+      "5d",
+      "6a",
+      "6b",
+      "6c",
+      "6d",
+      "6e",
+      "6f",
+      "6g",
+      "6h",
+      "6i",
+      "6j",
+      "6k",
+      "6l",
+      "6m",
+      "6n",
+      "6ñ",
+      "6o",
+      "6p"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "B1"
+    ]
+  },
+  {
+    "course": "precalculo",
+    "page": 33,
+    "printedPage": 33,
+    "sectionCode": "2.5",
+    "section": "Expresiones y polinomios",
+    "week": "B2",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "1d",
+      "1e",
+      "1f",
+      "2a",
+      "2b",
+      "2c",
+      "2d",
+      "2e",
+      "2f",
+      "2g",
+      "2h",
+      "3a",
+      "3b",
+      "3c",
+      "3d",
+      "4a",
+      "4b",
+      "4c",
+      "4d",
+      "4e",
+      "4f",
+      "5a",
+      "5b",
+      "5c",
+      "5d",
+      "6",
+      "7",
+      "8"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "B2"
+    ]
+  },
+  {
+    "course": "precalculo",
+    "page": 42,
+    "printedPage": 42,
+    "sectionCode": "3.2.5",
+    "section": "Factorización",
+    "week": "B3",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "1d",
+      "1e",
+      "1f",
+      "1g",
+      "1h",
+      "1i",
+      "1j",
+      "1k",
+      "1l",
+      "1m",
+      "1n",
+      "1ñ",
+      "1o",
+      "1p",
+      "1q",
+      "1r",
+      "1s",
+      "2a",
+      "2b",
+      "2c",
+      "2d"
+    ],
+    "referencedBy": [
+      "3.2.5:2e",
+      "3.2.5:2f",
+      "3.2.5:2g",
+      "3.2.5:2h",
+      "3.2.5:2i"
+    ],
+    "continuesOnNextPage": [
+      "2"
+    ],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "B3"
+    ]
+  },
+  {
+    "course": "precalculo",
+    "page": 43,
+    "printedPage": 43,
+    "sectionCode": "3.2.5",
+    "section": "Factorización",
+    "week": "B3",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "2e",
+      "2f",
+      "2g",
+      "2h",
+      "2i",
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [
+      "2"
+    ],
+    "weeks": [
+      "B3"
+    ]
+  },
+  {
+    "course": "precalculo",
+    "page": 52,
+    "printedPage": 52,
+    "sectionCode": "3.3.5",
+    "section": "Fracciones algebraicas",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "1d",
+      "1e",
+      "1f",
+      "1g",
+      "1h",
+      "2a",
+      "2b",
+      "2c",
+      "2d",
+      "2e",
+      "2f",
+      "2g",
+      "2h",
+      "2i",
+      "2j",
+      "2k",
+      "2l",
+      "2m",
+      "2n"
+    ],
+    "referencedBy": [
+      "3.3.5:2ñ",
+      "3.3.5:2o"
+    ],
+    "continuesOnNextPage": [
+      "2"
+    ],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "S4"
+    ]
+  },
+  {
+    "course": "precalculo",
+    "page": 53,
+    "printedPage": 53,
+    "sectionCode": "3.3.5",
+    "section": "Fracciones algebraicas",
+    "week": "S4",
+    "assignment": "confirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "2ñ",
+      "2o",
+      "3a",
+      "3b",
+      "3c",
+      "3d",
+      "3e",
+      "3f",
+      "3g",
+      "3h",
+      "3i",
+      "3j",
+      "3k"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [
+      "2"
+    ],
+    "weeks": [
+      "S4"
+    ]
+  },
+  {
+    "course": "precalculo",
+    "page": 63,
+    "printedPage": 63,
+    "sectionCode": "4.6",
+    "section": "Ecuaciones",
+    "week": "B5",
+    "assignment": "unconfirmed",
+    "inventoryReviewed": true,
+    "labels": [
+      "1a",
+      "1b",
+      "1c",
+      "1d",
+      "1e",
+      "1f",
+      "1g",
+      "1h",
+      "1i",
+      "1j",
+      "1k",
+      "1l",
+      "1m",
+      "1n",
+      "1ñ",
+      "2a",
+      "2b",
+      "2c",
+      "2d",
+      "2e",
+      "2f",
+      "2g",
+      "2h",
+      "2i",
+      "2j",
+      "2k"
+    ],
+    "referencedBy": [],
+    "continuesOnNextPage": [],
+    "continuesFromPreviousPage": [],
+    "weeks": [
+      "B5"
+    ]
+  }
+]

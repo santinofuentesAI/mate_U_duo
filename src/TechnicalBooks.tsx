@@ -1,29 +1,36 @@
-import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowRight, BookText, Search, ZoomIn } from 'lucide-react';
-import type { Course } from './types';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { ArrowLeft, ArrowRight, BookText, Search } from 'lucide-react';
+import type { Course, BookSource } from './types';
 import { bookScope } from './bookScope';
 import { readerPages } from './bookIndex';
 import { bookEditions } from './bookEditions';
-
-export function TechnicalBooks({course,onRead,onBack}:{course:Course;onRead:(page:number)=>void;onBack:()=>void}) {
-  const [pages,setPages]=useState<string[]>([]),[page,setPage]=useState(1),[query,setQuery]=useState(''),[loading,setLoading]=useState(true);
-  useEffect(()=>{let active=true;setLoading(true);setPages([]);setPage(1);
-    const promise=course==='precalculo'?import('./bookText-precalculo.json'):import('./bookText-discreta.json');
-    void promise.then(module=>{if(active)setPages(module.default);}).finally(()=>{if(active)setLoading(false);});
-    return()=>{active=false;};
-  },[course]);
-  const needle=query.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-  const matches=needle?pages.map((text,index)=>({index:index+1,text})).filter(({text})=>text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(needle)).slice(0,40):[];
-  function go(next:number){setPage(Math.max(1,Math.min(next,pages.length)));window.scrollTo({top:0,behavior:'smooth'});}
-  return <div className="technical-book"><button className="text-button" onClick={onBack}><ArrowLeft size={17}/> Volver a la biblioteca</button>
-    <span className="eyebrow">BIBLIOTECA · TÉCNICA</span><h1>El libro, página por página.</h1><p>{bookEditions[course].title} · temario {bookScope[course].label}. El texto continúa unas páginas más para adelantar temas, separado del recorrido semanal.</p>
-    <p className="notice">Algunas fracciones, exponentes, diagramas y tablas pierden su posición al extraerse del PDF. Para resolver una fórmula, comprobá el original con «Ver página visual» antes de escribir tu respuesta.</p>
-    <div className="technical-controls"><label className="route-search"><Search size={18}/><input aria-label="Buscar dentro del libro" placeholder="Buscar una palabra o tema…" value={query} onChange={e=>setQuery(e.target.value)}/></label><label>Página PDF <input type="number" min={1} max={pages.length||bookScope[course].lastPage} value={page} onChange={e=>{const value=Number(e.target.value);if(Number.isInteger(value)&&value>=1&&value<=(pages.length||bookScope[course].lastPage))setPage(value);}}/></label></div>
-    {loading?<p role="status">Preparando las páginas…</p>:<>
-      {needle&&<div className="technical-results" aria-label="Resultados de búsqueda">{matches.length?<>{matches.map(hit=><button key={hit.index} onClick={()=>{go(hit.index);setQuery('');}}>PDF {hit.index} · {hit.text.replace(/\s+/g,' ').slice(0,110)}…</button>)}{matches.length===40&&<small>Se muestran los primeros 40 resultados.</small>}</>:<p>No hay páginas con ese término. Probá otra palabra.</p>}</div>}
-      <details className="technical-index"><summary>Índice por tema</summary><div>{readerPages[course].map(section=><button key={section.title} onClick={()=>go(section.page)}>{section.title}<small>PDF {section.page}–{section.end}</small></button>)}</div></details>
-      <article className="technical-sheet card"><header><span><BookText size={21}/> Página PDF {page} de {pages.length}{page>bookScope[course].lastPage?' · adelanto opcional':''}</span><button className="secondary" onClick={()=>onRead(page)}><ZoomIn size={16}/>Ver página visual</button></header><pre>{pages[page-1]||'Esta página no contiene texto seleccionable. Abrí la imagen original.'}</pre></article>
-      <nav className="technical-pagination" aria-label="Páginas del libro"><button className="secondary" disabled={page<=1} onClick={()=>go(page-1)}><ArrowLeft size={16}/>Anterior</button><span>{page} / {pages.length}</span><button className="primary" disabled={page>=pages.length} onClick={()=>go(page+1)}>Siguiente<ArrowRight size={16}/></button></nav>
+import { bookCatalog, assignmentLabel } from './bookCatalog';
+const BookOriginal=lazy(()=>import('./BookOriginal').then(m=>({default:m.BookOriginal})));
+import { BookFormula } from './BookFormula';
+import { lessons } from './content';
+const normalize=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const lessonByPage:Record<Course,[number,number,string][]>={precalculo:[[7,9,'Conjuntos numéricos'],[10,11,'Fracciones numéricas'],[12,14,'Potencias'],[15,19,'Raíces y valor absoluto'],[20,23,'Variables y valor numérico'],[24,27,'Monomios y términos semejantes'],[28,29,'Suma y resta de polinomios'],[30,31,'Multiplicación y productos notables'],[32,33,'División de polinomios'],[34,38,'Factor común y agrupación'],[39,41,'Trinomios y diferencias de cuadrados'],[42,42,'Suma y diferencia de cubos'],[43,45,'División sintética'],[46,48,'Operar fracciones algebraicas'],[49,53,'Racionalización'],[54,56,'Ecuaciones lineales'],[57,58,'Ecuaciones cuadráticas'],[59,59,'Ecuaciones de grado superior'],[60,61,'Ecuaciones racionales'],[62,63,'Ecuaciones con radicales']],discreta:[[3,45,'Introducción'],[46,58,'Proposiciones y conectores'],[59,63,'Equivalencias y simplificación'],[64,78,'Reglas de inferencia'],[79,82,'Formas normales'],[83,97,'Universal y existencial'],[98,100,'Inferencias cuantificadas'],[101,110,'Métodos de demostración'],[111,128,'Operaciones con conjuntos'],[129,134,'Conjuntos numéricos'],[135,142,'Venn y leyes de conjuntos'],[143,152,'Aplicaciones e inclusión-exclusión']]};
+export function TechnicalBooks({course,onBack,onProblem}:{course:Course;onBack:()=>void;onProblem:(id:string)=>void;onRead?:(page:number)=>void}) {
+  const [pages,setPages]=useState<string[]>([]),[page,setPage]=useState(()=>{try{return Math.max(1,Number(localStorage.getItem(`mate-technical-page-${course}`))||1);}catch{return 1;}}),[query,setQuery]=useState(''),[loading,setLoading]=useState(true),[failed,setFailed]=useState(false),[visual,setVisual]=useState(false);
+  useEffect(()=>{let active=true;const promise=course==='precalculo'?import('./bookText-precalculo.json'):import('./bookText-discreta.json');void promise.then(module=>{if(active){setPages(module.default);setPage(p=>Math.min(p,module.default.length));setLoading(false);}}).catch(()=>{if(active){setFailed(true);setLoading(false);}});return()=>{active=false;};},[course]);
+  const needle=normalize(query.trim()),matches=needle?pages.map((text,index)=>({index:index+1,text})).filter(({text})=>normalize(text).includes(needle)).slice(0,40):[];
+  const related=bookCatalog[course].filter(p=>p.sourcePages.includes(page));
+  const section=readerPages[course].find(s=>page>=s.page&&page<=s.end);
+  const suggested=lessonByPage[course].find(([a,b])=>page>=a&&page<=b)?.[2];
+  const lesson=suggested?lessons.find(l=>l.course===course&&normalize(l.title).includes(normalize(suggested))):undefined;
+  const original:BookSource={course,page,printedPage:course==='discreta'?Math.max(0,page-2):page,section:section?.title||related[0]?.section||'Lectura',exercise:'Página completa',crop:{x:0,y:0,width:1,height:1}};
+  function go(next:number){const value=Math.max(1,Math.min(next,pages.length||bookScope[course].lastPage));setPage(value);setVisual(false);try{localStorage.setItem(`mate-technical-page-${course}`,String(value));}catch{}window.scrollTo({top:0,behavior:'smooth'});}
+  return <div className="technical-book"><button className="text-button" onClick={onBack}><ArrowLeft size={17}/>Volver a la biblioteca</button><span className="eyebrow">BIBLIOTECA · TÉCNICA</span><h1>Leé una página. Entendé una idea.</h1><p>{bookEditions[course].title}</p>
+    <div className="technical-controls"><label className="route-search"><Search size={18}/><input aria-label="Buscar dentro del libro" placeholder="Concepto o palabra…" value={query} onChange={e=>setQuery(e.target.value)}/></label><label>Página PDF<input type="number" min={1} max={pages.length||bookScope[course].lastPage} value={page} onChange={e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&n<=(pages.length||bookScope[course].lastPage))go(n);}}/></label></div>
+    {loading?<p role="status">Preparando las páginas…</p>:failed?<p role="alert">No se pudo cargar el texto. Volvé a la biblioteca e intentá de nuevo.</p>:<>
+      {needle&&<div className="technical-results" aria-label="Resultados de búsqueda">{matches.length?matches.map(hit=><button key={hit.index} onClick={()=>{go(hit.index);setQuery('');}}>PDF {hit.index} · {hit.text.replace(/\s+/g,' ').slice(0,110)}…</button>):<p>No hay coincidencias. Probá otra palabra.</p>}{matches.length===40&&<small>Primeros 40 resultados.</small>}</div>}
+      <details className="technical-index"><summary>Índice por tema y sección</summary><div>{readerPages[course].map(s=><button key={s.title} onClick={()=>go(s.page)}>{s.title}<small>PDF {s.page}–{s.end}</small></button>)}{[...new Map(bookCatalog[course].map(p=>[p.sectionCode,p])).values()].map(p=><button key={p.sectionCode} onClick={()=>go(p.page)}>Práctica {p.sectionCode} · {p.section}<small>{assignmentLabel(p.week)}</small></button>)}</div></details>
+      <article className="technical-sheet card"><header><span><BookText size={21}/>PDF {page} · {course==='discreta'&&page>2?`impresa ${page-2}`:`página ${page}`}</span><button className="secondary" aria-expanded={visual} onClick={()=>setVisual(v=>!v)}>{visual?'Ocultar página visual':'Ver página visual'}</button></header><h2>{section?.title||related[0]?.section||'Portada e índice'}</h2>{page>bookScope[course].lastPage&&<p className="notice">Fuera del alcance actual · adelanto opcional, sin estadísticas del temario.</p>}
+        {visual&&<Suspense fallback={<p role="status">Preparando la vista original…</p>}><BookOriginal key={page} source={original}/></Suspense>}
+        {lesson&&<section className="technical-explanation"><span className="eyebrow">EXPLICACIÓN ADAPTADA · {lesson.title}</span>{lesson.theory.map(t=><p key={t}>{t}</p>)}{lesson.formulas.map(f=><BookFormula key={f} math={f}/>)}<h3>Ejemplo explicado paso a paso</h3><div className="example">{lesson.example.steps.map((s,i)=><div key={i}><span>{i+1}</span><p>{s}</p></div>)}</div><small>Explicación didáctica relacionada con el tema; no es una transcripción literal del ejemplo de esta página.</small></section>}
+        <details className="auxiliary-text"><summary>Texto auxiliar de esta página · extracción sin certificar</summary><p className="notice">Este texto sirve para buscar y orientar la lectura. No certifica la disposición de fracciones, potencias, barras, tablas ni diagramas. La página visual conserva esos datos.</p><div className="technical-prose">{(pages[page-1]||'Sin texto seleccionable. Consultá el original.').split(/\n\s*\n/).map((block,i)=><p key={i}>{block.trim()}</p>)}</div></details>
+        {related.length>0&&<section className="technical-related"><h3>De esta página a mi práctica</h3><p>{related.length} actividades; incluyen los incisos cuyos datos comienzan o continúan aquí.</p>{related.map(p=><button className="secondary" key={p.id} onClick={()=>onProblem(p.id)}>{p.sectionCode} · ejercicio {p.number}{p.part}<ArrowRight size={16}/></button>)}</section>}
+      </article><nav className="technical-pagination" aria-label="Páginas del libro"><button className="secondary" disabled={page<=1} onClick={()=>go(page-1)}><ArrowLeft size={16}/>Anterior</button><span>{page} / {pages.length}</span><button className="primary" disabled={page>=pages.length} onClick={()=>go(page+1)}>Siguiente<ArrowRight size={16}/></button></nav>
     </>}
   </div>;
 }

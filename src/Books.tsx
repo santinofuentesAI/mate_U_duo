@@ -9,7 +9,7 @@ import { bookRoutes } from './bookIndex';
 import { bookScope } from './bookScope';
 import { storedBook, saveBook, storedClips, saveClip, deleteClip, type BookClip } from './bookStorage';
 import { ConfirmDialog } from './ConfirmDialog';
-import { bundledBook } from './bundledBook';
+import { matchesBook } from './bookEditions';
 GlobalWorkerOptions.workerSrc = workerUrl;
 type Point = { x: number; y: number };
 type Selection = { start: Point; end: Point };
@@ -28,8 +28,11 @@ export function Books({course, initialPage}: {course: Course; initialPage?: numb
   const selectedClip = clips.find(c => c.id === pinned);
   useEffect(() => {
     const token = ++generation.current; setPdf(null); setStatus(''); setLoading(true); setFullBook((initialPage||0)>scope.lastPage); setPage(initialPage || bookRoutes[course][0].page);
-    storedBook(course).then(data=>data||bundledBook(course)).then(async data => {
-      if (!data || token !== generation.current) return;
+    storedBook(course).then(async data => {
+      if (token !== generation.current) return;
+      if(!data){setStatus('Importá tu copia una vez. Después podés abrirla sin conexión en este navegador.');return;}
+      const exact=await matchesBook(data,course);
+      if(!exact)setStatus('Edición diferente: los números de página no están verificados para esta copia.');
       const doc = await getDocument({data: new Uint8Array(data)}).promise;
       if (token !== generation.current) { await doc.destroy(); return; }
       documentRef.current = doc; setPdf(doc); setPage(Math.min(initialPage || bookRoutes[course][0].page, doc.numPages, (initialPage||0)>scope.lastPage?doc.numPages:scope.lastPage));
@@ -62,13 +65,13 @@ export function Books({course, initialPage}: {course: Course; initialPage?: numb
     const token = ++generation.current; setLoading(true); setStatus('Cargando tu libro…'); let doc: PDFDocumentProxy|null = null;
     try {
       if (file.size > 32*1024*1024) throw new Error('Máximo 32 MB por libro.');
-      const data = await file.arrayBuffer(); doc = await getDocument({data: new Uint8Array(data.slice(0))}).promise;
+      const data = await file.arrayBuffer(), exact=await matchesBook(data,course); doc = await getDocument({data: new Uint8Array(data.slice(0))}).promise;
       if (token !== generation.current) { await doc.destroy(); return; }
-      await saveBook(course, data);
+      await saveBook(course, data); void navigator.storage?.persist?.().catch(()=>false);
       if (token !== generation.current) { await doc.destroy(); return; }
       const old = documentRef.current; documentRef.current = doc; setPdf(doc); setFullBook(false); setPage(Math.min(initialPage || bookRoutes[course][0].page, doc.numPages, scope.lastPage));
       if (old) setTimeout(() => void old.destroy(), 0);
-      setStatus(`Libro guardado en este dispositivo · ${doc.numPages} páginas.`);
+      setStatus(`Libro guardado en este dispositivo · ${doc.numPages} páginas.${exact?' Edición verificada.':' Edición diferente: referencias sin verificar.'}`);
     } catch(e) { if (doc && doc !== documentRef.current) await doc.destroy(); if (token === generation.current) setStatus(e instanceof Error ? e.message : 'No se pudo cargar el libro.'); }
     finally { if (token === generation.current) setLoading(false); }
   }
@@ -91,14 +94,14 @@ export function Books({course, initialPage}: {course: Course; initialPage?: numb
     try { await deleteClip(clip.id); setClips(items => items.filter(c => c.id !== clip.id)); if (pinned === clip.id) setPinned(clips.find(c => c.id !== clip.id)?.id || ''); } catch { setStatus('No se pudo borrar el recorte.'); }
   }
   return <div className="books"><span className="eyebrow">PRÁCTICA DEL LIBRO</span><h1>El ejercicio real, en tu celular.</h1>
-    <p>Abrí la página original incluida en la app, recortá el ejercicio y resolvelo junto a su imagen. Tus recortes y notas se guardan en este dispositivo.</p>
+    <p>Importá tu copia una vez, abrí el original y resolvé junto a su imagen. Tus recortes y notas se guardan en este dispositivo.</p>
     <div className="card"><label className={`upload ${loading?'loading':''}`}><Upload size={20}/>{loading?'Cargando…':pdf?'Cambiar edición PDF':'Cargar mi libro PDF'}<input disabled={loading} type="file" accept="application/pdf,.pdf" onChange={e => {const f=e.target.files?.[0]; if(f) void upload(f); e.target.value='';}}/></label><p role="status">{status}</p><small>Cargá el libro correspondiente a {course==='discreta'?'Introducción a la Matemática Discreta, 4.ª ed.':'Precálculo 2024'}. Los saltos de página están preparados para esas ediciones.</small></div>
     <section className="card scope-card"><span className="eyebrow">TEMARIO ACTUAL</span><h2>{scope.label}</h2><p>{scope.explanation}</p><button className="secondary" onClick={()=>setPage(1)}>Leer desde la página 1</button><label className="scope-toggle"><input type="checkbox" checked={fullBook} onChange={e=>{setFullBook(e.target.checked);if(!e.target.checked)setPage(n=>Math.min(n,lastPage,scope.lastPage));}}/>Explorar el libro completo fuera del temario</label></section>
     <div className="book-routes">{bookRoutes[course].map(r=><button key={r.title} className={page>=r.page&&page<=r.end?'selected':''} onClick={()=>setPage(Math.min(r.page,lastPage))}><b>{r.week}</b><span>{r.title}<small>PDF {r.page}–{r.end} · impresa {r.printed}</small></span><ChevronRight size={16}/></button>)}</div>
     {pdf?<section className="card pdf-viewer"><div className="pdf-toolbar"><button aria-label="Página anterior" disabled={page<=1} onClick={()=>setPage(page-1)}><ChevronLeft/></button><label>Página PDF<input type="number" min={1} max={lastPage} value={page} onChange={e=>{const n=Number(e.target.value);if(Number.isInteger(n)&&n>=1&&n<=lastPage)setPage(n);}}/></label><span>/ {lastPage}{fullBook?'':' del temario'}</span><button aria-label="Página siguiente" disabled={page>=lastPage} onClick={()=>setPage(page+1)}><ChevronRight/></button><button aria-label="Reducir página" disabled={zoom<=.6} onClick={()=>setZoom(z=>Math.max(.6,z-.2))}><ZoomOut/></button><button aria-label="Ampliar página" disabled={zoom>=2} onClick={()=>setZoom(z=>Math.min(2,z+.2))}><ZoomIn/></button><button className="secondary" disabled={busy} aria-pressed={cropMode} onClick={()=>{setCropMode(!cropMode);setSelection(null);}}><Crop size={18}/>{cropMode?'Cancelar recorte':'Recortar ejercicio'}</button></div>{busy&&<p role="status">Dibujando página…</p>}
     {cropMode&&<div className="crop-instructions"><p>Arrastrá con un dedo sobre la página para marcar el ejercicio. Fuera de la página podés seguir desplazándote.</p><label>Nombre del recorte<input value={clipTitle} maxLength={120} onChange={e=>setClipTitle(e.target.value)} placeholder="Ej. 12 · De Morgan"/></label><div className="row wrap"><button onClick={()=>setSelection({start:{x:0,y:0},end:{x:1,y:.5}})}>Mitad superior</button><button onClick={()=>setSelection({start:{x:0,y:.5},end:{x:1,y:1}})}>Mitad inferior</button><button className="primary" disabled={!selection||busy||saving} onPointerUp={e=>{if(e.pointerType==='touch'){lastSaveTouch.current=performance.now();void capture();}}} onClick={e=>{if(e.detail===0||performance.now()-lastSaveTouch.current>1000)void capture();}}>{saving?'Guardando…':'Guardar recorte'}</button></div></div>}
     <div className="pdf-canvas" ref={viewer}><div className="pdf-sheet"><canvas ref={canvas} aria-label={`Página ${page} del libro`}/>{cropMode&&!busy&&<div className="crop-overlay" aria-label="Área para recortar el ejercicio" onPointerDown={e=>{if(!e.isPrimary)return;e.preventDefault();e.currentTarget.setPointerCapture(e.pointerId);dragging.current=true;const p=point(e);setSelection({start:p,end:p});}} onPointerMove={e=>{if(dragging.current){const end=point(e);setSelection(s=>s?{...s,end}:null);}}} onPointerUp={()=>{dragging.current=false;}} onPointerCancel={()=>{dragging.current=false;setSelection(null);}}>{selection&&<div className="crop-selection" style={{left:`${Math.min(selection.start.x,selection.end.x)*100}%`,top:`${Math.min(selection.start.y,selection.end.y)*100}%`,width:`${Math.abs(selection.start.x-selection.end.x)*100}%`,height:`${Math.abs(selection.start.y-selection.end.y)*100}%`}}/>}</div>}</div></div>
-    <label>Mis notas · página {page}<textarea value={note} onChange={e=>{setNote(e.target.value);try{localStorage.setItem(`mate-note-${course}-${page}`,e.target.value);}catch{setStatus('No se pudo guardar la nota: almacenamiento lleno.');}}} placeholder="Número de ejercicio, restricciones, dudas…"/></label></section>:<div className="empty card"><BookOpen size={42}/><h3>Abrí el libro aquí mismo</h3><p>El libro incluido debería aparecer automáticamente. También podés cargar otra edición si la necesitás.</p></div>}
+    <label>Mis notas · página {page}<textarea value={note} onChange={e=>{setNote(e.target.value);try{localStorage.setItem(`mate-note-${course}-${page}`,e.target.value);}catch{setStatus('No se pudo guardar la nota: almacenamiento lleno.');}}} placeholder="Número de ejercicio, restricciones, dudas…"/></label></section>:<div className="empty card"><BookOpen size={42}/><h3>Abrí el libro aquí mismo</h3><p>Importá tu PDF con el botón de arriba. Se conserva en este navegador para estudiar sin conexión.</p></div>}
     {clips.length>0&&<section className="card clip-gallery"><h2>Mis recortes · {clips.length}</h2><p>Elegí uno para tener el enunciado al lado mientras resolvés.</p><div className="clip-list">{clips.map(c=><div key={c.id}><button className={c.id===pinned?'selected':''} aria-label={`Usar recorte ${c.title}`} onClick={()=>setPinned(c.id)}><img src={c.image} alt=""/><span>{c.title}<small>Tu PDF · página {c.page}</small></span><Pin size={16}/></button><button aria-label={`Borrar recorte ${c.title}`} onClick={()=>setClipToDelete(c)}><Trash2 size={18}/></button></div>)}</div></section>}
     <div className={`book-workspace ${selectedClip?'with-clip':''}`}>
       {selectedClip&&<aside className="card pinned-clip"><span className="eyebrow">MI EJERCICIO REAL</span><h2>{selectedClip.title}</h2><small>Recorte de tu PDF · página {selectedClip.page}</small><a href={selectedClip.image} download={`ejercicio-${course}-p${selectedClip.page}.png`} className="clip-image" aria-label="Descargar imagen del ejercicio"><img src={selectedClip.image} alt={`${selectedClip.title}, enunciado original del libro`}/></a><div className="row wrap"><button className="secondary" onClick={()=>{setPage(Math.min(selectedClip.page,lastPage));viewer.current?.closest('section')?.scrollIntoView({behavior:'smooth'});}}>Ver página original</button><button onClick={()=>setPinned('')}>Desfijar</button></div></aside>}
