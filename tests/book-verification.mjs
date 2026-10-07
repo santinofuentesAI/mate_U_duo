@@ -22,7 +22,10 @@ try {
   assert.equal(await page.locator('.response-state.validated').count(), 0);
   await final.fill('F'); await button('Comprobar respuesta').click();
   await page.getByText('Resultado final correcto · pasos sin revisar').waitFor();
-  await page.reload(); await page.getByText('Resultado final correcto · pasos sin revisar').waitFor();
+  await page.reload();
+  await page.getByRole('navigation', { name: 'Navegación móvil' }).getByRole('button', { name: 'Practicar' }).click();
+  await page.getByRole('button', { name: /Ejercicios del libro/ }).click();
+  await page.getByText('Resultado final correcto · pasos sin revisar').waitFor();
   await final.fill('V');
   assert.equal(await page.locator('.response-state.validated').count(), 0);
   await button('Comprobar respuesta').click(); await page.getByText('Todavía no coincide').waitFor();
@@ -36,6 +39,7 @@ try {
   assert.equal(await button('Comprobar respuesta').count(), 0);
   await page.getByText(/aún no tiene una solución comprobada/).waitFor();
   await page.getByRole('combobox', { name: 'Elegir curso' }).selectOption('discreta');
+  await page.getByRole('button', { name: /Ejercicios del libro/ }).click();
   await select('discreta-55-2c');
   await page.getByRole('textbox', { name: 'Respuesta final' }).fill('Contingencia');
   await page.getByRole('textbox', { name: 'Columna final de la tabla' }).fill('V,V,V,V');
