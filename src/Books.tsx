@@ -27,7 +27,7 @@ export function Books({course, initialPage, onPageChange, onProblem}: {course: C
   const lastSaveTouch = useRef(-Infinity), saveInFlight = useRef(false);
   const lastPage = pdf ? Math.min(pdf.numPages, fullBook ? pdf.numPages : scope.lastPage) : scope.lastPage;
   const selectedClip = clips.find(c => c.id === pinned);
-  const related = bookCatalog[course].filter(problem=>problem.sourcePages.includes(page));
+  const related = bookCatalog[course].filter(problem=>problem.page===page);
   useEffect(()=>onPageChange(page),[page,onPageChange]);
   useEffect(() => {
     const token = ++generation.current; setPdf(null); setStatus(''); setLoading(true); setFullBook((initialPage||0)>scope.lastPage); setPage(initialPage || bookRoutes[course][0].page);
