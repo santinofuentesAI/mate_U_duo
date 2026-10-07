@@ -1,6 +1,6 @@
 import type { PracticeItem } from './learning';
 import type { Question } from './types';
-import { equivalentAlgebra, grade, normalize } from './engine';
+import { equivalentAlgebra, grade, hasVariableDenominator, normalize } from './engine';
 
 export type FinalAnswers = Record<string, string>;
 export type CheckResult = { correct: boolean; error?: string };
@@ -69,8 +69,10 @@ export function checkFinal(question: Question, input: string): CheckResult {
   if (!input.trim()) return { correct: false, error: 'Escribí la respuesta final antes de comprobar.' };
   try {
     if (question.type === 'choice') return choiceAnswer(input, String(question.answer));
-    if (question.type === 'text' && /^-?\d+(?:\/\d+)?$/.test(String(question.answer)))
+    if (question.type === 'text' && /^-?\d+(?:\/\d+)?$/.test(String(question.answer))) {
+      if (!/^[\d\s()+\-−*/^.,÷×]+$/.test(input)) return { correct: false, error: 'Escribí un resultado numérico, sin variables ni unidades.' };
       return { correct: equivalentAlgebra(input, String(question.answer)) };
+    }
     if (question.type === 'set' || question.type === 'venn') return grade(question, splitTopLevel(input));
     if (question.type === 'table' || question.type === 'synthetic') {
       const values = input.trim().split(/[;,\s]+/).filter(Boolean);
@@ -84,6 +86,7 @@ export function checkFinal(question: Question, input: string): CheckResult {
       return { correct: false, error: 'Este resultado requiere restricciones; resolvelo en la práctica guiada.' };
     const superscript: Record<string, string> = { '⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9' };
     const mathInput = question.type === 'algebra' ? input.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, digits => '^' + [...digits].map(c => superscript[c]).join('')) : input;
+    if (question.type === 'algebra' && hasVariableDenominator(mathInput)) return { correct: false, error: 'La expresión cambia el dominio: no introduzcas una división por una variable o un polinomio.' };
     return grade(question, mathInput);
   } catch (error) { return { correct: false, error: error instanceof Error ? error.message : 'Revisá el formato.' }; }
 }

@@ -78,6 +78,7 @@ export function parseAlgebra(input: string): Rational {
   const result = sum(); if (at !== expanded.length || !result.den.size) throw new Error('La expresión no es válida.'); return result;
 }
 export function equivalentAlgebra(a: string, b: string) { const aa = parseAlgebra(a), bb = parseAlgebra(b); return !add(mul(aa.num, bb.den), mul(bb.num, aa.den), -1).size; }
+export function hasVariableDenominator(input: string) { return [...parseAlgebra(input).den.keys()].some(key => key.length > 0); }
 // Equivalence alone would also accept the unchanged, unfactored problem.
 export function isFactored(input: string) {
   let raw=input.toLowerCase().replace(/\s/g,'').replace(/[×·]/g,'*').replace(/[−–]/g,'-');

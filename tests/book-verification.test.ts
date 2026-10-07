@@ -20,6 +20,8 @@ test('book final verifier accepts equivalent mathematical answers and rejects wr
   assert.equal(checkFinal(question('precalculo-libro-42-1e'), '8-y^3').correct, false);
   assert.ok(checkFinal(question('precalculo-libro-19-6p'), '2/120').correct);
   assert.equal(checkFinal(question('precalculo-libro-19-6p'), '60').correct, false);
+  assert.equal(checkFinal(question('precalculo-libro-19-6a'), '20x/x').correct, false);
+  assert.equal(checkFinal(question('precalculo-libro-33-2a'), '(-5x^2-2x-5)*(x-1)/(x-1)').correct, false);
   assert.ok(checkFinal(question('discreta-libro-63-4'), '1').correct);
   assert.equal(checkFinal(question('discreta-libro-63-4'), '0').correct, false);
 });
