@@ -33,10 +33,10 @@ test('complement bars in the PDF must not be lost when converting original set p
   const U=['a','b','c','d','e','f'],A=['a','b','e'],B=['c','e','f'],C=['b','e','f'];
   const difference=A.filter(x=>!B.includes(x));const union=[...new Set([...difference,...C])];
   const symmetric=[...new Set([...B,...C])].filter(x=>B.includes(x)!==C.includes(x));
-  const complement=U.filter(x=>!symmetric.includes(x));
-  const result=[...new Set([...union.filter(x=>complement.includes(x)),'d'])];
-  assert.ok(grade(question('discreta-libro-123-2'),result).correct);
-  assert.equal(grade(question('discreta-libro-123-2'),['b','d']).correct,false);
+  const complement=U.filter(x=>!symmetric.includes(x)&&x!=='d');
+  const result=union.filter(x=>complement.includes(x));
+  assert.ok(grade(question('discreta-libro-123-2-corregido'),result).correct);
+  assert.equal(grade(question('discreta-libro-123-2-corregido'),['b','d']).correct,false);
   assert.ok(grade(question('discreta-libro-124-6b'),['1','2','3','4','5','6','7']).correct);
   assert.equal(grade(question('discreta-libro-124-6b'),['8','9']).correct,false);
 });

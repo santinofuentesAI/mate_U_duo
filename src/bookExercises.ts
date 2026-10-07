@@ -1637,19 +1637,18 @@ export const bookExercises: BookExercise[] = [
     "course": "discreta",
     "lessonTitle": "Operaciones con conjuntos",
     "question": {
-      "id": "discreta-libro-123-2",
+      "id": "discreta-libro-123-2-corregido",
       "type": "set",
-      "prompt": "U={a,b,c,d,e,f}, A={a,b,e}, B={c,e,f}, C={b,e,f}.\nCalculá ([(A−B)∪C]∩(B△C)ᶜ)∪{d}. El complemento ᶜ se toma respecto de U.",
+      "prompt": "U={a,b,c,d,e,f}, A={a,b,e}, B={c,e,f}, C={b,e,f}.\nCalculá [(A−B)∪C]∩((B△C)∪{d})ᶜ. El complemento ᶜ se toma respecto de U.",
       "answer": [
         "a",
-        "d",
         "e",
         "f"
       ],
-      "explanation": "A−B={a,b}; al unir C obtenés {a,b,e,f}. B△C={b,c}; su complemento en U es {a,d,e,f}. La intersección da {a,e,f}; al unir {d}, resulta {a,d,e,f}.",
+      "explanation": "A−B={a,b}; al unir C obtenés {a,b,e,f}. B△C={b,c}; al unir {d} queda {b,c,d}. Su complemento en U es {a,e,f}; al intersectar resulta {a,e,f}.",
       "hints": [
-        "La barra del original indica complemento: calculá U−(B△C) antes de intersectar.",
-        "A−B={a,b}; al unir C obtenés {a,b,e,f}. B△C={b,c}; su complemento en U es {a,d,e,f}. La intersección da {a,e,f}; al unir {d}, resulta {a,d,e,f}."
+        "La barra del original cubre (B△C)∪{d}: calculá su complemento antes de intersectar.",
+        "A−B={a,b}; al unir C obtenés {a,b,e,f}. B△C={b,c}; al unir {d} queda {b,c,d}. Su complemento en U es {a,e,f}; al intersectar resulta {a,e,f}."
       ],
       "tag": "Operaciones con conjuntos",
       "difficulty": 3,

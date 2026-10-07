@@ -86,8 +86,8 @@ test('all 59 existing reviewed activities remain reachable; free response is nev
     const p=bookCatalog[course].find(p=>reviewedActivities(p,items).length)!;
     assert.equal(responseStatus(p,items,freshProgress(),false),'identified');
     assert.equal(responseStatus(p,items,freshProgress(),true),'submitted');
-    const item=reviewedActivities(p,items)[0],progress=freshProgress();
-    progress.attempts=[{questionId:item.question.id,lessonId:item.lesson.id,correct:true,assisted:false,date:new Date().toISOString()}];
+    const reviewed=reviewedActivities(p,items),progress=freshProgress();
+    progress.attempts=reviewed.map(item=>({questionId:item.question.id,lessonId:item.lesson.id,correct:true,assisted:false,date:new Date().toISOString()}));
     assert.equal(responseStatus(p,items,progress,true),'validated');
     progress.attempts.push({...progress.attempts[0],correct:false});
     assert.equal(responseStatus(p,items,progress,true),'submitted');
