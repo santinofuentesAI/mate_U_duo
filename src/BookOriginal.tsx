@@ -6,6 +6,7 @@ import type { BookSource } from './types';
 import { saveBook, storedBook } from './bookStorage';
 import { bookEditions, matchesBook } from './bookEditions';
 import { Dialog } from './Dialog';
+import { bundledBook } from './bundledBook';
 GlobalWorkerOptions.workerSrc=workerUrl;
 export function BookOriginal({source:s}:{source:BookSource}) {
   const [revision,setRevision]=useState(0),[image,setImage]=useState(''),[status,setStatus]=useState('Leyendo tu libro…'),[busy,setBusy]=useState(false),[zoom,setZoom]=useState(false),[fullPage,setFullPage]=useState(false),[verified,setVerified]=useState(false);
@@ -22,8 +23,8 @@ export function BookOriginal({source:s}:{source:BookSource}) {
       try {
         let pdf=doc.current,exactMatch=verified;
         if(!pdf){
-          const data=await storedBook(s.course);if(canceled)return;
-          if(!data){setStatus('Cargá cualquier PDF de tu libro: queda solo en este dispositivo. Si es la misma edición, recortamos el inciso automáticamente; si no, te mostramos la página completa.');return;}
+          const data=await storedBook(s.course)||await bundledBook(s.course);if(canceled)return;
+          if(!data){setStatus('No se encontró el libro incluido. Podés cargar tu propia copia para ver el inciso.');return;}
           exactMatch=await matchesBook(data,s.course);if(canceled)return;
           setVerified(exactMatch);
           if(canceled)return;
@@ -36,7 +37,7 @@ export function BookOriginal({source:s}:{source:BookSource}) {
         const original=page.getViewport({scale:1}),scale=Math.min(4,1200/(original.width*rect.width)),viewport=page.getViewport({scale});
         const canvas=document.createElement('canvas');canvas.width=Math.ceil(viewport.width*rect.width);canvas.height=Math.ceil(viewport.height*rect.height);
         render=page.render({canvas,viewport,background:'#ffffff',transform:[1,0,0,1,-rect.x*viewport.width,-rect.y*viewport.height]});await render.promise;
-        if(!canceled){setImage(canvas.toDataURL('image/png'));setStatus(useCrop?'Recorte automático del inciso de tu PDF, guardado solo en este dispositivo.':'Esta edición no es la referencia exacta: mostramos la página completa para que no tengas que recortar nada.');}
+        if(!canceled){setImage(canvas.toDataURL('image/png'));setStatus(useCrop?'Recorte automático del inciso original.':'Esta edición no es la referencia exacta: mostramos la página completa para que no tengas que recortar nada.');}
       }catch(e){if(!canceled)setStatus(e instanceof Error?e.message:'No se pudo abrir este PDF. Intentá cargarlo de nuevo.');}
     }
     void load();return()=>{canceled=true;render?.cancel();};
@@ -56,8 +57,8 @@ export function BookOriginal({source:s}:{source:BookSource}) {
   return <aside className="book-original card" aria-label="Ejercicio original del libro"><div className="original-heading"><span className="illustrated-icon"><BookOpen size={25}/></span><div><span className="eyebrow">DIRECTO DE TU LIBRO</span><h3>Ejercicio {s.exercise.replace('-tabla','')}</h3></div><span className="source-page">PDF {s.page}</span></div>
     <p className="source-reference">{s.section}{s.printedPage!==s.page&&` · impresa ${s.printedPage}`}</p>
     {s.adaptation&&<p className="source-adaptation">{s.adaptation}</p>}
-    {image?<><button className="original-preview" onClick={()=>setZoom(true)} aria-label={!verified||fullPage?'Ampliar página completa':'Ampliar ejercicio original'}><img src={image} alt={label}/><span><ZoomIn size={16}/>Tocá para ampliar</span></button>{verified&&<button className="text-button page-toggle" onClick={()=>setFullPage(v=>!v)}>{fullPage?'Ver solo el inciso recortado':'Ver página completa'}</button>}<details className="original-file"><summary>Cambiar PDF</summary><button className="text-button" onClick={()=>upload.current?.click()} disabled={busy}><Upload size={16}/>Cargar mi PDF</button></details></>:<div className="original-empty"><ScanLine size={32}/><p>Del PDF a tu práctica</p><small>Se guarda en este dispositivo, no se sube a ningún servidor.</small><button className="secondary wide" disabled={busy} onClick={()=>upload.current?.click()}><Upload size={18}/>{busy?'Abriendo PDF…':'Cargar mi PDF'}</button></div>}
-    <p className="original-status" role="status">{status}</p><small>{bookEditions[s.course].title} · se guarda solo en este dispositivo.</small>
+    {image?<><button className="original-preview" onClick={()=>setZoom(true)} aria-label={!verified||fullPage?'Ampliar página completa':'Ampliar ejercicio original'}><img src={image} alt={label}/><span><ZoomIn size={16}/>Tocá para ampliar</span></button>{verified&&<button className="text-button page-toggle" onClick={()=>setFullPage(v=>!v)}>{fullPage?'Ver solo el inciso recortado':'Ver página completa'}</button>}<details className="original-file"><summary>Cambiar PDF</summary><button className="text-button" onClick={()=>upload.current?.click()} disabled={busy}><Upload size={16}/>Cargar mi PDF</button></details></>:<div className="original-empty"><ScanLine size={32}/><p>Del PDF a tu práctica</p><small>Tu copia alternativa se guarda en este dispositivo.</small><button className="secondary wide" disabled={busy} onClick={()=>upload.current?.click()}><Upload size={18}/>{busy?'Abriendo PDF…':'Cargar mi PDF'}</button></div>}
+    <p className="original-status" role="status">{status}</p><small>{bookEditions[s.course].title} · edición incluida; las copias alternativas quedan en este dispositivo.</small>
     <input ref={upload} hidden type="file" accept="application/pdf,.pdf" aria-label={`PDF original de ${s.course}`} onChange={e=>{const f=e.target.files?.[0];if(f)void importBook(f);e.target.value='';}}/>
     {zoom&&<Dialog title={!verified||fullPage?'Página de tu libro':'Ejercicio de tu libro'} onClose={()=>setZoom(false)}><p>{label}</p><img className="original-zoom" src={image} alt={label}/><button className="primary wide" onClick={()=>setZoom(false)}>Volver a resolver</button></Dialog>}
   </aside>;
