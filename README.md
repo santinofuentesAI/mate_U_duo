@@ -11,9 +11,9 @@ Aprendizaje de Matemática Discreta desde el inicio hasta conjuntos (página imp
 - Biblioteca de lectura: buscador por tema, filtro por semana o bloque, 47 ejemplos resueltos, soluciones comentadas, diccionario de símbolos y enlaces a las páginas originales de teoría y ejemplos de ambos libros.
 - Teclado táctil integrado: P/Q/R/S, negación, conjunción, disyunción, implicación, bicondicional, números y operadores algebraicos. Cursor, borrado y opción de teclado físico.
 - Tablas de verdad, selección de conjuntos, regiones de Venn, orden de demostraciones y división sintética.
-- Cuaderno de transformaciones: verifica una ley lógica por paso, incluso dentro de una subexpresión. Cuaderno de inferencias: verifica las diez reglas y las líneas citadas.
+- En Mi libro y dentro de cada inciso de Book Exam hay herramientas opcionales para comprobar transformaciones e inferencias por pasos. El paso comprobado se puede copiar al desarrollo, pero no valida la respuesta completa.
 - Referencia de 14 leyes y 10 reglas de inferencia durante los ejercicios.
-- Referencias según el curso: Precálculo muestra 32 reglas de potencias, productos notables, factorización, fracciones, raíces y ecuaciones, con condiciones y ejemplos. Se usa también en Biblioteca, Mi libro y el cuaderno algebraico; el diccionario de símbolos cambia con el curso.
+- Referencias según el curso: Precálculo muestra 32 reglas de potencias, productos notables, factorización, fracciones, raíces y ecuaciones, con condiciones y ejemplos. Se usa también en Biblioteca y Mi libro; el diccionario de símbolos cambia con el curso.
 - Editor visual de álgebra: exponentes elevados en el campo que se edita, botones de cuadrado y cubo, plantilla de paréntesis y fracción, cursor táctil, deshacer y opción de teclado del teléfono. Conserva la notación del motor para comprobar respuestas sin alterar su significado.
 - Respuesta al acertar con animación breve, XP real del intento y avance inmediato de la barra; oculta el teclado para dejar espacio a la explicación. Respeta movimiento reducido y no vuelve a dar XP por repetir una pregunta.
 - Intentos ilimitados, consejo gratis y ayuda guiada por 5 monedas ficticias. Se empieza con 20 monedas; cada 5 XP aporta una. Sin compras ni pagos.
@@ -23,7 +23,7 @@ Aprendizaje de Matemática Discreta desde el inicio hasta conjuntos (página imp
 - Diario de errores: conserva la respuesta que se ingresó, sus restricciones, explicación y un acceso para reintentar esa pregunta. Distingue un acierto posterior sin ayuda del dominio a largo plazo.
 - Pausar y retomar la sesión tras una recarga: ejercicio, respuesta, restricciones, pistas ya pagadas y retroalimentación. Empezar otra sesión reemplaza la anterior. Resumen de primeros aciertos, reintentos y ayudas al terminar.
 - Exploradores táctiles: conectores con valores V/F y fila activa de la tabla; conjuntos con pertenencia y operaciones en vivo; ecuaciones con coeficientes deslizables, gráfica, raíces y explicación del discriminante, incluidos los casos lineales y degenerados.
-- Visor de PDF privado: importar el libro en el dispositivo, abrir páginas reales por semana, ampliar y guardar notas. Todos los incisos de una página se pueden consultar; los cuadernos permiten trabajar junto a ella.
+- Visor de PDF privado: importar el libro en el dispositivo, abrir páginas reales por semana, ampliar y guardar notas. Desde cada página se puede abrir en Book Exam un inciso identificado en el catálogo y volver a la página conservando la posición. El catálogo no demuestra cobertura exhaustiva.
 - Progreso local, copia JSON, modo oscuro, tamaño de letra y movimiento reducido. Fechas de estudio en America/Costa_Rica.
 - Cuatro colores (violeta, azul, verde y rosa) con contraste de texto comprobado en modo claro y oscuro.
 - Recortes privados del PDF mediante un gesto táctil, guardados en IndexedDB. En tablet horizontal, el enunciado queda junto al cuaderno; en vertical, arriba. Se pueden fijar, descargar y borrar. Los borradores del libro se separan por curso.

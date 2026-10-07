@@ -50,7 +50,7 @@ try {
   const start=page.getByRole('button',{name:/Empezar \d+ ejercicios/});assert.equal(await start.isEnabled(),true);
   const size=Number((await start.textContent()).match(/\d+/)[0]);assert(size>0&&size<=8);
   await start.click();const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('mate-u-duo.session.v1')));assert.equal(saved.ids.length,size);
-  await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();await nav('Cuaderno');await button('Explorar').click();
+  await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();await nav('Practicar');await button('Abrir explorador').click();
   await page.locator('.logic-output b').waitFor();assert.equal(await page.locator('.logic-output b').textContent(),'F');
   await button('Cambiar Q').tap();assert.equal(await page.locator('.logic-output b').textContent(),'V');assert.equal(await page.locator('.current-truth-row').count(),1);
   await button('Explorar De Morgan').click();assert.equal(await page.locator('.logic-output b').textContent(),'F');
@@ -58,7 +58,7 @@ try {
   await button('Explorar Implicación').click();await noOverflow('logic mobile');
   await button('Conjuntos en vivo').click();await button('A ∩ B').click();assert.equal(await page.locator('.set-result b').textContent(),'{3}');
   await button('A contiene 3').tap();assert.equal(await page.locator('.set-result b').textContent(),'{∅}');await button('Aᶜ').click();assert.equal(await page.locator('.set-result b').textContent(),'{3, 4, 5, 6}');
-  await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');await page.locator('.equation-solution').waitFor();
+  await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');await button('Abrir explorador').click();await page.locator('.equation-solution').waitFor();
   assert.equal(await page.locator('.root-chips').textContent(),'x = -1x = 3');await button('Una raíz').click();assert.equal(await page.locator('.root-chips').textContent(),'x = 2');
   await button('Sin raíces').click();await page.getByRole('heading',{name:'No hay soluciones reales',exact:true}).waitFor();
   await page.getByRole('slider',{name:'Coeficiente a'}).fill('0');await page.getByRole('slider',{name:'Coeficiente b'}).fill('0');await page.getByRole('slider',{name:'Coeficiente c'}).fill('0');await page.getByRole('heading',{name:'Infinitas soluciones reales',exact:true}).waitFor();
@@ -66,7 +66,7 @@ try {
   await page.screenshot({path:'tmp/qa/mobile-explorer.png',fullPage:true});
   for(const size of [{width:800,height:1280},{width:1024,height:768},{width:1280,height:800}]) {
     await page.setViewportSize(size);await nav('Ajustes');await page.getByLabel('Modo oscuro').check();await page.getByLabel('Tamaño de letra').fill('1.3');
-    await nav('Cuaderno');await button('Explorar').click();await page.locator('.equation-graph').waitFor();await noOverflow(`equation ${size.width}`);
+    await nav('Practicar');await button('Abrir explorador').click();await page.locator('.equation-graph').waitFor();await noOverflow(`equation ${size.width}`);
     await page.screenshot({path:`tmp/qa/explorer-${size.width}.png`,fullPage:true});
     await nav('Practicar');await page.locator('.session-builder').waitFor();await noOverflow(`practice ${size.width}`);
     await page.screenshot({path:`tmp/qa/practice-${size.width}.png`,fullPage:true});

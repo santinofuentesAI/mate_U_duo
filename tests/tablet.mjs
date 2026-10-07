@@ -31,10 +31,10 @@ try {
   await page.getByLabel('Tamaño de letra').fill('1.3');
   for(const size of [{width:1280,height:800},{width:1024,height:768},{width:800,height:1280},{width:1440,height:900}]) {
     await page.setViewportSize(size);
-    for(const tab of ['Aprender','Practicar','Biblioteca','Cuaderno','Mi avance','Ajustes']) { await nav(tab).click(); await noOverflow(`${size.width} ${tab} large font`); }
+    for(const tab of ['Aprender','Practicar','Biblioteca','Mi libro','Mi avance','Ajustes']) { await nav(tab).click(); await noOverflow(`${size.width} ${tab} large font`); }
   }
   await page.getByLabel('Tamaño de letra').fill('1'); await page.setViewportSize({width:1280,height:800});
-  await nav('Cuaderno').click();
+  await nav('Mi libro').click();await page.getByRole('button',{name:'Probar con un ejemplo explicado'}).click();
   const input=page.getByRole('textbox',{name:'Siguiente paso'}),editor=input.locator('xpath=../..');
   await input.fill('PQ'); await input.evaluate(el=>{el.focus();el.setSelectionRange(1,1);});
   await editor.getByRole('button',{name:'Conjunción',exact:true}).tap(); assert.equal(await input.inputValue(),'P∧Q');
@@ -42,7 +42,7 @@ try {
   await input.evaluate(el=>{el.focus();el.setSelectionRange(1,2);}); await editor.getByRole('button',{name:'Borrar símbolo',exact:true}).tap();
   await editor.getByRole('button',{name:'Implicación',exact:true}).tap(); assert.equal(await input.inputValue(),'P→Q','selected deletion keeps caret');
   await editor.getByRole('button',{name:'Limpiar',exact:true}).tap(); await editor.getByRole('button',{name:'Negación',exact:true}).tap(); await editor.getByRole('button',{name:'P',exact:true}).tap(); assert.equal(await input.inputValue(),'¬P');
-  await input.fill('¬P∨¬Q'); await page.getByRole('button',{name:'Comprobar paso',exact:true}).tap(); await page.getByText('Paso verificado.',{exact:true}).waitFor();
+  await input.fill('¬P∨¬Q'); await page.getByRole('button',{name:'Comprobar paso',exact:true}).tap(); await page.getByText('Paso comprobado. Podés proponer otra transformación.',{exact:true}).waitFor();
   await nav('Mi libro').click();
   {
     await rendered();assert.equal(await page.getByRole('spinbutton',{name:'Página PDF'}).inputValue(),'1','legacy PDF survives upgrade and page clamps to document length');
@@ -67,7 +67,7 @@ try {
     const clip=await page.locator('.pinned-clip').boundingBox(),work=await page.locator('.book-working').boundingBox(); assert.ok(clip.x+clip.width<work.x+2,'exercise beside keyboard in landscape');
     assert.ok(await page.locator('.pinned-clip img').evaluate(img=>img.complete&&img.naturalWidth>100),'original exercise crop renders');
     await noOverflow('landscape cropped workspace'); await page.screenshot({path:'tmp/qa/tablet-landscape-workspace.png'});
-    await page.getByRole('button',{name:'Demostraciones',exact:true}).tap(); await page.getByRole('heading',{name:'De las premisas a la conclusión.'}).waitFor();
+    await page.getByRole('button',{name:'Inferencias',exact:true}).tap(); await page.getByRole('heading',{name:'De las premisas a la conclusión.'}).waitFor();
     await page.reload(); await nav('Mi libro').click(); await page.getByRole('heading',{name:'Leyes · ejercicio real',exact:true}).waitFor(); await rendered();
     await page.setViewportSize({width:1024,height:768}); await page.locator('.book-workspace').scrollIntoViewIfNeeded(); await noOverflow('1024 cropped workspace'); await page.screenshot({path:'tmp/qa/tablet-1024-workspace.png'});
     await page.setViewportSize({width:800,height:1280}); await page.locator('.book-workspace').scrollIntoViewIfNeeded(); await noOverflow('portrait crop'); await page.screenshot({path:'tmp/qa/tablet-portrait-workspace.png'});
