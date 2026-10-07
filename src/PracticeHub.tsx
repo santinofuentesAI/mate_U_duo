@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, Bookmark, CalendarDays, Clock, Lightbulb, RefreshCw, Target, WandSparkles } from 'lucide-react';
+import { ArrowRight, Bookmark, CalendarDays, Clock, Lightbulb, RefreshCw, WandSparkles } from 'lucide-react';
 import { lessons } from './content';
 import type { Lesson, Progress } from './types';
 import { bank, dailyChallenge, latestAttempts, mistakeJournal, practicePlan, type PracticeItem } from './learning';
@@ -9,8 +9,9 @@ import { MathExpression } from './MathExpression';
 import { BookPractice } from './BookPractice';
 import { BookExam } from './BookExam';
 import { ExamLobby } from './ExamLobby';
-interface Props { progress:Progress;onStart:(items:PracticeItem[],title:string,mode:string)=>void;onExam:(units:string[])=>void;onLesson:(l:Lesson)=>void;onExplore:()=>void;onRead:(page:number)=>void;initialBookProblem?:string; }
-export function PracticeHub({progress:p,onStart,onExam,onLesson,onExplore,onRead,initialBookProblem}:Props) {
+import type { SavedSession } from './sessions';
+interface Props { progress:Progress;pending:SavedSession|null;onResume:()=>void;onStart:(items:PracticeItem[],title:string,mode:string)=>void;onExam:(units:string[])=>void;onLesson:(l:Lesson)=>void;onExplore:()=>void;onRead:(page:number)=>void;initialBookProblem?:string; }
+export function PracticeHub({progress:p,pending,onResume,onStart,onExam,onLesson,onExplore,onRead,initialBookProblem}:Props) {
   const [count,setCount]=useState(3),[unit,setUnit]=useState('all'),[difficulty,setDifficulty]=useState('all'),[view,setView]=useState<'practice'|'errors'>('practice'),[revealed,setRevealed]=useState<string[]>([]),[source,setSource]=useState('all'),[examOpen,setExamOpen]=useState(false);
   const items=bank(lessons,p.course),units=[...new Set(items.map(i=>i.lesson.unit))],last=latestAttempts(p),journal=mistakeJournal(items,p);
   const visited=new Set(p.attempts.map(a=>a.lessonId)),seenUnits=units.filter((u,i)=>i===0||lessons.some(l=>l.course===p.course&&l.unit===u&&(p.completed.includes(l.id)||visited.has(l.id))));
@@ -21,10 +22,10 @@ export function PracticeHub({progress:p,onStart,onExam,onLesson,onExplore,onRead
   const errors=items.filter(i=>{const a=last.get(i.question.id);return a&&(!a.correct||a.assisted);});
   const due=items.filter(i=>p.skills[i.question.id]&&Date.parse(p.skills[i.question.id].due)<=Date.now());
   function retry(item:PracticeItem) {onStart([item],`Volver a entender · ${item.lesson.title}`,'errors');}
-  return <div className="practice-hub"><span className="eyebrow">PRÁCTICA QUE SE ADAPTA A VOS</span><h1>Tu tiempo. Tu siguiente paso.</h1><p>Una sesión corta también cuenta. Elegí qué querés trabajar y salí con una idea más clara.</p>
+  return <div className="practice-hub"><span className="eyebrow">PRÁCTICA QUE SE ADAPTA A VOS</span><h1>Tu tiempo. Tu siguiente paso.</h1><p>Una sesión corta también cuenta. Elegí qué querés trabajar y salí con una idea más clara.</p>{pending&&<div className="paused-session" role="status"><div><b>{pending.session.mode==='exam'?'Simulacro pausado':'Sesión pausada'} · {pending.session.title}</b><small>{Math.max(1,pending.index+1)} de {pending.session.items.length} · guardada en este dispositivo</small></div><button className="primary" onClick={onResume}>Continuar sesión<ArrowRight size={17}/></button></div>}
     <div className="hub-tabs" role="group" aria-label="Vista de práctica"><button aria-pressed={view==='practice'} className={view==='practice'?'active':''} onClick={()=>setView('practice')}><WandSparkles size={18}/>Mi práctica</button><button aria-pressed={view==='errors'} className={view==='errors'?'active':''} onClick={()=>setView('errors')}><Lightbulb size={18}/>Diario de errores<span>{journal.length}</span></button></div>
     {view==='practice'?<>
-      <details className="generated-exam"><summary>Examen de práctica · 35 desafíos</summary><section className="exam-promo"><div className="exam-promo-art"><Target size={40}/><span>35</span></div><div><span className="eyebrow">NUEVO · MODO EXAMEN</span><h2>El examen llegó al aula.</h2><p>35 desafíos nuevos de los temas que ya viste. Incluye argumentos de varias líneas, traducción a símbolos y soluciones explicadas.</p><button className="primary" onClick={()=>setExamOpen(true)}>Entrar al examen<ArrowRight size={18}/></button></div></section></details>
+      <section className="exam-choice" aria-label="Elegir tipo de examen"><div><span className="eyebrow">SIMULACRO CON CORRECCIÓN</span><h2>35 desafíos de las lecciones</h2><p>Preguntas generadas y comprobables, con explicación al terminar. Guarda tu sesión para continuarla.</p><button className="secondary" onClick={()=>setExamOpen(true)}>Preparar simulacro<ArrowRight size={17}/></button></div><div><span className="eyebrow">BOOK EXAM · LIBROS</span><h2>Un inciso a tu ritmo</h2><p>Elegí el problema original, guardá tu desarrollo y reanudá. Solo las prácticas revisadas tienen corrección.</p><button className="secondary" onClick={()=>document.getElementById('book-exam-heading')?.scrollIntoView({behavior:'smooth',block:'start'})}>Ir a Book Exam<ArrowRight size={17}/></button></div></section>
       <BookExam key={p.course} course={p.course} items={items.filter(i=>i.question.bookSource)} progress={p} onStart={onStart} onRead={onRead} initialProblem={initialBookProblem}/>
       <BookPractice items={items.filter(i=>i.question.bookSource)} progress={p} count={count} onStart={onStart}/>
       <section className="card session-builder"><div className="row"><div><span className="eyebrow">HECHO PARA EL BUS</span><h2>Armá tu próxima sesión.</h2></div><Clock size={28}/></div><div className="session-lengths" role="group" aria-label="Cantidad de ejercicios">{[[3,'Un ratito','3 ejercicios'],[8,'Una pausa','8 ejercicios'],[15,'Con calma','15 ejercicios']].map(([n,name,text])=><button key={n} className={count===n?'selected':''} aria-pressed={count===n} onClick={()=>setCount(Number(n))}><b>{name}</b><small>{text}</small></button>)}</div>
