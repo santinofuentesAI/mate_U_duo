@@ -29,6 +29,9 @@ test('session recovery rejects missing questions, duplicate IDs, cross-course it
   const l=lessons[0],raw={id:'12345678-1234-1234-1234-123456789012',title:l.title,mode:'lesson',started:'2026-10-05T12:00:00Z',startingXP:0,lessonId:l.id,ids:l.questions.map(q=>q.id),index:1};
   assert.equal(decodeSession(raw)?.session.items[1].question.id,l.questions[1].id);
   assert.equal(decodeSession({...raw,index:l.questions.length}),null);assert.equal(decodeSession({...raw,ids:['not-a-question']}),null);assert.equal(decodeSession({...raw,ids:[raw.ids[0],raw.ids[0]]}),null);
+  const earlier=decodeSession({...raw,ids:l.questions.filter(q=>q.id.endsWith('-q1')||q.id.endsWith('-q2')||q.id.endsWith('-q3')).map(q=>q.id),index:1});
+  assert.equal(earlier?.index,1);assert.equal(earlier?.session.items.length,10);
+  assert.equal(new Set(earlier?.session.items.map(i=>i.question.id)).size,10);
   assert.equal(decodeSession({...raw,mode:'adaptive',lessonId:undefined,ids:[raw.ids[0],bank(lessons,'precalculo')[0].question.id],index:0}),null);
 });
 test('equation explorer handles two roots, a double root, no real roots, a line and degenerate identities',()=>{

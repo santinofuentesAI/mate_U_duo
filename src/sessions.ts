@@ -28,7 +28,13 @@ export function decodeSession(raw:unknown):SavedSession|null {
   const lesson=r.mode==='lesson'?lessons.find(l=>l.id===r.lessonId):undefined,index=Number(r.index);
   if(r.lessonId!==undefined&&!lesson)return null;
   if(index< (lesson?-1:0)||index>=items.length)return null;
-  if(r.mode==='lesson'&&(!lesson||lesson.questions.length!==items.length||lesson.questions.some((q,i)=>q.id!==items[i]!.question.id)))return null;
+  if(r.mode==='lesson'){
+    if(!lesson||items.some(item=>item!.lesson.id!==lesson.id)||items.length>lesson.questions.length)return null;
+    // Sessions saved before the lesson grew from three to ten questions resume
+    // at the same exercise, then continue through the newly added questions.
+    const savedIds=new Set(items.map(item=>item!.question.id));
+    items=[...items,...lesson.questions.filter(q=>!savedIds.has(q.id)).map(question=>({lesson,question}))];
+  }
   return {session:{id:r.id,title:r.title,mode:r.mode,started:r.started,startingXP:Number(r.startingXP),lesson,items:items as PracticeItem[],...(r.mode==='exam'?{examSeed:String(r.examSeed),examUnits:r.examUnits as string[],examCourse:r.examCourse as Course,examVersion:r.examVersion===2?2:1}:{})},index};
 }
 export function loadSession(){try{const text=localStorage.getItem(SESSION_KEY);return text?decodeSession(JSON.parse(text)):null;}catch{return null;}}
