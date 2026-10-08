@@ -1,37 +1,63 @@
 import { useState } from 'react';
-import { ArrowRight, BookOpenCheck, ChevronRight, FileText, PencilLine } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpenCheck } from 'lucide-react';
 import type { Course, Progress } from './types';
 import type { PracticeItem } from './learning';
 import { BookProblem } from './BookProblem';
-import { assignmentLabel, bookCatalog, readBookPosition, responseStatus, reviewedActivities, statusLabels } from './bookCatalog';
-interface Props {course:Course;items:PracticeItem[];progress:Progress;onStart:(items:PracticeItem[],title:string,mode:string)=>void;onRead:(page:number)=>void;initialProblem?:string;}
-export function BookExam({course,items,progress,onStart,onRead,initialProblem}:Props) {
+import { assignmentLabel, bookCatalog, readBookPosition, responseStatus, reviewedActivities } from './bookCatalog';
+
+interface Props { course:Course; items:PracticeItem[]; progress:Progress; onStart:(items:PracticeItem[],title:string,mode:string)=>void; onRead:(page:number)=>void; initialProblem?:string; }
+
+export function BookExam({course,items,progress,onStart,initialProblem}:Props) {
   const all=bookCatalog[course];
   const initial=all.find(p=>p.id===(initialProblem||readBookPosition(course)?.id));
-  const [week,setWeek]=useState(initial?.week||(course==='discreta'?'S1':'S4')),[section,setSection]=useState(initial?.sectionCode||'all'),[topic,setTopic]=useState('all');
-  const [selected,setSelected]=useState<string|null>(initial?.id||null),[message,setMessage]=useState('');
-  const [,refreshChecks]=useState(0);
+  const [week,setWeek]=useState(initial?.week||(course==='discreta'?'S1':'S4'));
+  const [section,setSection]=useState(initial?.sectionCode||'all');
+  const [selected,setSelected]=useState<string|null>(initial?.id||null);
   const [lastPosition,setLastPosition]=useState(initial?.id||null);
+  const [message,setMessage]=useState('');
+  const [,refreshChecks]=useState(0);
   const [done,setDone]=useState<string[]>(()=>{try{const v=JSON.parse(localStorage.getItem(`mate-book-exam-done-${course}`)||'[]');return Array.isArray(v)?v.filter(id=>typeof id==='string'):[];}catch{return [];}});
-  const weeks=[...new Set(all.map(p=>p.week))],topics=[...new Set(all.map(p=>p.section))];
-  const sections=[...new Map(all.filter(p=>(week==='all'||p.week===week)&&(topic==='all'||p.section===topic)).map(p=>[p.sectionCode,p.section])).entries()];
-  const catalog=all.filter(p=>(week==='all'||p.week===week)&&(topic==='all'||p.section===topic)&&(section==='all'||p.sectionCode===section));
-  const current=all.find(p=>p.id===selected),status=(p:typeof all[number])=>responseStatus(p,items,progress,done.includes(p.id));
-  function choose(id:string){setSelected(id);setLastPosition(id);setMessage('');try{localStorage.setItem(`mate-book-position-${course}`,JSON.stringify({id}));}catch{setMessage('No se pudo guardar tu posición. Conservá esta pestaña abierta.');}requestAnimationFrame(()=>document.getElementById('book-exam-current')?.scrollIntoView({behavior:'smooth',block:'start'}));}
-  function resume(){const last=all.find(p=>p.id===lastPosition);if(!last)return;setWeek(last.week);setTopic('all');setSection(last.sectionCode);choose(last.id);}
+  const weeks=[...new Set(all.map(p=>p.week))];
+  const inWeek=all.filter(p=>week==='all'||p.week===week);
+  const sections=[...new Map(inWeek.map(p=>[p.sectionCode,p.section])).entries()];
+  const catalog=inWeek.filter(p=>section==='all'||p.sectionCode===section);
+  const current=all.find(p=>p.id===selected);
+  const status=(p:typeof all[number])=>responseStatus(p,items,progress,done.includes(p.id));
+  const position=catalog.find(p=>p.id===lastPosition);
+  const nextPending=catalog.find(p=>status(p)==='submitted')||catalog.find(p=>status(p)==='identified');
+  const start=position&&status(position)!=='validated'?position:nextPending||position||catalog[0];
+  const index=catalog.findIndex(p=>p.id===selected);
+
+  function choose(id:string){
+    setSelected(id);setLastPosition(id);setMessage('');
+    try{localStorage.setItem(`mate-book-position-${course}`,JSON.stringify({id}));}
+    catch{setMessage('No se pudo guardar tu posición en este dispositivo.');}
+    requestAnimationFrame(()=>document.getElementById('book-exam-current')?.scrollIntoView({behavior:'smooth',block:'start'}));
+  }
   function markDone(){if(!selected)return false;const updated=[...new Set([...done,selected])];try{localStorage.setItem(`mate-book-exam-done-${course}`,JSON.stringify(updated));setDone(updated);return true;}catch{setMessage('No se pudo guardar el estado. Tu respuesta sigue en pantalla.');return false;}}
-  function edited(){if(!selected||!done.includes(selected))return;const updated=done.filter(id=>id!==selected);setDone(updated);try{localStorage.setItem(`mate-book-exam-done-${course}`,JSON.stringify(updated));}catch{setMessage('No se pudo guardar el nuevo estado de la respuesta.');}}
-  function nextProblem(delta=1){const index=catalog.findIndex(p=>p.id===selected),next=catalog[index+delta];if(next)choose(next.id);else setMessage(delta===1?'Llegaste al final de esta selección. Podés cambiar los filtros.':'Este es el primer ejercicio de la selección.');}
-  function filter(){setSelected(null);setMessage('');}
-  return <section className="book-exam card" aria-label="Modo Book Exam">
-    <header className="book-exam-title" id="book-exam-heading"><span className="book-exam-emblem"><BookOpenCheck size={28}/></span><div><h2>Book Exam</h2><p>Un inciso a la vez. Escribí tus pasos y seguí después.</p></div></header>
-    <div className="book-filters"><label>Semana<select aria-label="Semana de Book Exam" value={week} onChange={e=>{setWeek(e.target.value);setTopic('all');setSection('all');filter();}}><option value="all">Todo el alcance</option>{weeks.map(w=><option key={w} value={w}>{assignmentLabel(w)}</option>)}</select></label><label>Problema<select aria-label="Problema de Book Exam" value={catalog.some(p=>p.id===selected)?selected||'':''} onChange={e=>e.target.value?choose(e.target.value):filter()}><option value="">Elegí un problema o inciso</option>{catalog.map(p=><option key={p.id} value={p.id}>{p.sectionCode} · {p.number}{p.part} · PDF {p.page}</option>)}</select></label></div>
-    <details className="simple-more"><summary>Filtrar por tema y sección</summary><div className="book-filters"><label>Tema<select aria-label="Tema de Book Exam" value={topic} onChange={e=>{setTopic(e.target.value);setSection('all');filter();}}><option value="all">Todos los temas</option>{topics.map(t=><option key={t}>{t}</option>)}</select></label><label>Sección<select aria-label="Sección de Book Exam" value={section} onChange={e=>{setSection(e.target.value);filter();}}><option value="all">Todas las secciones</option>{sections.map(([code,name])=><option key={code} value={code}>{code} · {name}</option>)}</select></label></div></details>
-    <div className="book-exam-actions"><button className="primary" disabled={!catalog.length} onClick={()=>{const next=catalog.find(p=>status(p)==='identified')||catalog.find(p=>status(p)==='submitted');if(next)choose(next.id);else setMessage('Ya trabajaste toda esta selección. Podés repasar un ejercicio o cambiar los filtros.');}}>Empezar por el primero pendiente<ArrowRight size={18}/></button>{lastPosition&&lastPosition!==selected&&<button className="secondary" onClick={resume}>Continuar donde quedé<ChevronRight size={18}/></button>}</div>
-    {current&&<div id="book-exam-current"><BookProblem key={current.id} problem={current} verified={reviewedActivities(current,items)} responseState={status(current)} onVerified={item=>onStart([item],`Book Exam · ${current.sectionCode} · ${current.number}${current.part}`,'book-exam')} onDone={markDone} onEdited={edited} onChecked={()=>refreshChecks(n=>n+1)} onNext={()=>nextProblem()} onPrevious={()=>nextProblem(-1)}/></div>}
+  function edited(){
+    if(!selected||!done.includes(selected))return;
+    const updated=done.filter(id=>id!==selected);setDone(updated);
+    try{localStorage.setItem(`mate-book-exam-done-${course}`,JSON.stringify(updated));}catch{setMessage('No se pudo actualizar el estado del ejercicio.');}
+  }
+  function move(delta:number){const next=catalog[index+delta];if(next)choose(next.id);else setMessage(delta===1?'Terminaste esta selección. Elegí otra semana o sección.':'Este es el primer ejercicio de la selección.');}
+  function changeWeek(value:string){setWeek(value);setSection('all');setSelected(null);setMessage('');}
+  function changeSection(value:string){setSection(value);setSelected(null);setMessage('');}
+
+  return <section className="book-exam card book-journey" aria-label="Modo Book Exam">
+    {!current?<>
+      <header className="book-journey-intro"><span className="book-journey-icon"><BookOpenCheck size={26}/></span><h2>Ejercicios del libro</h2><p>Uno a la vez. Tu avance se guarda aquí.</p></header>
+      <div className="book-journey-start"><label>Elegí la semana<select aria-label="Semana de Book Exam" value={week} onChange={e=>changeWeek(e.target.value)}><option value="all">Todo el alcance</option>{weeks.map(w=><option key={w} value={w}>{assignmentLabel(w)}</option>)}</select></label>
+        <button className="primary wide" disabled={!start} onClick={()=>start&&choose(start.id)}>{position&&status(position)!=='validated'?'Continuar mi ejercicio':'Empezar a practicar'}<ArrowRight size={19}/></button>
+        {start&&<small>{start.sectionCode} · ejercicio {start.number}{start.part} · PDF {start.page}{status(start)==='submitted'?' · borrador guardado':''}</small>}
+      </div>
+      <details className="book-journey-picker"><summary>Elegir otro ejercicio</summary><div><label>Sección<select aria-label="Sección de Book Exam" value={section} onChange={e=>changeSection(e.target.value)}><option value="all">Todas las secciones</option>{sections.map(([code,name])=><option key={code} value={code}>{code} · {name}</option>)}</select></label><label>Inciso<select aria-label="Problema de Book Exam" value="" onChange={e=>e.target.value&&choose(e.target.value)}><option value="">Elegí un inciso</option>{catalog.map(p=><option key={p.id} value={p.id}>{p.sectionCode} · {p.number}{p.part} · PDF {p.page}{status(p)==='validated'?' ✓':status(p)==='submitted'?' · guardado':''}</option>)}</select></label></div></details>
+      <p className="book-journey-fineprint">Solo los ejercicios con solución revisada se comprueban automáticamente. En los demás podés guardar tus pasos.</p>
+    </>:<>
+      <div className="book-journey-top"><button className="text-button" onClick={()=>{setSelected(null);setMessage('');}}><ArrowLeft size={18}/> Elegir ejercicio</button><span>{index>=0?`${index+1} de ${catalog.length}`:'Ejercicio del libro'}</span></div>
+      {index>=0&&<div className="book-journey-track" role="progressbar" aria-valuenow={index+1} aria-valuemin={1} aria-valuemax={catalog.length} aria-label="Avance en la selección"><span style={{width:`${((index+1)/catalog.length)*100}%`}}/></div>}
+      <div id="book-exam-current"><BookProblem key={current.id} problem={current} verified={reviewedActivities(current,items)} responseState={status(current)} onVerified={item=>onStart([item],`Book Exam · ${current.sectionCode} · ${current.number}${current.part}`,'book-exam')} onDone={markDone} onEdited={edited} onChecked={()=>refreshChecks(n=>n+1)} onNext={()=>move(1)} onPrevious={()=>move(-1)}/></div>
+    </>}
     {message&&<p role="status" className="notice">{message}</p>}
-    <details className="book-exam-list"><summary><PencilLine size={19}/> Inventario de esta selección <ChevronRight size={18}/></summary><div>{catalog.map(p=><button key={p.id} onClick={()=>choose(p.id)}><span className={`book-state-symbol ${status(p)}`}>{status(p)==='validated'?'✓':status(p)==='submitted'?'✎':'·'}</span><span><b>{p.sectionCode} · Ejercicio {p.number}{p.part} · {p.section}</b><small>PDF {p.page} · impresa {p.printedPage} · {statusLabels[status(p)]}</small></span><ChevronRight size={17}/></button>)}</div></details>
-    <details className="book-exam-list"><summary><FileText size={19}/> Páginas y alcance semanal <ChevronRight size={18}/></summary><p>Las semanas con material confirmado son S1–S4 en Discreta y S4 en Precálculo. Los bloques B y los complementos no afirman una asignación del docente.</p><div>{[...new Map(catalog.map(p=>[p.sectionCode,p])).values()].map(p=><div className="book-exam-section" key={p.sectionCode}><b>{p.sectionCode} · {p.section}</b><small>{assignmentLabel(p.week)}</small><div>{[...new Set(all.filter(a=>a.sectionCode===p.sectionCode).flatMap(a=>a.sourcePages))].sort((a,b)=>a-b).map(page=><button key={page} onClick={()=>onRead(page)}>PDF {page}<ChevronRight size={16}/></button>)}</div></div>)}</div></details>
-    <p className="book-exam-note">La comprobación usa únicamente claves revisadas y evalúa el resultado final; tus pasos libres no reciben calificación automática. Para otros incisos, podés practicar sin una nota. Los originales se muestran desde tu copia privada.</p>
   </section>;
 }

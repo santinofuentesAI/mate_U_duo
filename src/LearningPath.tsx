@@ -1,21 +1,26 @@
 import { useState } from 'react';
-import { ArrowRight, Bookmark, Check, ChevronDown, Search, Sparkles } from 'lucide-react';
+import { ArrowRight, Check, Search, Sparkles } from 'lucide-react';
 import type { Lesson, Progress } from './types';
-import { lessonMastery } from './progress';
 import { lessonWeekLabel } from './bookScope';
 import { TopicIcon } from './TopicIcon';
-export function LearningPath({path,progress:p,onStart,onFavorite}:{path:Lesson[];progress:Progress;onStart:(l:Lesson)=>void;onFavorite:(id:string)=>void}) {
-  const [unit,setUnit]=useState('all'),[search,setSearch]=useState(''),[onlySaved,setOnlySaved]=useState(false),[exploring,setExploring]=useState(false);
-  const units=[...new Set(path.map(l=>l.unit))],next=path.find(l=>!p.completed.includes(l.id))||path[0];
-  const normal=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-  const filtered=(exploring?path:path.filter(l=>l.unit===next.unit)).filter(l=>(unit==='all'||l.unit===unit)&&(!onlySaved||p.favorites?.includes(l.id))&&normal(`${l.title} ${l.unit} ${l.description}`).includes(normal(search)));
-  return <section className={`learning-route ${exploring?'is-exploring':''}`}><div className="row route-heading"><div><span className="eyebrow">TU PRÓXIMO PASO</span><h2>Tu ruta de aprendizaje</h2></div><span>{path.filter(l=>p.completed.includes(l.id)).length} / {path.length}</span></div>
-    {exploring&&<div id="route-explorer" className="route-explorer"><div className="route-tools"><label className="route-search"><Search size={18}/><input aria-label="Buscar un nivel" placeholder="¿Qué tema necesitás hoy?" value={search} onChange={e=>setSearch(e.target.value)}/></label><button aria-label="Guardados" title="Ver temas guardados" className={onlySaved?'selected':''} aria-pressed={onlySaved} onClick={()=>setOnlySaved(!onlySaved)}><Bookmark size={18}/><span>Guardados</span></button></div>
-    <div className="unit-pills" role="group" aria-label="Bloques de aprendizaje"><button className={unit==='all'?'selected':''} aria-pressed={unit==='all'} onClick={()=>setUnit('all')}>Todos</button>{units.map(u=><button key={u} className={unit===u?'selected':''} aria-pressed={unit===u} onClick={()=>setUnit(u)}>{u.split(' · ')[0]}<span>{u.split(' · ')[1]}</span></button>)}</div></div>}
-    {units.filter(u=>filtered.some(l=>l.unit===u)).map(u=>{const list=filtered.filter(l=>l.unit===u),done=path.filter(l=>l.unit===u&&p.completed.includes(l.id)).length,total=path.filter(l=>l.unit===u).length;return <section className="level-unit" key={u}><header className="level-unit-header"><div className="unit-number">{units.indexOf(u)+1}</div><div><small>{u.split(' · ')[0]}</small><h3>{u.split(' · ')[1]}</h3></div><span>{done}/{total} lecciones</span></header><div className="level-grid">{list.map(l=>{const mastery=lessonMastery(p,l),complete=p.completed.includes(l.id),saved=p.favorites?.includes(l.id),status=mastery===100?'Dominado · a mantener':mastery>0?`${mastery}% de dominio · vas avanzando`:complete?'Lección vista · falta recordarla':'Nuevo · listo para empezar';return <article className={`level-card ${l.id===next.id?'is-next':''} ${complete?'is-complete':''} ${mastery===100?'is-mastered':''}`} key={l.id}>
-      <button className="level-open" aria-label={`Abrir ${l.title}`} onClick={()=>onStart(l)}><span className="level-orb">{mastery===100?<Check size={26}/>:<TopicIcon name={l.icon} topic={l.title} size={34}/>}</span><div><span className="level-kicker">NIVEL {path.indexOf(l)+1}{l.id===next.id&&<><Sparkles size={11}/>SIGUIENTE</>}</span><h4>{l.title}</h4><small>{lessonWeekLabel(l)}</small><small>{l.questions.length} prácticas · {l.minutes} min</small></div><ArrowRight size={17}/></button><footer><span>{status}</span><button aria-label={`${saved?'Quitar':'Guardar'} ${l.title}`} aria-pressed={!!saved} onClick={()=>onFavorite(l.id)}><Bookmark size={18} fill={saved?'currentColor':'none'}/></button></footer><div className="level-mastery" role="progressbar" aria-label={`Dominio de ${l.title}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={mastery}><span style={{width:`${mastery}%`}}/></div>
-    </article>;})}</div></section>;})}
-    {!filtered.length&&<div className="card empty-state"><Search size={28}/><h3>No hay niveles con ese filtro.</h3><p>Probá otro tema o quitá los filtros para volver a ver la ruta.</p><button onClick={()=>{setUnit('all');setSearch('');setOnlySaved(false);}}>Ver todos los niveles</button></div>}
-    <button className="route-explore-toggle" aria-expanded={exploring} aria-controls={exploring?'route-explorer':undefined} onClick={()=>{setExploring(!exploring);setUnit('all');setSearch('');setOnlySaved(false);}}>{exploring?'Volver a mi unidad':`Explorar todas las unidades (${units.length})`}<ChevronDown size={17}/></button>
+
+export function LearningPath({path,progress:p,onStart}:{path:Lesson[];progress:Progress;onStart:(l:Lesson)=>void;onFavorite:(id:string)=>void}) {
+  const [exploring,setExploring]=useState(false),[search,setSearch]=useState('');
+  const next=path.find(l=>!p.completed.includes(l.id))||path[0];
+  if(!next)return null;
+  const units=[...new Set(path.map(l=>l.unit))];
+  const currentUnit=path.filter(l=>l.unit===next.unit);
+  const remaining=currentUnit.filter(l=>l.id!==next.id);
+  const normalized=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const results=path.filter(l=>normalized(`${l.title} ${l.unit} ${l.description}`).includes(normalized(search)));
+  const complete=p.completed.includes(next.id);
+  const done=path.filter(l=>p.completed.includes(l.id)).length;
+  return <section className="learning-route learning-simple">
+    <header className="learning-simple-heading"><div><span className="eyebrow">TU CAMINO</span><h1>Aprender</h1></div><span>{done} de {path.length} lecciones</span></header>
+    <div className="learning-simple-unit"><span>{next.unit.split(' · ')[0]}</span><b>{next.unit.split(' · ')[1]||next.unit}</b></div>
+    <article className="learning-next"><span className="learning-next-icon"><TopicIcon name={next.icon} topic={next.title} size={38}/></span><span className="learning-next-tag"><Sparkles size={15}/> {complete?'Para repasar':'Siguiente lección'}</span><h2>{next.title}</h2><p>{next.description}</p><button className="primary wide" onClick={()=>onStart(next)}>{complete?'Repasar lección':'Empezar lección'}<ArrowRight size={19}/></button><small>{lessonWeekLabel(next)} · {next.minutes} min</small></article>
+    {remaining.length>0&&<div className="learning-simple-list"><h3>Esta unidad</h3>{remaining.map(l=><button key={l.id} onClick={()=>onStart(l)}><span className={p.completed.includes(l.id)?'done':''}>{p.completed.includes(l.id)?<Check size={18}/>:<TopicIcon name={l.icon} topic={l.title} size={20}/>}</span><b>{l.title}</b><small>{p.completed.includes(l.id)?'Visto':'Abrir'}</small><ArrowRight size={17}/></button>)}</div>}
+    <button className="learning-explore-button" aria-expanded={exploring} onClick={()=>setExploring(v=>!v)}>{exploring?'Cerrar temas':'Ver todos los temas'}<ArrowRight size={17}/></button>
+    {exploring&&<div className="learning-explorer"><label className="simple-search"><Search size={18}/><input aria-label="Buscar un nivel" placeholder="Buscar un tema…" value={search} onChange={e=>setSearch(e.target.value)}/></label>{units.filter(u=>results.some(l=>l.unit===u)).map(u=><section key={u}><h3>{u}</h3>{results.filter(l=>l.unit===u).map(l=><button key={l.id} onClick={()=>onStart(l)}><span>{p.completed.includes(l.id)?<Check size={18}/>:<TopicIcon name={l.icon} topic={l.title} size={20}/>}</span><b>{l.title}</b><ArrowRight size={17}/></button>)}</section>)}{!results.length&&<p>No encontré ese tema. Probá otra palabra.</p>}</div>}
   </section>;
 }
