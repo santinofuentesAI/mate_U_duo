@@ -97,6 +97,33 @@ export function isFactored(input: string) {
   }}
   return count>=2;
 }
+export function isLinearFactorization(input: string) {
+  if (!isFactored(input)) return false;
+  let raw=input.toLowerCase().replace(/\s/g,'').replace(/[×·]/g,'*').replace(/[−–]/g,'-');
+  // Make implicit products explicit, but only split at the outermost level.
+  raw=raw.replace(/([a-z0-9)])\(/g,'$1*(').replace(/\)([a-z])/g,')*$1').replace(/\)\(/g,')*(');
+  if(raw.startsWith('(')&&raw.endsWith(')')){
+    let depth=0,whole=true;
+    for(let i=0;i<raw.length-1;i++){if(raw[i]==='(')depth++;if(raw[i]===')')depth--;if(depth===0){whole=false;break;}}
+    if(whole)raw=raw.slice(1,-1);
+  }
+  let depth=0,start=0;const factors:string[]=[];
+  for(let i=0;i<raw.length;i++){if(raw[i]==='(')depth++;if(raw[i]===')')depth--;if(raw[i]==='*'&&depth===0){factors.push(raw.slice(start,i));start=i+1;}}
+  factors.push(raw.slice(start));
+  return factors.every(factor=>{
+    let base=factor.match(/^\((.+)\)\^[2-8]$/)?.[1]||factor.match(/^([a-z])\^[2-8]$/)?.[1]||factor;
+    if(base.startsWith('(')&&base.endsWith(')'))base=base.slice(1,-1);
+    const parsed=parseAlgebra(base);
+    return [...parsed.den.keys()].every(k=>!k.length)&&[...parsed.num.keys()].every(k=>k.length<=1);
+  });
+}
+function isIrreducibleFraction(input:string){
+  const match=input.replace(/\s+/g,'').replace(/[−–]/g,'-').match(/^(-?\d+)\/(\d+)$/);
+  if(!match||Number(match[2])===0)return false;
+  let a=Math.abs(Number(match[1])),b=Number(match[2]);
+  while(b)[a,b]=[b,a%b];
+  return a===1;
+}
 export function synthetic(coefficients: number[], root: number) { const result = [coefficients[0]]; for (let i = 1; i < coefficients.length; i++) result.push(coefficients[i] + root * result[i - 1]); return result; }
 export function normalize(s: string) { return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase().replace(/\s+/g, ' ').replace(/[−–]/g, '-'); }
 function elements(s: string | string[]) { return [...new Set((Array.isArray(s) ? s : s.replace(/[{}]/g, '').split(/[;,]/)).map(x => normalize(x)).filter(Boolean))].sort(); }
@@ -104,7 +131,7 @@ export function sameSet(a: string | string[], b: string | string[]) { return JSO
 export function grade(q: Question, value: string | string[], exclusions: string[] = []): { correct: boolean; error?: string } {
   try {
     if (q.type === 'logic') return { correct: equivalentLogic(String(value), String(q.answer)) };
-    if (q.type === 'algebra') { const equivalent = equivalentAlgebra(String(value), String(q.answer)); const domains = sameSet(exclusions, q.exclusions || []); const form=q.requiredForm==='factored'?isFactored(String(value)):q.requiredForm==='expanded'?!/[()]/.test(String(value)):true; return { correct: equivalent && domains && form, error: equivalent && !domains ? 'La expresión es equivalente, pero revisá las restricciones del dominio original.' : equivalent&&!form?q.requiredForm==='expanded'?'Es equivalente, pero falta desarrollarla: escribí el polinomio sin paréntesis.':'Es equivalente, pero falta escribirla como producto de factores. Consultá las reglas de factorización.':undefined }; }
+    if (q.type === 'algebra') { const equivalent = equivalentAlgebra(String(value), String(q.answer)); const domains = sameSet(exclusions, q.exclusions || []); const form=q.requiredForm==='factored'?isFactored(String(value)):q.requiredForm==='linearFactors'?isLinearFactorization(String(value)):q.requiredForm==='irreducibleFraction'?isIrreducibleFraction(String(value)):q.requiredForm==='expanded'?!/[()]/.test(String(value)):true; const formError=q.requiredForm==='expanded'?'Es equivalente, pero falta desarrollarla: escribí el polinomio sin paréntesis.':q.requiredForm==='linearFactors'?'Es equivalente, pero todavía queda un factor de grado mayor que uno. Continuá hasta obtener factores lineales.':q.requiredForm==='irreducibleFraction'?'Es equivalente, pero escribí una fracción irreducible con la forma a/b.':'Es equivalente, pero falta escribirla como producto de factores. Consultá las reglas de factorización.';return { correct: equivalent && domains && form, error: equivalent && !domains ? 'La expresión es equivalente, pero revisá las restricciones del dominio original.' : equivalent&&!form?formError:undefined }; }
     if (q.type === 'set' || q.type === 'venn') return { correct: sameSet(value, q.answer) };
     if (q.type === 'order' || q.type === 'table' || q.type === 'synthetic') return { correct: JSON.stringify((value as string[]).map(normalize)) === JSON.stringify((q.answer as string[]).map(normalize)) };
     return { correct: normalize(String(value)) === normalize(String(q.answer)) };

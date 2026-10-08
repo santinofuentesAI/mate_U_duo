@@ -2,7 +2,7 @@ import type { Lesson, Question, QuestionType } from './types';
 
 // Each row is a new, authored exercise. These are lesson practice, not transcriptions
 // of numbered book problems. The final two rows of each lesson are challenges.
-type Seed = [type: 'c' | 't' | 'a' | 'l', prompt: string, answer: string, explanation: string, options?: string[]];
+type Seed = [type: 'c' | 't' | 'a' | 'l' | 's', prompt: string, answer: string, explanation: string, options?: string[]];
 const practice: Record<string, Seed[]> = {
   'Conjuntos numéricos': [
     ['c','¿A qué conjunto más pequeño pertenece 0?','ℕ','En esta app ℕ incluye el cero.',['ℕ','ℤ pero no ℕ','Irracionales']],
@@ -155,7 +155,7 @@ const practice: Record<string, Seed[]> = {
     ['c','¿Qué valores excluye 1/(x²−9)?','−3 y 3','x²−9=(x−3)(x+3).',['−3 y 3','Solo 3','Solo 0']],
     ['a','Simplificá (x²−4)/(x−2), con x≠2.','x+2','El factor x−2 se cancela; el dominio original sigue excluyendo 2.'],
     ['c','Después de simplificar x(x−1)/x, ¿se admite x=0?','No','La fracción original no estaba definida en cero.',['No','Sí','Solo si x=1']],
-    ['c','¿Qué valores excluye (x+1)/(x²−x)?','0 y 1','El denominador es x(x−1).',['0 y 1','Solo 0','−1 y 1']],
+    ['c','Simplificás (x²−1)/(x²−x). ¿Qué valores siguen excluidos?','0 y 1','El denominador original x(x−1) excluye 0 y 1 aunque se cancele x−1.',['0 y 1','Solo 0','Solo 1']],
   ],
   'Operar fracciones algebraicas': [
     ['a','Sumá 1/x + 2/x, con x≠0.','3/x','Los denominadores ya coinciden.'],
@@ -191,7 +191,7 @@ const practice: Record<string, Seed[]> = {
     ['c','Resolvé x²+x−6=0.','−3 y 2','(x+3)(x−2)=0.',['−3 y 2','3 y −2','−6 y 1']],
     ['t','Hallá Δ de 3x²−2x+1=0.','-8','(−2)²−4·3·1=−8.'],
     ['c','Resolvé 2x²−5x−3=0.','−1/2 y 3','(2x+1)(x−3)=0.',['−1/2 y 3','1/2 y −3','−1 y 3']],
-    ['c','Resolvé x²−6x+5=0 completando cuadrados o factorizando.','1 y 5','(x−1)(x−5)=0.',['1 y 5','−1 y −5','2 y 4']],
+    ['s','Resolvé 3x²−2x−1=0 en ℝ. Seleccioná todas las raíces.','-1/3,1','(3x+1)(x−1)=0.',['-3','-1','-1/3','0','1/3','1','3']],
   ],
   'Ecuaciones de grado superior': [
     ['t','¿Qué raíz se obtiene de x(x−2)=0 si el primer factor se anula?','0','x=0 hace cero el producto.'],
@@ -227,7 +227,7 @@ const practice: Record<string, Seed[]> = {
     ['t','La edad de Ana duplica la de Leo; juntas suman 27. ¿Edad de Leo?','9','Leo=x, Ana=2x: 3x=27.'],
     ['t','El largo de un rectángulo supera al ancho en 2; perímetro 20. ¿Ancho?','4','2x+2(x+2)=20; x=4.'],
     ['t','Dos números consecutivos suman 47. ¿Cuál es el mayor?','24','x+(x+1)=47; x=23.'],
-    ['t','Un taxi cobra 5 fijos y 3 por km. La cuenta es 32. ¿Cuántos km recorrió?','9','5+3x=32; x=9 y la cantidad es no negativa.'],
+    ['t','Dos cuadernos y tres lápices cuestan 19; un cuaderno y un lápiz cuestan 7. ¿Cuánto cuesta un lápiz?','5','Si c+l=7 y 2c+3l=19, restá 2(c+l): l=5; c=2.'],
   ],
   'Introducción y razonamiento lógico': [
     ['c','¿Un ejemplo verdadero prueba “todos los naturales son pares”?','No','Un ejemplo no alcanza para una afirmación universal.',['No','Sí']],
@@ -236,7 +236,7 @@ const practice: Record<string, Seed[]> = {
     ['c','¿Qué se busca para refutar “todo múltiplo de 3 es par”?','Un múltiplo impar de 3','3 es un contraejemplo.',['Un múltiplo impar de 3','Un múltiplo par de 3','Diez casos favorables']],
     ['t','¿Cuál es el menor natural positivo que refuta “todo natural positivo es par”?','1','1 es natural positivo e impar.'],
     ['c','“Algunos enteros son negativos”. ¿Qué bastaría para demostrarlo?','Un testigo, como −1','Un existencial necesita un caso que cumpla.',['Un testigo, como −1','Comprobar todos los enteros','Un entero positivo']],
-    ['c','Se observaron los casos n=1,…,100 de una conjetura universal. ¿Ya está demostrada?','No','La conjetura puede fallar más adelante; hace falta un argumento general.',['No','Sí, siempre','Solo si n=100 es par']],
+    ['c','Se observó que n(n+1) es par para 100 enteros. ¿Qué argumento demostraría el caso general?','n y n+1 son consecutivos: uno es par','En dos enteros consecutivos siempre hay uno par; por eso su producto es par para todo entero n.',['n y n+1 son consecutivos: uno es par','Basta con los 100 ejemplos','Todo entero n es par']],
   ],
   'Proposiciones y conectores': [
     ['c','Elegí el enunciado con valor de verdad definido.','7 es primo','Tiene valor de verdad definido.',['7 es primo','¿Es 7 primo?','Sumá 2']],
@@ -245,7 +245,7 @@ const practice: Record<string, Seed[]> = {
     ['c','Con P=V, Q=F, ¿cuánto vale P∨Q?','V','La disyunción inclusiva exige al menos una verdadera.',['V','F']],
     ['l','P: viajo. Q: leo. Escribí “no viajo o leo”.','¬P∨Q','Negá P y unilo a Q con ∨.'],
     ['c','Con P=F, Q=F, ¿cuánto vale P⊻Q?','F','La disyunción exclusiva exige exactamente una verdadera.',['F','V']],
-    ['l','P: llueve. Q: hace frío. Escribí “ni llueve ni hace frío”.','¬P∧¬Q','Las dos proposiciones son falsas: ¬P y ¬Q.'],
+    ['l','P: llueve. Q: hace frío. R: salgo. Escribí “ni llueve ni hace frío, pero salgo”.','¬P∧¬Q∧R','Negá P y Q; “pero” une con R mediante una conjunción.'],
   ],
   'Implicación y bicondicional': [
     ['c','Con P=V y Q=V, ¿cuánto vale P→Q?','V','Se cumple el consecuente.',['V','F']],
@@ -263,7 +263,7 @@ const practice: Record<string, Seed[]> = {
     ['c','Con P=F y Q=V, ¿cuánto vale P→Q?','V','El antecedente es falso.',['V','F']],
     ['c','¿Qué clase de fórmula es P∨¬P?','Tautología','Todas las filas dan V.',['Tautología','Contradicción','Contingencia']],
     ['c','¿Qué clase de fórmula es (P∧Q)∨(P∧¬Q)?','Contingencia','Se simplifica a P: unas filas V y otras F.',['Contingencia','Tautología','Contradicción']],
-    ['c','Para P=V,Q=F,R=V, evaluá (P→Q)∨(Q∧R).','F','P→Q es F y Q∧R es F.',['F','V']],
+    ['c','¿Cómo se clasifica ((P→Q)∧P)→Q?','Tautología','Si el antecedente es V, modus ponens asegura Q; en los demás casos la implicación también es V.',['Tautología','Contradicción','Contingencia']],
   ],
   'Equivalencias y simplificación': [
     ['l','Simplificá ¬¬P.','P','La doble negación devuelve P.'],
@@ -326,7 +326,7 @@ const practice: Record<string, Seed[]> = {
     ['c','Si n=2k+1, ¿qué paridad tiene n²?','Impar','n²=4k²+4k+1=2(2k²+2k)+1.',['Impar','Par','Depende de k']],
     ['c','Para demostrar por contradicción que √2 es irracional, ¿qué suponés?','Que √2 es racional','Se supone la negación de lo que se quiere concluir.',['Que √2 es racional','Que 2 es impar','Que √2 es negativo']],
     ['c','Si n² es impar, ¿n puede ser par?','No','Si n fuera par, n² también sería par.',['No','Sí']],
-    ['c','¿Qué muestra que 6 es par y múltiplo de 3?','Un caso, no la regla universal','Una instancia no demuestra que todos los pares sean múltiplos de 3.',['Un caso, no la regla universal','Que todos los pares lo son','Una contradicción']],
+    ['c','Para probar “si n² es impar, n es impar” por contraposición, ¿qué desarrollo sirve?','n=2k implica n²=2(2k²)','Demostrá que si n fuera par, su cuadrado sería par; eso prueba la contrapositiva.',['n=2k implica n²=2(2k²)','n=2k+1 implica n² impar','Probar con n=1 y n=3']],
   ],
   'Predicados y universos': [
     ['c','P(x): x>2 sobre ℤ. ¿Cuánto vale P(3)?','V','3>2.',['V','F']],
@@ -335,7 +335,7 @@ const practice: Record<string, Seed[]> = {
     ['c','P(n): n es par. ¿Es P(0) verdadera con ℕ={0,1,…}?','Sí','0=2·0.',['Sí','No']],
     ['c','En ℤ, P(x): x²=x. ¿Es P(1) verdadera?','Sí','1²=1.',['Sí','No']],
     ['c','En ℤ, P(x): x²=x. ¿Es P(2) verdadera?','No','2²=4, que difiere de 2.',['No','Sí']],
-    ['c','En ℝ, ¿es verdadero “x²≥0” para cualquier valor de x?','Sí','El cuadrado de un real nunca es negativo.',['Sí','No']],
+    ['s','En U={−2,−1,0,1,2}, seleccioná los x que cumplen P(x): x²=x.','0,1','x²−x=x(x−1)=0: son exactamente 0 y 1.',['-2','-1','0','1','2']],
   ],
   'Universal y existencial': [
     ['c','U={1,2}. ¿Es verdadero ∃x∈U: x=2?','V','2 es testigo.',['V','F']],
@@ -344,7 +344,7 @@ const practice: Record<string, Seed[]> = {
     ['c','U={2,4,6}. ¿Es verdadero ∃x∈U: x impar?','F','Todos los elementos son pares.',['F','V']],
     ['l','P significa P(a), Q significa P(b). Expandí ∃x∈{a,b}:P(x).','P∨Q','Al menos uno de los dos casos.'],
     ['c','En ℤ, ¿es verdadero ∃x: x²=9?','V','x=3 y x=−3 son testigos.',['V','F']],
-    ['c','En ℤ, ¿es verdadero ∀x ∃y: x+y=0?','V','Para cada x elegí el entero y=−x.',['V','F']],
+    ['c','U={−2,−1,0,1,2} y P(x): x²≤1. ¿Qué valores tienen ∀x P(x) y ∃x P(x)?','F y V','±2 refutan el universal; 0, ±1 sirven de testigo existencial.',['F y V','V y V','F y F']],
   ],
   'Negar y distribuir': [
     ['c','Negá “todos son mayores de 5”.','Alguno no es mayor de 5','¬∀ se transforma en ∃¬.',['Alguno no es mayor de 5','Nadie es mayor de 5','Alguno es mayor de 5']],
@@ -398,7 +398,7 @@ const practice: Record<string, Seed[]> = {
     ['c','A={1,2}, B={2,3}. ¿Cuál es A△B?','{1,3}','Quitá lo común a la unión.',['{1,3}','{2}','{1,2,3}']],
     ['c','Ω={1,2,3,4}, A={2,4}. ¿Cuál es Aᶜ?','{1,3}','Restá A del universo.',['{1,3}','{2,4}','∅']],
     ['c','A={1,2,3}, B={2,3,4}, C={3,4,5}. ¿Cuál es A∩B∩C?','{3}','3 es el único elemento de los tres.',['{3}','{2,3}','{3,4}']],
-    ['c','A={1,2,3}, B={2,3,4}, C={3,4,5}. ¿Cuál es (A−B)∪(B∩C)?','{1,3,4}','A−B={1}; B∩C={3,4}.',['{1,3,4}','{1,4}','{2,3,4}']],
+    ['s','A={1,2,3}, B={2,3,4}, C={3,4,5}. Seleccioná (A−B)∪(B∩C).','1,3,4','A−B={1}; B∩C={3,4}.',['1','2','3','4','5']],
   ],
   'Intervalos y fronteras': [
     ['c','¿Qué intervalo contiene 2 pero no 5?','[2,5)','El corchete incluye 2 y el paréntesis excluye 5.',['[2,5)','(2,5]','(2,5)']],
@@ -416,7 +416,7 @@ const practice: Record<string, Seed[]> = {
     ['c','¿Cuál es (A∪B)ᶜ?','Aᶜ∩Bᶜ','De Morgan: fuera de ambos.',['Aᶜ∩Bᶜ','Aᶜ∪Bᶜ','A∩B']],
     ['c','¿Cuál es (A∩B)ᶜ?','Aᶜ∪Bᶜ','No estar en ambos equivale a faltar en al menos uno.',['Aᶜ∪Bᶜ','Aᶜ∩Bᶜ','A∪B']],
     ['c','¿Cuántas regiones tiene un diagrama de tres conjuntos, incluida la exterior?','8','Hay 2³ patrones.',['8','6','7']],
-    ['c','¿Qué código ABC describe A∩C pero fuera de B?','101','Dentro de A y C, fuera de B.',['101','111','011']],
+    ['s','Con códigos ABC, seleccioná las regiones de (A∪B)−C.','100,010,110','A o B deben ser 1 y C debe ser 0; incluí la intersección A∩B fuera de C.',['000','100','010','001','110','101','011','111']],
   ],
   'Aplicaciones e inclusión-exclusión': [
     ['t','|A|=8, |B|=7, |A∩B|=3. Calculá |A∪B|.','12','8+7−3=12.'],
@@ -434,10 +434,12 @@ export function addLessonPractice(lessons: Lesson[]): void {
     const seeds = practice[lesson.title];
     if (!seeds || seeds.length !== 7) continue;
     const added: Question[] = seeds.map(([kind, prompt, answer, explanation, options], i) => ({
-      id: `${lesson.id}-extra${i+1}`, type: ({ c:'choice', t:'text', a:'algebra', l:'logic' } as Record<string,QuestionType>)[kind],
-      prompt, answer, explanation, options, hints: ['Identificá la regla y resolvé un paso a la vez.', explanation],
+      id: `${lesson.id}-extra${i+1}`, type: ({ c:'choice', t:'text', a:'algebra', l:'logic', s:'set' } as Record<string,QuestionType>)[kind],
+      prompt, answer: kind === 's' ? answer.split(',') : answer, explanation,
+      ...(kind === 's' ? { universe: options } : { options }), hints: ['Identificá la regla y resolvé un paso a la vez.', explanation],
       tag: lesson.title, difficulty: i < 2 ? 1 : i < 5 ? 2 : 3,
-      ...(kind === 'a' && /^Factorizá/.test(prompt) ? { requiredForm: 'factored' as const } : {}),
+      ...(kind === 'a' && lesson.title === 'Conjuntos numéricos' && prompt.includes('fracción irreducible') ? { requiredForm: 'irreducibleFraction' as const } : {}),
+      ...(kind === 'a' && /^Factorizá/.test(prompt) ? { requiredForm: lesson.title === 'Factorización completa' ? 'linearFactors' as const : 'factored' as const } : {}),
     }));
     // Short starters, guided practice, original lesson questions, final challenges.
     // Preserve existing question IDs so saved progress still points to the same work.

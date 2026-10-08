@@ -11,7 +11,7 @@ export interface Question {
   hints: string[]; tag: string; difficulty: 1 | 2 | 3;
   expression?: string; variables?: string[]; universe?: string[];
   exclusions?: string[]; coefficients?: number[]; root?: number;
-  bookSource?: BookSource; requiredForm?: 'factored'|'expanded';
+  bookSource?: BookSource; requiredForm?: 'factored'|'expanded'|'linearFactors'|'irreducibleFraction';
   premises?: string[];
   translation?:string;
   guidedSteps?: { expression: string; rule: string; hint: string }[];
