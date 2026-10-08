@@ -20,7 +20,7 @@ export function LessonStory({lesson,onStart}:{lesson:Lesson;onStart:()=>void}) {
     <article className="lesson-story-card"><span className="lesson-story-icon"><TopicIcon name={lesson.icon} topic={lesson.title} size={37}/></span><small>{current.kind==='step'?`EJEMPLO · PASO ${current.number}`:current.kind==='formula'?'PARA RECORDAR':'APRENDAMOS'}</small><h1>{current.title}</h1>
       {current.kind==='formula'?<div className="lesson-story-formulas">{lesson.formulas.map(f=><div className="math" key={f} dangerouslySetInnerHTML={{__html:katex.renderToString(f,{throwOnError:false,strict:false,displayMode:true})}}/>)}</div>:<p>{current.body}</p>}
     </article>
-    <div className="lesson-story-actions">{page>0&&<button className="secondary" onClick={()=>setPage(page-1)}><ArrowLeft size={17}/>Anterior</button>}<button className="primary" onClick={()=>page+1<slides.length?setPage(page+1):onStart()}>{page+1<slides.length?'Continuar':'Ahora practico'}<ArrowRight size={18}/></button></div>
-    {page<slides.length-1&&<button className="lesson-story-skip" onClick={onStart}>Ir a los ejercicios</button>}
+    <div className="lesson-story-actions">{page>0&&<button className="secondary" onClick={()=>setPage(page-1)}><ArrowLeft size={17}/>Anterior</button>}<button className="primary" onClick={()=>page+1<slides.length?setPage(page+1):onStart()}>{page+1<slides.length?'Continuar':`Empezar ${lesson.questions.length} ejercicios`}<ArrowRight size={18}/></button></div>
+    {page<slides.length-1&&<button className="lesson-story-skip" onClick={onStart}>Ir a los {lesson.questions.length} ejercicios</button>}
   </section>;
 }

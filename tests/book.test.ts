@@ -11,7 +11,7 @@ import { checkInference, checkLaw } from '../src/laws';
 import { matchesBook } from '../src/bookEditions';
 const question=(id:string)=>bookExercises.find(e=>e.question.id===id)!.question;
 test('selected book incisos have valid references, crop bounds and independently checked logical answers',()=>{
-  assert.equal(bookExercises.length,59);assert.equal(bank(lessons,'precalculo').length,105);assert.equal(bank(lessons,'discreta').length,95);
+  assert.equal(bookExercises.length,59);assert.equal(bank(lessons,'precalculo').length,280);assert.equal(bank(lessons,'discreta').length,249);
   const ids=new Set(lessons.flatMap(l=>l.questions.map(q=>q.id)));
   for(const e of bookExercises){
     const q=e.question,s=q.bookSource!,c=s.crop;

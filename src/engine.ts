@@ -91,7 +91,7 @@ export function isFactored(input: string) {
   let depth=0,start=0;const factors:string[]=[];
   for(let i=0;i<raw.length;i++){if(raw[i]==='(')depth++;if(raw[i]===')')depth--;if(raw[i]==='*'&&depth===0){factors.push(raw.slice(start,i));start=i+1;}}
   factors.push(raw.slice(start));let count=0;
-  for(const factor of factors){const p=parseAlgebra(factor);if([...p.num.keys()].some(k=>k.length)&&[...p.den.keys()].every(k=>!k.length)){
+  for(const factor of factors){const p=parseAlgebra(factor);if((([...p.num.keys()].some(k=>k.length)) || (factors.length>1 && [...p.num.values()].some(v=>Math.abs(v)>1))) && [...p.den.keys()].every(k=>!k.length)){
     const power=unwrap(factor).match(/^\((.+)\)\^([2-8])$/);
     count+=power&&/[+-]/.test(power[1].slice(1))?Number(power[2]):1;
   }}

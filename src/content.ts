@@ -1,5 +1,6 @@
 import type { Course, Lesson, Question } from './types';
 import { buildExpandedContent } from './expandedContent';
+import { addLessonPractice } from './lessonPractice';
 const choice = (prompt: string, options: string[], answer: string, explanation: string): Question => ({ id: '', type: 'choice', prompt, options, answer, explanation, hints: ['Identificá primero la definición o regla que aplica.', explanation], tag: '', difficulty: 1 });
 const input = (type: Question['type'], prompt: string, answer: Question['answer'], explanation: string, extra: Partial<Question> = {}): Question => ({ id: '', type, prompt, answer, explanation, hints: ['Separá el problema en pasos y revisá los casos extremos.', explanation], tag: '', difficulty: 2, ...extra });
 function lesson(course: Course, unit: string, title: string, icon: string, pages: string, theory: string[], formulas: string[], steps: string[], questions: Question[]): Lesson {
@@ -157,6 +158,7 @@ export const lessons: Lesson[] = [
 ];
 for(const l of lessons.filter(l=>l.course==='precalculo'))l.unit=['Raíces racionales y factores','División sintética','Factorización completa'].includes(l.title)?'B3 · Factorización':'B4 · Fracciones algebraicas';
 lessons.push(...buildExpandedContent(lesson));
+addLessonPractice(lessons);
 const preferredOrder=['Introducción y razonamiento lógico','Proposiciones y conectores','Implicación y bicondicional','Tablas de verdad','Equivalencias y simplificación','Traducción y contraejemplos','Formas normales','Factor común y agrupación','Trinomios y diferencias de cuadrados','Suma y diferencia de cubos','Raíces racionales y factores','División sintética','Factorización completa'];
 const priority=(l:Lesson)=>{const i=preferredOrder.indexOf(l.title);return i<0?100:i;};
 lessons.sort((a,b)=>a.course.localeCompare(b.course)||Number(a.unit.match(/\d+/)?.[0]||0)-Number(b.unit.match(/\d+/)?.[0]||0)||priority(a)-priority(b));
@@ -165,7 +167,7 @@ export const courseInfo = {
   precalculo: { name:'Precálculo', subtitle:'Libro · páginas 1–63 · Desde las bases hasta ecuaciones', emoji:'🌱', color:'#168979' },
 };
 export const sourceNotes = [
-  'Cobertura temática ampliada: Precálculo páginas 1–63; Discreta desde el inicio hasta ejercicios de cardinalidad, página impresa 150 / PDF 152. Los bloques de Precálculo organizan temas del libro, no asignan semanas del docente. El banco incluye 59 actividades seleccionadas de incisos originales, además de las 141 preguntas de lecciones; no es una transcripción de cada inciso.',
+  'Cobertura temática ampliada: Precálculo páginas 1–63; Discreta desde el inicio hasta ejercicios de cardinalidad, página impresa 150 / PDF 152. Los bloques de Precálculo organizan temas del libro, no asignan semanas del docente. Las 47 lecciones tienen 10 ejercicios de práctica creados y corregibles cada una; las 59 actividades seleccionadas de incisos originales son aparte. Esta práctica no es una transcripción de cada inciso del libro.',
   'Discreta S1: una equivalencia propuesta no es válida; la lección de contraejemplos muestra una fila que la refuta.',
   'Discreta S2: la convención abierto/cerrado está invertida respecto de la física habitual. Se usa 1 = conduce. Algunas demostraciones requieren revisar premisas; no se inventaron premisas faltantes.',
   'Discreta S4: las leyes de complemento deben ser A ∪ Aᶜ = Ω y A ∩ Aᶜ = ∅. Hay ejercicios con C sin definir y expresiones ambiguas que no se autocorrigen aquí.',

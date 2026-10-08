@@ -28,7 +28,7 @@ test('mistake journal preserves the submitted answer and separates assisted from
 test('session recovery rejects missing questions, duplicate IDs, cross-course items and invalid position',()=>{
   const l=lessons[0],raw={id:'12345678-1234-1234-1234-123456789012',title:l.title,mode:'lesson',started:'2026-10-05T12:00:00Z',startingXP:0,lessonId:l.id,ids:l.questions.map(q=>q.id),index:1};
   assert.equal(decodeSession(raw)?.session.items[1].question.id,l.questions[1].id);
-  assert.equal(decodeSession({...raw,index:4}),null);assert.equal(decodeSession({...raw,ids:['not-a-question']}),null);assert.equal(decodeSession({...raw,ids:[raw.ids[0],raw.ids[0]]}),null);
+  assert.equal(decodeSession({...raw,index:l.questions.length}),null);assert.equal(decodeSession({...raw,ids:['not-a-question']}),null);assert.equal(decodeSession({...raw,ids:[raw.ids[0],raw.ids[0]]}),null);
   assert.equal(decodeSession({...raw,mode:'adaptive',lessonId:undefined,ids:[raw.ids[0],bank(lessons,'precalculo')[0].question.id],index:0}),null);
 });
 test('equation explorer handles two roots, a double root, no real roots, a line and degenerate identities',()=>{

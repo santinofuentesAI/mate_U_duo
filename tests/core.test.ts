@@ -45,7 +45,7 @@ test('named law validation distinguishes correct rule and verifies subexpression
 test('curriculum integrity: unique ids, valid choice keys, every saved answer grades correctly',()=>{
   assert.equal(lessons.length,47);const ids=new Set<string>();
   for(const l of lessons){assert.ok(!ids.has(l.id));ids.add(l.id);assert.ok(l.questions.length>=3);for(const q of l.questions){assert.ok(!ids.has(q.id));ids.add(q.id);assert.equal(grade(q,q.answer,q.exclusions).correct,true, q.id);if(q.type==='choice')assert.ok(q.options?.includes(String(q.answer)));if(q.type==='synthetic')assert.deepEqual(synthetic(q.coefficients!,q.root!).map(String),q.answer);if(q.type==='table')assert.deepEqual(truthRows(q.expression!,q.variables).map(r=>r.result?'V':'F'),q.answer);}}
-  assert.equal(ids.size,188);
+  assert.equal(ids.size,517);
 });
 test('book scope: all pages covered by reading or practice, stops at current topic',()=>{
   assert.equal(bookScope.precalculo.lastPage,63);assert.equal(bookScope.discreta.lastPage,152);
@@ -72,7 +72,7 @@ test('progress: hints never count as mastery, delayed recall required, XP not fa
   p=recordAttempt(p,l,q,true,false,day1);assert.equal(p.xp,10);assert.equal(p.skills[q.id].stage,0);
   const plannedDue=p.skills[q.id].due;p=recordAttempt(p,l,q,true,false,new Date('2026-10-05T16:00:00Z'));assert.equal(p.skills[q.id].due,plannedDue,'early practice does not postpone scheduled recall');
   p=recordAttempt(p,l,q,true,false,day1);assert.equal(p.xp,10);assert.equal(lessonMastery(p,l),0);
-  const day2=new Date('2026-10-06T12:00:01Z');p=recordAttempt(p,l,q,true,false,day2);assert.equal(p.skills[q.id].stage,1);assert.equal(lessonMastery(p,l),33);assert.equal(streak(p,day2),2);
+  const day2=new Date('2026-10-06T12:00:01Z');p=recordAttempt(p,l,q,true,false,day2);assert.equal(p.skills[q.id].stage,1);assert.equal(lessonMastery(p,l),10);assert.equal(streak(p,day2),2);
   p=recordAttempt(p,l,q,true,true,day2);assert.equal(p.skills[q.id].stage,0);assert.equal(lessonMastery(p,l),0);
   assert.equal(dayKey(new Date('2026-10-05T02:00:00Z')),'2026-10-04');
   assert.throws(()=>validateProgress({...p,spentCoins:-5}));assert.throws(()=>validateProgress({version:0}));assert.equal(validateProgress(p).xp,10);
