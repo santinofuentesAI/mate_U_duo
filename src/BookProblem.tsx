@@ -21,7 +21,12 @@ export function BookProblem({problem,verified,responseState,onVerified,onDone,on
   const finalInput=useRef<HTMLInputElement|null>(null),finalId=useRef('');
   const checkable=verified.filter(x=>canCheckFinal(x.question));
   const guided=verified.filter(x=>!canCheckFinal(x.question));
-  const quick=problem.course==='precalculo'?['^2','^3','/','(',')','−']:checkable.some(x=>x.question.type==='table')?['V','F',',']:checkable.some(x=>x.question.type==='set'||x.question.type==='venn')?['{','}',',','∅','(',')']:['¬','∧','∨','→','↔'];
+  const quick=checkable.some(x=>x.question.answer==='Verdadero'||x.question.answer==='Falso')?['V','F']:
+    checkable.some(x=>x.question.type==='table')?['V','F',',']:
+    checkable.some(x=>x.question.type==='set'||x.question.type==='venn')?['{','}',',','∅']:
+    checkable.every(x=>x.question.type==='choice')?[]:
+    problem.course==='precalculo'?['^2','^3','/','(',')','−']:
+    ['¬','∧','∨','→','↔'];
 
   function save(value:string){try{localStorage.setItem(key,value);setSaveState('Guardado en este dispositivo');setError('');return true;}catch{setSaveState('');setError('No se pudo guardar. Copiá tus pasos antes de salir.');return false;}}
   function edit(value:string){setHistory(h=>[...h.slice(-49),answer]);setFuture([]);setAnswer(value);save(value);onEdited();}
@@ -45,7 +50,7 @@ export function BookProblem({problem,verified,responseState,onVerified,onDone,on
       <details className="book-problem-original" onToggle={e=>setOriginalOpen(e.currentTarget.open)}><summary><BookOpen size={18}/> Ver página original</summary><small>PDF {problem.page} · impresa {problem.printedPage}{problem.sourcePages.length>1?` · continúa en PDF ${problem.sourcePages.join(', ')}`:''}</small>{originalOpen&&problem.visuals.map((visual,i)=><Suspense key={`${visual.page}-${i}`} fallback={<p role="status">Preparando la página…</p>}><BookOriginal source={makeSource(visual)}/></Suspense>)}</details>
     </div><div className="book-thinking">
       {checkable.length>0&&<section className="book-final-check" aria-label="Comprobar resultado"><h4>Tu respuesta</h4>{checkable.map(({question})=>{const result=checks?.find(x=>x.item.question.id===question.id)?.result;return <div className="book-final-item" key={question.id}><label htmlFor={`final-${question.id}`}>{checkable.length>1?finalLabel(question):'Resultado final'}<input id={`final-${question.id}`} value={finalAnswers[question.id]||''} onFocus={e=>{finalInput.current=e.currentTarget;finalId.current=question.id;}} onChange={e=>updateFinal(question.id,e.target.value)} placeholder={finalExample(question)} autoCapitalize="off" autoComplete="off" spellCheck={false}/></label>{result&&<p className={`book-check-feedback ${result.correct?'right':'wrong'}`} role="status"><b>{result.correct?'¡Correcto!':'Revisá tu respuesta'}</b><span>{result.correct?question.explanation:result.error||question.hints[0]||'Intentá de nuevo.'}</span></p>}</div>;})}
-        <div className="book-final-keys" role="group" aria-label="Símbolos para la respuesta">{quick.map((token,i)=><button type="button" key={`${token}-${i}`} onPointerDown={e=>e.preventDefault()} onClick={()=>insertFinal(token)}>{token}</button>)}</div>
+        {quick.length>0&&<div className="book-final-keys" role="group" aria-label="Símbolos para la respuesta">{quick.map((token,i)=><button type="button" key={`${token}-${i}`} onPointerDown={e=>e.preventDefault()} onClick={()=>insertFinal(token)}>{token}</button>)}</div>}
         <button className="primary wide" onClick={checkFinalAnswer} disabled={checkable.some(x=>!finalAnswers[x.question.id]?.trim())}><CheckCircle2 size={18}/>Comprobar</button><small>Se comprueba el resultado. Tus pasos son tuyos para revisar.</small>
       </section>}
       {guided.length>0&&<div className="book-guided-check"><p>Esta demostración se revisa paso a paso.</p>{guided.map(item=><button className="primary wide" key={item.question.id} onClick={()=>onVerified(item)}>Resolver con corrección<ArrowRight size={18}/></button>)}</div>}
