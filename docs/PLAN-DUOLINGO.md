@@ -387,7 +387,7 @@ El contenido debe desbloquearse progresivamente:
 - [x] La app funciona en móvil, tablet y escritorio
 - [x] Tests pasan (`npm test`) - 37/37 ✅
 - [x] Build exitoso (`npm run build`) ✅
-- [ ] Screenshots capturados y agregados al PR
+- [x] Screenshots capturados y agregados al PR ✅
 
 ---
 
