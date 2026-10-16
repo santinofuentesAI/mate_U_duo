@@ -34,4 +34,5 @@ export interface Progress {
   dailyProgress?: Record<string, { exercises: number; xp: number }>;
   achievements?: string[];
   level?: number;
+  theme?: 'duolingo' | 'glassmorphism' | 'minimal' | 'neon' | 'pastel';
 }
