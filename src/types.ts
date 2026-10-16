@@ -23,7 +23,7 @@ export interface Lesson {
   questions: Question[];
 }
 export interface AnswerDetails { answer: string|string[]; exclusions?: string[]; error?: string; }
-export interface Attempt extends Partial<AnswerDetails> { questionId: string; lessonId: string; correct: boolean; assisted: boolean; date: string; }
+export interface Attempt extends Partial<AnswerDetails> { questionId: string; lessonId: string; correct: boolean; assisted: boolean; date: string; hintUsed?: boolean; hintsUsedLevels?: number[]; }
 export interface SkillProgress { successes: number; stage: number; due: string; last: string; }
 export interface Progress {
   version: 1; attempts: Attempt[]; completed: string[]; skills: Record<string, SkillProgress>;
@@ -35,4 +35,13 @@ export interface Progress {
   achievements?: string[];
   level?: number;
   theme?: 'duolingo' | 'glassmorphism' | 'minimal' | 'neon' | 'pastel';
+  // Phase 5a: Advanced learning features
+  currentStreak?: number;
+  longestStreak?: number;
+  lastStreakDate?: string;
+  streakFreezes?: number;
+  freezeUsedDates?: string[];
+  weekendProtection?: boolean;
+  hintsUsedPerQuestion?: Record<string, number[]>; // questionId -> [levels used]
+  coins?: number; // Separate from spentCoins for currency system
 }

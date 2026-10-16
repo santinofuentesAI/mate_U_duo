@@ -1,7 +1,13 @@
 import type { Progress, Question, Lesson, AnswerDetails } from './types';
 import { validPalette } from './palettes';
 export const STORAGE_KEY = 'mate-u-duo.v1';
-export const freshProgress = (): Progress => ({ version: 1, attempts: [], completed: [], skills: {}, xp: 0, days: [], course: 'discreta', dark: false, fontScale: 1, sound: false, reduceMotion: false, goal: 8, dailyGoalType: 'exercises', dailyGoalValue: 10, dailyProgress: {}, achievements: [], level: 1 });
+export const freshProgress = (): Progress => ({ 
+  version: 1, attempts: [], completed: [], skills: {}, xp: 0, days: [], 
+  course: 'discreta', dark: false, fontScale: 1, sound: false, reduceMotion: false, 
+  goal: 8, dailyGoalType: 'exercises', dailyGoalValue: 10, dailyProgress: {}, 
+  achievements: [], level: 1, coins: 20, currentStreak: 0, longestStreak: 0, 
+  streakFreezes: 0, freezeUsedDates: [], weekendProtection: false 
+});
 const studyDayFormatter=new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Costa_Rica', year: 'numeric', month: '2-digit', day: '2-digit' });
 export function dayKey(now = new Date()) { return studyDayFormatter.format(now); }
 export function validateProgress(v: unknown): Progress {
@@ -15,10 +21,29 @@ export function validateProgress(v: unknown): Progress {
   if (p.attempts.length > 100000 || p.attempts.some(a => !a || typeof a.questionId !== 'string' || typeof a.lessonId !== 'string' || typeof a.correct !== 'boolean' || typeof a.assisted !== 'boolean' || !Number.isFinite(Date.parse(a.date)))) throw new Error('El historial contiene entradas inválidas.');
   if (p.completed.some(x => typeof x !== 'string') || p.days.some(x => typeof x !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(x))) throw new Error('Datos de avance inválidos.');
   for (const s of Object.values(p.skills)) if (!s || !Number.isInteger(s.stage) || s.stage < 0 || s.stage > 4 || !Number.isInteger(s.successes) || s.successes < 0 || !Number.isFinite(Date.parse(s.due)) || !Number.isFinite(Date.parse(s.last))) throw new Error('Calendario de repaso inválido.');
-  return { ...freshProgress(), ...p, palette: validPalette(p.palette), fontScale: Math.min(1.3, Math.max(1, Number(p.fontScale) || 1)), goal: Math.min(30, Math.max(4, Number(p.goal) || 8)), dark: !!p.dark, sound: !!p.sound, reduceMotion: !!p.reduceMotion, dailyGoalType: p.dailyGoalType || 'exercises', dailyGoalValue: Math.min(30, Math.max(3, Number(p.dailyGoalValue) || 10)), dailyProgress: p.dailyProgress || {}, achievements: p.achievements || [], level: Math.max(1, Math.floor((p.xp || 0) / 100) + 1) };
+  return { 
+    ...freshProgress(), ...p, 
+    palette: validPalette(p.palette), 
+    fontScale: Math.min(1.3, Math.max(1, Number(p.fontScale) || 1)), 
+    goal: Math.min(30, Math.max(4, Number(p.goal) || 8)), 
+    dark: !!p.dark, 
+    sound: !!p.sound, 
+    reduceMotion: !!p.reduceMotion, 
+    dailyGoalType: p.dailyGoalType || 'exercises', 
+    dailyGoalValue: Math.min(30, Math.max(3, Number(p.dailyGoalValue) || 10)), 
+    dailyProgress: p.dailyProgress || {}, 
+    achievements: p.achievements || [], 
+    level: Math.max(1, Math.floor((p.xp || 0) / 100) + 1),
+    coins: Math.max(0, Number(p.coins) || 20),
+    currentStreak: Math.max(0, Number(p.currentStreak) || 0),
+    longestStreak: Math.max(0, Number(p.longestStreak) || 0),
+    streakFreezes: Math.max(0, Number(p.streakFreezes) || 0),
+    freezeUsedDates: Array.isArray(p.freezeUsedDates) ? p.freezeUsedDates : [],
+    weekendProtection: !!p.weekendProtection
+  };
 }
 export function loadProgress(): Progress { try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? validateProgress(JSON.parse(raw)) : freshProgress(); } catch { return freshProgress(); } }
-export function recordAttempt(p: Progress, lesson: Lesson, q: Question, correct: boolean, assisted: boolean, now = new Date(), details?: AnswerDetails): Progress {
+export function recordAttempt(p: Progress, lesson: Lesson, q: Question, correct: boolean, assisted: boolean, now = new Date(), details?: AnswerDetails, hintsUsed?: number[]): Progress {
   const last = p.skills[q.id];
   const isScheduledReview = !!last && now.getTime() >= Date.parse(last.due);
   const succeeds = correct && !assisted;
@@ -27,11 +52,45 @@ export function recordAttempt(p: Progress, lesson: Lesson, q: Question, correct:
   const intervals = [1, 3, 7, 14, 30];
   const due = succeeds && last && !isScheduledReview ? last.due : new Date(now.getTime() + (succeeds ? intervals[stage] * 86400000 : 10 * 60000)).toISOString();
   const day = dayKey(now);
-  // Repeated attempts never farm XP; a correct answer with hints still remains in review.
+  
+  // Calculate XP with hints penalty
   const rewarded = p.attempts.some(a => a.questionId === q.id && a.correct);
-  return { ...p, xp: p.xp + (correct && !rewarded ? (assisted ? 5 : 10) : 0), days: [...new Set([...p.days, day])],
-    attempts: [...p.attempts, { questionId: q.id, lessonId: lesson.id, correct, assisted, date: now.toISOString(), ...details }].slice(-100000),
-    skills: { ...p.skills, [q.id]: { stage, successes, due, last: now.toISOString() } } };
+  let xpGained = 0;
+  if (correct && !rewarded) {
+    if (hintsUsed && hintsUsed.length > 0) {
+      // Calculate penalty for hints used
+      const penalty = hintsUsed.reduce((sum, level) => {
+        if (level === 1) return sum + 2;
+        if (level === 2) return sum + 4;
+        if (level === 3) return sum + 7;
+        return sum;
+      }, 0);
+      xpGained = Math.max(1, 10 - penalty);
+    } else {
+      xpGained = assisted ? 5 : 10;
+    }
+  }
+  
+  // Earn 1 coin for every 5 XP gained
+  const coinsGained = Math.floor(xpGained / 5);
+  
+  return { 
+    ...p, 
+    xp: p.xp + xpGained,
+    coins: (p.coins || 0) + coinsGained,
+    days: [...new Set([...p.days, day])],
+    attempts: [...p.attempts, { 
+      questionId: q.id, 
+      lessonId: lesson.id, 
+      correct, 
+      assisted, 
+      date: now.toISOString(), 
+      hintUsed: hintsUsed && hintsUsed.length > 0,
+      hintsUsedLevels: hintsUsed,
+      ...details 
+    }].slice(-100000),
+    skills: { ...p.skills, [q.id]: { stage, successes, due, last: now.toISOString() } } 
+  };
 }
 export function lessonMastery(p: Progress, lesson: Lesson) { const mastered = lesson.questions.filter(q => (p.skills[q.id]?.stage || 0) >= 1 && (p.skills[q.id]?.successes || 0) >= 2).length; return Math.round(mastered / lesson.questions.length * 100); }
 export function streak(p: Progress, now = new Date()) { const days = new Set(p.days); let count = 0; const d = new Date(`${dayKey(now)}T12:00:00-06:00`); if (!days.has(dayKey(d))) d.setDate(d.getDate() - 1); while (days.has(dayKey(d))) { count++; d.setDate(d.getDate() - 1); } return count; }
