@@ -9,6 +9,7 @@ export interface Question {
   id: string; type: QuestionType; prompt: string; math?: string;
   options?: string[]; answer: string | string[]; explanation: string;
   hints: string[]; tag: string; difficulty: 1 | 2 | 3;
+  topic?: string; // For error explanation and hint matching
   expression?: string; variables?: string[]; universe?: string[];
   exclusions?: string[]; coefficients?: number[]; root?: number;
   bookSource?: BookSource; requiredForm?: 'factored'|'expanded'|'linearFactors'|'irreducibleFraction';
@@ -22,7 +23,7 @@ export interface Lesson {
   theory: string[]; formulas: string[]; example: { title: string; steps: string[] };
   questions: Question[];
 }
-export interface AnswerDetails { answer: string|string[]; exclusions?: string[]; error?: string; }
+export interface AnswerDetails { answer: string|string[]; exclusions?: string[]; error?: string; hintsUsed?: number[]; }
 export interface Attempt extends Partial<AnswerDetails> { questionId: string; lessonId: string; correct: boolean; assisted: boolean; date: string; hintUsed?: boolean; hintsUsedLevels?: number[]; }
 export interface SkillProgress { successes: number; stage: number; due: string; last: string; }
 export interface Progress {

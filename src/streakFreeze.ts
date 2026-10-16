@@ -19,13 +19,16 @@ export function buyStreakFreeze(progress: Progress, useCoins: boolean = false): 
   const cost = useCoins ? FREEZE_COST_COINS : FREEZE_COST_XP;
   const currency = useCoins ? 'coins' : 'xp';
   
-  if (progress[currency] < cost) {
+  const currentValue = useCoins ? (progress.coins || 0) : progress.xp;
+  
+  if (currentValue < cost) {
     return progress; // Not enough currency
   }
   
   return {
     ...progress,
-    [currency]: progress[currency] - cost,
+    xp: useCoins ? progress.xp : progress.xp - cost,
+    coins: useCoins ? (progress.coins || 0) - cost : progress.coins,
     streakFreezes: (progress.streakFreezes || 0) + 1
   };
 }

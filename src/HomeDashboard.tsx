@@ -2,8 +2,9 @@ import type { Lesson, Progress } from './types';
 import type { Session } from './sessions';
 import { LearningPath } from './LearningPath';
 import { MateoMascot } from './MateoMascot';
-import { ArrowRight, X, Flame, Star, Trophy, Target } from 'lucide-react';
+import { ArrowRight, X, Flame, Star, Trophy, Target, TrendingUp, TrendingDown, Award } from 'lucide-react';
 import { dailyGoalProgress, streak } from './progress';
+import { getWeeklyComparison } from './weeklyLeague';
 
 interface Props {
   progress:Progress;
@@ -21,6 +22,7 @@ export function HomeDashboard({progress,path,pending,onLesson,onDiscard,onResume
   const currentStreak = streak(progress);
   const completed = path.filter(l=>progress.completed.includes(l.id)).length;
   const percent = Math.min(100, Math.round((goalData.current / goalData.target) * 100));
+  const weeklyComparison = getWeeklyComparison(progress);
   
   return <div className="home-dashboard">
     {pending&&<div className="resume-strip"><button onClick={onResume}><span>CONTINUAR</span><b>{pending.session.items[0].lesson.course!==progress.course?`${pending.session.items[0].lesson.course==='precalculo'?'Precálculo':'Discreta'} · `:''}{pending.session.title}</b><small>{Math.max(1,pending.index+1)}/{pending.session.items.length}</small></button><button className="resume-discard" aria-label="Descartar sesión" onClick={onDiscard}><X size={17}/></button></div>}
@@ -88,6 +90,39 @@ export function HomeDashboard({progress,path,pending,onLesson,onDiscard,onResume
         </div>
       </article>
     </div>
+
+    {weeklyComparison.lastWeek && <div className="weekly-league-card card">
+      <div className="row">
+        <Award size={22} color="var(--purple)"/>
+        <h3>Liga semanal</h3>
+      </div>
+      <p className="weekly-league-intro">Tu progreso esta semana vs. la semana pasada</p>
+      <div className="weekly-league-stats">
+        <div className="weekly-stat">
+          <span className="weekly-stat-label">XP ganada</span>
+          <div className="weekly-stat-row">
+            <b className="weekly-stat-value">{weeklyComparison.thisWeek.xp}</b>
+            <span className={`weekly-stat-change ${weeklyComparison.change.xp >= 0 ? 'positive' : 'negative'}`}>
+              {weeklyComparison.change.xp >= 0 ? <TrendingUp size={16}/> : <TrendingDown size={16}/>}
+              {weeklyComparison.change.xp > 0 && '+'}{Math.round((weeklyComparison.change.xp / (weeklyComparison.lastWeek.xp || 1)) * 100)}%
+            </span>
+          </div>
+          <small className="weekly-stat-compare">vs. {weeklyComparison.lastWeek.xp} XP la semana pasada</small>
+        </div>
+        <div className="weekly-stat">
+          <span className="weekly-stat-label">Ejercicios</span>
+          <div className="weekly-stat-row">
+            <b className="weekly-stat-value">{weeklyComparison.thisWeek.exercisesCompleted}</b>
+            <span className={`weekly-stat-change ${weeklyComparison.change.exercises >= 0 ? 'positive' : 'negative'}`}>
+              {weeklyComparison.change.exercises >= 0 ? <TrendingUp size={16}/> : <TrendingDown size={16}/>}
+              {weeklyComparison.change.exercises > 0 && '+'}{Math.round((weeklyComparison.change.exercises / (weeklyComparison.lastWeek.exercisesCompleted || 1)) * 100)}%
+            </span>
+          </div>
+          <small className="weekly-stat-compare">vs. {weeklyComparison.lastWeek.exercisesCompleted} la semana pasada</small>
+        </div>
+      </div>
+      <p className="weekly-league-message">{weeklyComparison.motivationalQuote}</p>
+    </div>}
 
     <details className="route-disclosure">
       <summary>
