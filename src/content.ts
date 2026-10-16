@@ -1,6 +1,15 @@
 import type { Course, Lesson, Question } from './types';
 import { buildExpandedContent } from './expandedContent';
 import { addLessonPractice } from './lessonPractice';
+import { 
+  proofBuilderQuestions, 
+  interactiveTableQuestions, 
+  orderStepsQuestions, 
+  sortCardsQuestions, 
+  interactiveVennQuestions, 
+  graphSliderQuestions, 
+  matchGraphsQuestions 
+} from './interactiveQuestions';
 const choice = (prompt: string, options: string[], answer: string, explanation: string): Question => ({ id: '', type: 'choice', prompt, options, answer, explanation, hints: ['Identificá primero la definición o regla que aplica.', explanation], tag: '', difficulty: 1 });
 const input = (type: Question['type'], prompt: string, answer: Question['answer'], explanation: string, extra: Partial<Question> = {}): Question => ({ id: '', type, prompt, answer, explanation, hints: ['Separá el problema en pasos y revisá los casos extremos.', explanation], tag: '', difficulty: 2, ...extra });
 function lesson(course: Course, unit: string, title: string, icon: string, pages: string, theory: string[], formulas: string[], steps: string[], questions: Question[]): Lesson {
@@ -159,6 +168,98 @@ export const lessons: Lesson[] = [
 for(const l of lessons.filter(l=>l.course==='precalculo'))l.unit=['Raíces racionales y factores','División sintética','Factorización completa'].includes(l.title)?'B3 · Factorización':'B4 · Fracciones algebraicas';
 lessons.push(...buildExpandedContent(lesson));
 addLessonPractice(lessons);
+
+// Inject interactive questions into appropriate lessons (Phase 5c)
+function addInteractiveQuestions() {
+  // ProofBuilder: Add to "Reglas de inferencia" and "Demostraciones y falacias"
+  const inferenceLessons = lessons.filter(l => 
+    l.title === 'Reglas de inferencia' || l.title === 'Demostraciones y falacias'
+  );
+  inferenceLessons.forEach((lesson, lessonIdx) => {
+    proofBuilderQuestions.forEach((q, i) => {
+      if (lessonIdx === 0 && i < 2) { // First 2 to "Reglas de inferencia"
+        const newQ = { ...q, id: `${lesson.id}-interactive-proof-${i}`, tag: lesson.title };
+        lesson.questions.push(newQ);
+      } else if (lessonIdx === 1 && i === 2) { // Last one to "Demostraciones y falacias"
+        const newQ = { ...q, id: `${lesson.id}-interactive-proof-${i}`, tag: lesson.title };
+        lesson.questions.push(newQ);
+      }
+    });
+  });
+
+  // InteractiveTruthTable: Add to "Tablas de verdad"
+  const tableLessons = lessons.filter(l => l.title === 'Tablas de verdad');
+  tableLessons.forEach(lesson => {
+    interactiveTableQuestions.forEach((q, i) => {
+      const newQ = { ...q, id: `${lesson.id}-interactive-table-${i}`, tag: lesson.title };
+      lesson.questions.push(newQ);
+    });
+  });
+
+  // OrderSteps: Add to "Demostraciones y falacias"
+  const demoLessons = lessons.filter(l => l.title === 'Demostraciones y falacias');
+  demoLessons.forEach(lesson => {
+    orderStepsQuestions.forEach((q, i) => {
+      const newQ = { ...q, id: `${lesson.id}-order-steps-${i}`, tag: lesson.title };
+      lesson.questions.push(newQ);
+    });
+  });
+
+  // SortCards: Add to "Equivalencias y simplificación"
+  const equivLessons = lessons.filter(l => l.title === 'Equivalencias y simplificación');
+  equivLessons.forEach(lesson => {
+    sortCardsQuestions.forEach((q, i) => {
+      const newQ = { ...q, id: `${lesson.id}-sort-cards-${i}`, tag: lesson.title };
+      lesson.questions.push(newQ);
+    });
+  });
+
+  // InteractiveVenn: Add to "Venn y leyes de conjuntos" and "Operaciones con conjuntos"
+  const vennLessons = lessons.filter(l => 
+    l.title === 'Venn y leyes de conjuntos' || l.title === 'Operaciones con conjuntos'
+  );
+  vennLessons.forEach((lesson, lessonIdx) => {
+    interactiveVennQuestions.forEach((q, i) => {
+      if (lessonIdx === 0 || i < 2) { // Distribute across both lessons
+        const newQ = { ...q, id: `${lesson.id}-interactive-venn-${i}`, tag: lesson.title };
+        lesson.questions.push(newQ);
+      }
+    });
+  });
+
+  // GraphSlider: Add to Precálculo lessons with functions
+  const functionLessons = lessons.filter(l => 
+    (l.course === 'precalculo' && l.title.includes('Raíces racionales')) ||
+    l.title.includes('Factorización')
+  );
+  if (functionLessons.length > 0) {
+    functionLessons.forEach((lesson, lessonIdx) => {
+      graphSliderQuestions.forEach((q, i) => {
+        if (i === lessonIdx && lessonIdx < graphSliderQuestions.length) {
+          const newQ = { ...q, id: `${lesson.id}-graph-slider-${i}`, tag: lesson.title };
+          lesson.questions.push(newQ);
+        }
+      });
+    });
+  }
+
+  // MatchGraphs: Add to Precálculo lessons
+  const algebraLessons = lessons.filter(l => 
+    l.course === 'precalculo' && (l.title.includes('División') || l.title.includes('Fracciones'))
+  );
+  if (algebraLessons.length > 0) {
+    algebraLessons.forEach((lesson, lessonIdx) => {
+      matchGraphsQuestions.forEach((q, i) => {
+        if (i === lessonIdx && lessonIdx < matchGraphsQuestions.length) {
+          const newQ = { ...q, id: `${lesson.id}-match-graphs-${i}`, tag: lesson.title };
+          lesson.questions.push(newQ);
+        }
+      });
+    });
+  }
+}
+
+addInteractiveQuestions();
 const preferredOrder=['Introducción y razonamiento lógico','Proposiciones y conectores','Implicación y bicondicional','Tablas de verdad','Equivalencias y simplificación','Traducción y contraejemplos','Formas normales','Factor común y agrupación','Trinomios y diferencias de cuadrados','Suma y diferencia de cubos','Raíces racionales y factores','División sintética','Factorización completa'];
 const priority=(l:Lesson)=>{const i=preferredOrder.indexOf(l.title);return i<0?100:i;};
 lessons.sort((a,b)=>a.course.localeCompare(b.course)||Number(a.unit.match(/\d+/)?.[0]||0)-Number(b.unit.match(/\d+/)?.[0]||0)||priority(a)-priority(b));
