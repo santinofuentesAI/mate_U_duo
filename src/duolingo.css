@@ -1,5 +1,54 @@
 /* Duolingo-style daily goal and celebration */
 
+/* Home Dashboard Styles */
+
+.home-welcome {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--background) 100%);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.home-welcome > div {
+  flex: 1;
+}
+
+.home-welcome h1 {
+  margin: 0 0 4px 0;
+  font-size: 1.5rem;
+}
+
+.home-welcome p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.home-streak {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.home-streak b {
+  font-size: 1.4rem;
+}
+
+.home-streak small {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
 .daily-goal-hero {
   background: linear-gradient(135deg, var(--soft) 0%, var(--surface) 100%);
   border: 2px solid var(--border);
@@ -822,5 +871,265 @@
   background: var(--surface);
   color: var(--text);
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Mateo Mascot Animations */
+
+.mateo-mascot {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.mateo-mascot.is-animated {
+  animation: mascot-float 3s ease-in-out infinite;
+}
+
+.mateo-mascot.is-animated .mascot-body {
+  transform-origin: center;
+  animation: mascot-breathe 2s ease-in-out infinite;
+}
+
+.mateo-mascot.is-animated .mascot-arm-left {
+  transform-origin: 30px 120px;
+  animation: mascot-wave-arm 2s ease-in-out infinite;
+}
+
+.mateo-mascot.mood-wave .mascot-arm-left {
+  animation: mascot-wave-arm-active 0.6s ease-in-out infinite;
+}
+
+.mateo-mascot.mood-celebrate .mascot-sparkles {
+  animation: mascot-sparkle-pulse 0.8s ease-in-out infinite;
+}
+
+.mateo-mascot .mascot-shadow {
+  transform-origin: center;
+  animation: mascot-shadow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes mascot-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes mascot-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes mascot-wave-arm {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+@keyframes mascot-wave-arm-active {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(-30deg); }
+}
+
+@keyframes mascot-sparkle-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+@keyframes mascot-shadow-pulse {
+  0%, 100% { opacity: 0.15; transform: scaleX(1); }
+  50% { opacity: 0.1; transform: scaleX(0.95); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mateo-mascot.is-animated,
+  .mateo-mascot.is-animated .mascot-body,
+  .mateo-mascot.is-animated .mascot-arm-left,
+  .mateo-mascot.mood-wave .mascot-arm-left,
+  .mateo-mascot.mood-celebrate .mascot-sparkles,
+  .mateo-mascot .mascot-shadow {
+    animation: none !important;
+  }
+}
+
+/* Reference Tables Dialog */
+
+.reference-tables {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  background: var(--surface);
+  border-radius: 16px;
+  overflow: hidden;
+  width: min(900px, 95vw);
+}
+
+.reference-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #7556ef 0%, #5a3fd4 100%);
+  color: white;
+  border-bottom: 1px solid #ffffff20;
+}
+
+.reference-header > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reference-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.reference-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.reference-section {
+  margin-bottom: 32px;
+}
+
+.reference-section:last-child {
+  margin-bottom: 0;
+}
+
+.reference-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+
+.reference-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--background);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.reference-table th,
+.reference-table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.reference-table th {
+  background: linear-gradient(135deg, #7556ef 0%, #5a3fd4 100%);
+  color: white;
+  font-weight: 600;
+  font-family: 'KaTeX_Main', serif;
+  font-size: 1.1rem;
+}
+
+.reference-table td {
+  font-family: 'KaTeX_Main', serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.inference-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.inference-rule {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.inference-rule b {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.inference-rule pre {
+  margin: 0;
+  font-family: 'KaTeX_Main', 'Courier New', monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  white-space: pre;
+}
+
+.laws-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.laws-list > div {
+  background: var(--background);
+  padding: 12px 16px;
+  border-left: 3px solid #7556ef;
+  border-radius: 4px;
+  font-family: 'KaTeX_Main', serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.laws-list > div b {
+  color: var(--text);
+  margin-right: 8px;
+}
+
+.formula-box {
+  background: linear-gradient(135deg, #f3f0ff 0%, #e9e3ff 100%);
+  border: 2px solid #7556ef;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.formula-box p {
+  margin: 8px 0;
+  font-family: 'KaTeX_Main', serif;
+}
+
+.formula-box ul {
+  text-align: left;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .reference-tables {
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .reference-content {
+    padding: 16px;
+  }
+  
+  .inference-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .reference-table {
+    font-size: 0.85rem;
+  }
+  
+  .reference-table th,
+  .reference-table td {
+    padding: 8px 4px;
+  }
 }
 

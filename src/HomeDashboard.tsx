@@ -1,6 +1,7 @@
 import type { Lesson, Progress } from './types';
 import type { Session } from './sessions';
 import { LearningPath } from './LearningPath';
+import { MateoMascot } from './MateoMascot';
 import { ArrowRight, X, Flame, Star, Trophy, Target } from 'lucide-react';
 import { dailyGoalProgress, streak } from './progress';
 
@@ -25,6 +26,7 @@ export function HomeDashboard({progress,path,pending,onLesson,onDiscard,onResume
     {pending&&<div className="resume-strip"><button onClick={onResume}><span>CONTINUAR</span><b>{pending.session.items[0].lesson.course!==progress.course?`${pending.session.items[0].lesson.course==='precalculo'?'Precálculo':'Discreta'} · `:''}{pending.session.title}</b><small>{Math.max(1,pending.index+1)}/{pending.session.items.length}</small></button><button className="resume-discard" aria-label="Descartar sesión" onClick={onDiscard}><X size={17}/></button></div>}
     
     <div className="home-welcome">
+      <MateoMascot mood={currentStreak >= 7 ? 'celebrate' : currentStreak >= 3 ? 'happy' : 'wave'} size={90} animate={true}/>
       <div>
         <h1>¡Hola de nuevo!</h1>
         <p>Seguí practicando para mantener tu racha de aprendizaje</p>
