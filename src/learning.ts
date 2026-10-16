@@ -53,6 +53,28 @@ export function dailyPracticeSession(items:PracticeItem[],p:Progress,count=15,no
   const sorted=[...items].sort((a,b)=>priority(b)-priority(a)||seedNumber(`${seed}${a.question.id}`)-seedNumber(`${seed}${b.question.id}`));
   const high=sorted.filter(i=>priority(i)>=70);
   const mid=sorted.filter(i=>priority(i)>=30&&priority(i)<70);
-  const mix=[...high.slice(0,Math.ceil(count*0.6)),...mid.slice(0,Math.ceil(count*0.4))];
+  const low=sorted.filter(i=>priority(i)<30);
+  
+  // Build mix: prioritize high, then mid, then fill with low to reach count
+  const mix=[
+    ...high.slice(0,Math.ceil(count*0.6)),
+    ...mid.slice(0,Math.ceil(count*0.4))
+  ];
+  
+  // If we don't have enough items, add from low priority pool
+  if(mix.length<count){
+    const needed=count-mix.length;
+    const available=low.filter(i=>!mix.includes(i));
+    mix.push(...available.slice(0,needed));
+  }
+  
+  // If still not enough, add any remaining items
+  if(mix.length<count){
+    const needed=count-mix.length;
+    const available=sorted.filter(i=>!mix.includes(i));
+    mix.push(...available.slice(0,needed));
+  }
+  
+  // Shuffle and return exactly count items
   return mix.sort(()=>0.5-Math.random()).slice(0,count);
 }

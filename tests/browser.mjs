@@ -11,13 +11,25 @@ const context=await browser.newContext({viewport:{width:390,height:844},deviceSc
 const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
 page.on('dialog',d=>d.accept());
 const url=process.env.TEST_URL||'http://127.0.0.1:5173/';
-await page.goto(url);await page.getByRole('heading',{name:'Tu ruta de aprendizaje'}).waitFor();await page.getByRole('button',{name:'Abrir Introducción y razonamiento lógico'}).waitFor();
+await page.goto(url);await page.getByRole('heading',{name:'¡Hola de nuevo!'}).waitFor();
+// Expand the lessons disclosure
+await page.locator('details.route-disclosure summary').click();
+await page.waitForTimeout(500);
+// Click on first lesson by finding button with that title
+await page.locator('button.journey-level').first().waitFor();
 fs.mkdirSync('tmp/qa',{recursive:true});
 await page.screenshot({path:'tmp/qa/mobile-home.png',fullPage:true});
 assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'mobile overflow');
-await page.getByRole('button',{name:'Abrir Proposiciones y conectores',exact:true}).click();
+await page.locator('button.journey-level').filter({hasText:'Proposiciones y conectores'}).click();
 assert.equal(await page.locator('.katex-error').count(),0,'formula rendering');
-await page.getByRole('button',{name:'Ahora me toca practicar'}).click();
+// Skip the lesson story if present, or click to start exercises
+const skipButton = page.locator('button.lesson-story-skip');
+const startButton = page.getByRole('button',{name:/ejercicios/i});
+if (await skipButton.isVisible({timeout:2000})) {
+  await skipButton.click();
+} else if (await startButton.isVisible({timeout:2000})) {
+  await startButton.click();
+}
 await page.getByRole('button',{name:/2 \+ 2 = 4/}).click();await page.getByRole('button',{name:'Comprobar',exact:true}).click();
 await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await page.getByRole('button',{name:'Ver respuesta',exact:true}).click();const revealed=page.getByRole('region',{name:'Respuesta explicada'});await revealed.waitFor();assert.ok((await revealed.innerText()).length>20,'answer and explanation are visible');await page.getByRole('button',{name:'Ocultar respuesta',exact:true}).click();await page.getByRole('button',{name:'Continuar',exact:true}).click();
 await page.getByRole('button',{name:'P',exact:true}).click();await page.getByRole('button',{name:'Conjunción',exact:true}).click();await page.getByRole('button',{name:'Negación',exact:true}).click();await page.getByRole('button',{name:'Q',exact:true}).click();
