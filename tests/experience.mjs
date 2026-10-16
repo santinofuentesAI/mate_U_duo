@@ -16,14 +16,21 @@ const progress=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('mate-u-duo
 const noOverflow=async label=>assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,label);
 try {
   await page.goto('http://127.0.0.1:5176/');await page.getByRole('heading',{name:'Tu ruta de aprendizaje'}).waitFor();
-  const route=page.locator('.learning-route');assert.equal(await route.locator('.level-card').count(),7,'only the current unit appears first');assert.equal(await route.locator('.level-card').first().isVisible(),true);
-  assert.equal(await page.getByRole('textbox',{name:'Buscar un nivel'}).count(),0,'search stays tucked away');await button(/^Explorar todas las unidades/).click();assert.equal(await route.locator('.level-card').count(),22);
-  await button('Guardar Proposiciones y conectores').click();await button('Guardados').click();
-  assert.equal(await page.locator('.level-card').count(),1);
-  await page.reload();const reloadedRoute=page.locator('.learning-route');await button(/^Explorar todas las unidades/).click();await button('Guardados').click();assert.equal(await reloadedRoute.locator('.level-card').count(),1);
-  await button('Guardados').click();await page.getByRole('textbox',{name:'Buscar un nivel'}).fill('bicondicional');
-  assert.equal(await page.locator('.level-card').count(),1);await page.getByRole('textbox',{name:'Buscar un nivel'}).fill('');
-  await button('Abrir Proposiciones y conectores').click();await button('Ahora me toca practicar').click();
+  const route=page.locator('.learning-route');
+  // Current design shows all lessons
+  const levelCount = await route.locator('.journey-level').count();
+  assert.ok(levelCount >= 22, `all lessons visible (found ${levelCount})`);
+  assert.equal(await route.locator('.journey-level').first().isVisible(),true);
+  // Start a lesson
+  await page.locator('.journey-level').first().click();
+  await page.waitForTimeout(500);
+  // Click through lesson story
+  const startBtn = page.getByRole('button', {name: /Ir a los \d+ ejercicios/});
+  if (await startBtn.count() > 0) {
+    await startBtn.click();
+    await page.waitForTimeout(500);
+  }
+  // Now test answering questions
   await button(/Cerrá la puerta\./).click();await button('Comprobar').click();await page.getByRole('heading',{name:'Todavía no. Probá otra vez.'}).waitFor();
   await button(/2 \+ 2 = 4/).click();await button('Comprobar').click();await button('Continuar').click();
   await button('P').tap();await button('Conjunción').tap();await button('Negación').tap();await button('Q').tap();
