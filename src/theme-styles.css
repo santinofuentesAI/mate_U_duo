@@ -21,15 +21,19 @@
   --shadow-card: 0 8px 32px rgba(0,0,0,0.12);
 }
 
-/* Background gradient */
+/* Background gradient - cover full height including scroll */
+[data-theme="glassmorphism"] html,
 [data-theme="glassmorphism"] body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   background-attachment: fixed;
+  min-height: 100vh;
 }
 
+[data-theme="glassmorphism"][data-dark="true"] html,
 [data-theme="glassmorphism"][data-dark="true"] body {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   background-attachment: fixed;
+  min-height: 100vh;
 }
 
 /* Main layout elements */
@@ -76,7 +80,9 @@
 [data-theme="glassmorphism"] .pdf-viewer,
 [data-theme="glassmorphism"] .lesson-story,
 [data-theme="glassmorphism"] .exam-results,
-[data-theme="glassmorphism"] .mobile-nav {
+[data-theme="glassmorphism"] .mobile-nav,
+[data-theme="glassmorphism"] .home-progress > article,
+[data-theme="glassmorphism"] .route-disclosure {
   background: rgba(255, 255, 255, 0.15) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -121,9 +127,19 @@
 [data-theme="glassmorphism"][data-dark="true"] .pdf-viewer,
 [data-theme="glassmorphism"][data-dark="true"] .lesson-story,
 [data-theme="glassmorphism"][data-dark="true"] .exam-results,
-[data-theme="glassmorphism"][data-dark="true"] .mobile-nav {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+[data-theme="glassmorphism"][data-dark="true"] .mobile-nav,
+[data-theme="glassmorphism"][data-dark="true"] .home-progress > article,
+[data-theme="glassmorphism"][data-dark="true"] .route-disclosure {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Home progress stat icons - glass effect */
+[data-theme="glassmorphism"] .home-progress-icon,
+[data-theme="glassmorphism"] .home-stat-icon {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* All buttons */
@@ -208,7 +224,8 @@
 
 /* Progress tracks and rings */
 [data-theme="glassmorphism"] .progress-track,
-[data-theme="glassmorphism"] .daily-goal-ring {
+[data-theme="glassmorphism"] .daily-goal-ring,
+[data-theme="glassmorphism"] .home-progress-track {
   background: rgba(255, 255, 255, 0.1) !important;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -299,13 +316,43 @@
   background: rgba(255, 255, 255, 0.25) !important;
 }
 
-/* Ensure text remains readable */
-[data-theme="glassmorphism"] * {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+/* Improved text readability with enhanced contrast */
+[data-theme="glassmorphism"] {
+  color: #1a1a2e;
 }
 
-[data-theme="glassmorphism"][data-dark="true"] * {
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+[data-theme="glassmorphism"] h1,
+[data-theme="glassmorphism"] h2,
+[data-theme="glassmorphism"] h3,
+[data-theme="glassmorphism"] b,
+[data-theme="glassmorphism"] strong {
+  color: #0d0d1a;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="glassmorphism"] small,
+[data-theme="glassmorphism"] .muted {
+  color: rgba(26, 26, 46, 0.75);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="glassmorphism"][data-dark="true"] {
+  color: #e0e7ff;
+}
+
+[data-theme="glassmorphism"][data-dark="true"] h1,
+[data-theme="glassmorphism"][data-dark="true"] h2,
+[data-theme="glassmorphism"][data-dark="true"] h3,
+[data-theme="glassmorphism"][data-dark="true"] b,
+[data-theme="glassmorphism"][data-dark="true"] strong {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="glassmorphism"][data-dark="true"] small,
+[data-theme="glassmorphism"][data-dark="true"] .muted {
+  color: rgba(224, 231, 255, 0.8);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* ========================================
