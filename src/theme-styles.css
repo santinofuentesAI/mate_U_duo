@@ -21,56 +21,291 @@
   --shadow-card: 0 8px 32px rgba(0,0,0,0.12);
 }
 
+/* Background gradient */
 [data-theme="glassmorphism"] body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
 }
 
 [data-theme="glassmorphism"][data-dark="true"] body {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background-attachment: fixed;
 }
 
+/* Main layout elements */
+[data-theme="glassmorphism"] .app-shell,
+[data-theme="glassmorphism"] .main-shell,
+[data-theme="glassmorphism"] .content-grid {
+  background: transparent;
+}
+
+/* All cards and surfaces */
 [data-theme="glassmorphism"] .card,
 [data-theme="glassmorphism"] .modal,
+[data-theme="glassmorphism"] .modal-backdrop,
 [data-theme="glassmorphism"] .reference-content,
 [data-theme="glassmorphism"] .topbar,
-[data-theme="glassmorphism"] .sidebar {
-  background: rgba(255, 255, 255, 0.15);
+[data-theme="glassmorphism"] .sidebar,
+[data-theme="glassmorphism"] .session-shell,
+[data-theme="glassmorphism"] .session-content,
+[data-theme="glassmorphism"] .exercise,
+[data-theme="glassmorphism"] .result,
+[data-theme="glassmorphism"] .daily-celebration,
+[data-theme="glassmorphism"] .home-dashboard,
+[data-theme="glassmorphism"] .home-welcome,
+[data-theme="glassmorphism"] .daily-goal-hero,
+[data-theme="glassmorphism"] .journey-route,
+[data-theme="glassmorphism"] .journey-unit,
+[data-theme="glassmorphism"] .journey-level,
+[data-theme="glassmorphism"] .practice-hub,
+[data-theme="glassmorphism"] .achievements-page,
+[data-theme="glassmorphism"] .achievement-card,
+[data-theme="glassmorphism"] .library-grid,
+[data-theme="glassmorphism"] .library-topic,
+[data-theme="glassmorphism"] .books-tab-wrapper,
+[data-theme="glassmorphism"] .weekly-pdfs,
+[data-theme="glassmorphism"] .week-card,
+[data-theme="glassmorphism"] .simple-flow,
+[data-theme="glassmorphism"] .settings,
+[data-theme="glassmorphism"] aside,
+[data-theme="glassmorphism"] section.card,
+[data-theme="glassmorphism"] .hint,
+[data-theme="glassmorphism"] .notice,
+[data-theme="glassmorphism"] details,
+[data-theme="glassmorphism"] .book-original,
+[data-theme="glassmorphism"] .pdf-viewer,
+[data-theme="glassmorphism"] .lesson-story,
+[data-theme="glassmorphism"] .exam-results,
+[data-theme="glassmorphism"] .mobile-nav {
+  background: rgba(255, 255, 255, 0.15) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-card);
 }
 
+/* Dark mode surfaces */
 [data-theme="glassmorphism"][data-dark="true"] .card,
 [data-theme="glassmorphism"][data-dark="true"] .modal,
+[data-theme="glassmorphism"][data-dark="true"] .modal-backdrop,
 [data-theme="glassmorphism"][data-dark="true"] .reference-content,
 [data-theme="glassmorphism"][data-dark="true"] .topbar,
-[data-theme="glassmorphism"][data-dark="true"] .sidebar {
-  background: rgba(255, 255, 255, 0.08);
+[data-theme="glassmorphism"][data-dark="true"] .sidebar,
+[data-theme="glassmorphism"][data-dark="true"] .session-shell,
+[data-theme="glassmorphism"][data-dark="true"] .session-content,
+[data-theme="glassmorphism"][data-dark="true"] .exercise,
+[data-theme="glassmorphism"][data-dark="true"] .result,
+[data-theme="glassmorphism"][data-dark="true"] .daily-celebration,
+[data-theme="glassmorphism"][data-dark="true"] .home-dashboard,
+[data-theme="glassmorphism"][data-dark="true"] .home-welcome,
+[data-theme="glassmorphism"][data-dark="true"] .daily-goal-hero,
+[data-theme="glassmorphism"][data-dark="true"] .journey-route,
+[data-theme="glassmorphism"][data-dark="true"] .journey-unit,
+[data-theme="glassmorphism"][data-dark="true"] .journey-level,
+[data-theme="glassmorphism"][data-dark="true"] .practice-hub,
+[data-theme="glassmorphism"][data-dark="true"] .achievements-page,
+[data-theme="glassmorphism"][data-dark="true"] .achievement-card,
+[data-theme="glassmorphism"][data-dark="true"] .library-grid,
+[data-theme="glassmorphism"][data-dark="true"] .library-topic,
+[data-theme="glassmorphism"][data-dark="true"] .books-tab-wrapper,
+[data-theme="glassmorphism"][data-dark="true"] .weekly-pdfs,
+[data-theme="glassmorphism"][data-dark="true"] .week-card,
+[data-theme="glassmorphism"][data-dark="true"] .simple-flow,
+[data-theme="glassmorphism"][data-dark="true"] .settings,
+[data-theme="glassmorphism"][data-dark="true"] aside,
+[data-theme="glassmorphism"][data-dark="true"] section.card,
+[data-theme="glassmorphism"][data-dark="true"] .hint,
+[data-theme="glassmorphism"][data-dark="true"] .notice,
+[data-theme="glassmorphism"][data-dark="true"] details,
+[data-theme="glassmorphism"][data-dark="true"] .book-original,
+[data-theme="glassmorphism"][data-dark="true"] .pdf-viewer,
+[data-theme="glassmorphism"][data-dark="true"] .lesson-story,
+[data-theme="glassmorphism"][data-dark="true"] .exam-results,
+[data-theme="glassmorphism"][data-dark="true"] .mobile-nav {
+  background: rgba(255, 255, 255, 0.08) !important;
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
+/* All buttons */
+[data-theme="glassmorphism"] button,
 [data-theme="glassmorphism"] button.primary,
-[data-theme="glassmorphism"] button.secondary {
-  background: rgba(255, 255, 255, 0.2);
+[data-theme="glassmorphism"] button.secondary,
+[data-theme="glassmorphism"] button.icon-button,
+[data-theme="glassmorphism"] .simple-link,
+[data-theme="glassmorphism"] .choices button,
+[data-theme="glassmorphism"] .set-options button,
+[data-theme="glassmorphism"] .journey-level,
+[data-theme="glassmorphism"] .nav-icon {
+  background: rgba(255, 255, 255, 0.2) !important;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: var(--shadow-button);
 }
 
+[data-theme="glassmorphism"] button:hover,
 [data-theme="glassmorphism"] button.primary:hover,
 [data-theme="glassmorphism"] button.secondary:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.28) !important;
   transform: translateY(-1px);
 }
 
+[data-theme="glassmorphism"] button:disabled {
+  background: rgba(255, 255, 255, 0.1) !important;
+  opacity: 0.5;
+}
+
+/* All inputs and form elements */
 [data-theme="glassmorphism"] input,
 [data-theme="glassmorphism"] select,
 [data-theme="glassmorphism"] textarea {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1) !important;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="glassmorphism"] input:focus,
+[data-theme="glassmorphism"] select:focus,
+[data-theme="glassmorphism"] textarea:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+/* Tables */
+[data-theme="glassmorphism"] table,
+[data-theme="glassmorphism"] .reference-table {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+[data-theme="glassmorphism"] th {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+[data-theme="glassmorphism"] td {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Modal backdrops */
+[data-theme="glassmorphism"] .modal-backdrop {
+  background: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Session header */
+[data-theme="glassmorphism"] .session-header {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Progress tracks and rings */
+[data-theme="glassmorphism"] .progress-track,
+[data-theme="glassmorphism"] .daily-goal-ring {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Badges and tags */
+[data-theme="glassmorphism"] .eyebrow,
+[data-theme="glassmorphism"] .badge,
+[data-theme="glassmorphism"] .achievement-count,
+[data-theme="glassmorphism"] .home-streak {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Reference tables specific */
+[data-theme="glassmorphism"] .inference-rule,
+[data-theme="glassmorphism"] .laws-list > div,
+[data-theme="glassmorphism"] .formula-box {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Practice components */
+[data-theme="glassmorphism"] .exercise-help,
+[data-theme="glassmorphism"] .exercise-meta,
+[data-theme="glassmorphism"] .answer-feedback,
+[data-theme="glassmorphism"] .answer-reveal {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Books and PDFs */
+[data-theme="glassmorphism"] .books-tab-selector button,
+[data-theme="glassmorphism"] .pdf-toolbar {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+[data-theme="glassmorphism"] .books-tab-selector button.active {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Achievement cards specific styling */
+[data-theme="glassmorphism"] .achievement-card.unlocked {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="glassmorphism"] .achievement-card.locked {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Library topics */
+[data-theme="glassmorphism"] .library-topic:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+/* Journey levels (Aprender path) */
+[data-theme="glassmorphism"] .journey-level.is-current {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="glassmorphism"] .journey-level.is-done {
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Remove any solid backgrounds that might override */
+[data-theme="glassmorphism"] .main-content {
+  background: transparent !important;
+}
+
+/* Sidebar navigation */
+[data-theme="glassmorphism"] .sidebar button.active {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+[data-theme="glassmorphism"] .mobile-nav button.active {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Ensure text remains readable */
+[data-theme="glassmorphism"] * {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="glassmorphism"][data-dark="true"] * {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* ========================================
