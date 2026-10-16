@@ -327,5 +327,6 @@ button,a,input,select,textarea{touch-action:manipulation}
 .match-feedback{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:12px;font-size:.85rem;font-weight:700}
 .match-feedback.correct{background:#e0f4e8;color:#267849;border:1.5px solid #91c7a6}
 .match-feedback.incorrect{background:#ffe8e3;color:#bd4156;border:1.5px solid #f5b8a8}
+.lesson-mastery-badge{font-size:1.1rem;margin-left:6px;vertical-align:middle}
 
 
