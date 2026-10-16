@@ -39,3 +39,20 @@ export function sessionSummary(p:Progress,items:PracticeItem[],started:string) {
   for(const a of attempts)if(!first.has(a.questionId))first.set(a.questionId,a);
   return {clean:[...first.values()].filter(a=>a.correct&&!a.assisted).length,retries:attempts.filter(a=>!a.correct).length,helped:new Set(attempts.filter(a=>a.assisted).map(a=>a.questionId)).size};
 }
+export function dailyPracticeSession(items:PracticeItem[],p:Progress,count=15,now=new Date()) {
+  const last=latestAttempts(p),time=now.getTime();
+  const seed=dayKey(now);
+  function priority(item:PracticeItem) {
+    const q=item.question,s=p.skills[q.id],a=last.get(q.id);
+    if(s&&Date.parse(s.due)<=time)return 100;
+    if(a&&(!a.correct||a.assisted))return 85;
+    if(!s||s.stage===0)return 70;
+    if(s.stage===1)return 50;
+    return 30;
+  }
+  const sorted=[...items].sort((a,b)=>priority(b)-priority(a)||seedNumber(`${seed}${a.question.id}`)-seedNumber(`${seed}${b.question.id}`));
+  const high=sorted.filter(i=>priority(i)>=70);
+  const mid=sorted.filter(i=>priority(i)>=30&&priority(i)<70);
+  const mix=[...high.slice(0,Math.ceil(count*0.6)),...mid.slice(0,Math.ceil(count*0.4))];
+  return mix.sort(()=>0.5-Math.random()).slice(0,count);
+}

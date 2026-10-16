@@ -1,0 +1,305 @@
+/* Duolingo-style daily goal and celebration */
+
+.daily-goal-hero {
+  background: linear-gradient(135deg, var(--soft) 0%, var(--surface) 100%);
+  border: 2px solid var(--border);
+  border-radius: 24px;
+  padding: 28px;
+  margin: 0 0 24px;
+  box-shadow: 0 4px 0 var(--border);
+}
+
+.daily-goal-content {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.daily-goal-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.daily-goal-header svg {
+  color: var(--purple);
+}
+
+.daily-goal-header > div {
+  text-align: left;
+}
+
+.daily-goal-header .eyebrow {
+  margin-bottom: 4px;
+}
+
+.daily-goal-header h2 {
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.daily-goal-ring {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  padding: 10px;
+  margin: 24px auto;
+  display: grid;
+  place-items: center;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.daily-goal-ring > div {
+  background: var(--surface);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.daily-goal-ring b {
+  font-size: 2.8rem;
+  line-height: 1.1;
+  color: var(--purple);
+  font-weight: 900;
+}
+
+.daily-goal-ring span {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.daily-goal-hero p {
+  font-size: 0.85rem;
+  margin: 18px 0 22px;
+  color: var(--text);
+}
+
+.daily-practice-btn {
+  width: 100%;
+  justify-content: center;
+  font-size: 0.95rem;
+  padding: 16px 24px;
+  min-height: 58px;
+}
+
+/* Daily celebration screen */
+
+.daily-celebration {
+  text-align: center;
+  padding: 36px 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.celebration-mascot {
+  margin: 0 auto 24px;
+  animation: mascot-bounce 0.6s ease-out;
+}
+
+.celebration-mascot .mascot {
+  width: 160px;
+  height: 180px;
+}
+
+@keyframes mascot-bounce {
+  0% { transform: scale(0.3) translateY(20px); opacity: 0; }
+  50% { transform: scale(1.05) translateY(-10px); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.confetti-burst {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.confetti-burst::before,
+.confetti-burst::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--purple);
+  border-radius: 2px;
+  animation: confetti-fall 1.2s ease-out forwards;
+}
+
+.confetti-burst::before {
+  left: -80px;
+  background: #fbbf24;
+  animation-delay: 0.1s;
+}
+
+.confetti-burst::after {
+  left: 80px;
+  background: #ef4444;
+  animation-delay: 0.2s;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(300px) rotate(720deg); opacity: 0; }
+}
+
+.daily-celebration .eyebrow {
+  font-size: 0.65rem;
+  margin-bottom: 12px;
+}
+
+.daily-celebration h1 {
+  font-size: 2rem;
+  margin-bottom: 28px;
+}
+
+.daily-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.daily-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.daily-stat > div {
+  text-align: center;
+}
+
+.daily-stat b {
+  display: block;
+  font-size: 1.3rem;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.daily-stat small {
+  display: block;
+  font-size: 0.68rem;
+  margin-top: 3px;
+}
+
+.goal-complete-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #10b981;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin: 20px 0 16px;
+  animation: badge-pop 0.5s ease-out 0.3s both;
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.celebration-message {
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  color: var(--text) !important;
+  margin: 20px 0 28px !important;
+}
+
+/* Mobile responsive */
+
+@media (max-width: 700px) {
+  .daily-goal-hero {
+    padding: 20px 16px;
+    margin-bottom: 18px;
+  }
+
+  .daily-goal-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .daily-goal-ring {
+    width: 140px;
+    height: 140px;
+    margin: 20px auto;
+  }
+
+  .daily-goal-ring b {
+    font-size: 2.2rem;
+  }
+
+  .daily-goal-ring span {
+    font-size: 0.72rem;
+  }
+
+  .daily-practice-btn {
+    font-size: 0.85rem;
+    padding: 14px 20px;
+    min-height: 52px;
+  }
+
+  .daily-celebration {
+    padding: 28px 18px;
+  }
+
+  .celebration-mascot .mascot {
+    width: 130px;
+    height: 150px;
+  }
+
+  .daily-celebration h1 {
+    font-size: 1.5rem;
+  }
+
+  .daily-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .daily-stat {
+    flex-direction: row;
+    justify-content: center;
+    padding: 14px;
+  }
+
+  .daily-stat > div {
+    text-align: left;
+    flex: 1;
+  }
+
+  .daily-stat b {
+    font-size: 1.1rem;
+  }
+
+  .goal-complete-badge {
+    font-size: 0.8rem;
+    padding: 10px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebration-mascot,
+  .goal-complete-badge,
+  .confetti-burst::before,
+  .confetti-burst::after {
+    animation: none !important;
+  }
+}
