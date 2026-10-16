@@ -45,4 +45,7 @@ export interface Progress {
   weekendProtection?: boolean;
   hintsUsedPerQuestion?: Record<string, number[]>; // questionId -> [levels used]
   coins?: number; // Separate from spentCoins for currency system
+  // Phase 5b: FSRS + Mastery + Adaptive Difficulty
+  fsrsCards?: Record<string, import('./fsrs').FSRSCard>; // questionId -> card
+  topicMasteries?: Record<string, import('./topicMastery').TopicMastery>; // topic -> mastery
 }

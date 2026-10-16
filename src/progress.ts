@@ -1,5 +1,7 @@
 import type { Progress, Question, Lesson, AnswerDetails } from './types';
 import { validPalette } from './palettes';
+import { initializeFSRSCard, reviewFSRSCard, updateFSRSCard, type FSRSReviewResult } from './fsrs';
+import { updateTopicMastery } from './topicMastery';
 export const STORAGE_KEY = 'mate-u-duo.v1';
 export const freshProgress = (): Progress => ({ 
   version: 1, attempts: [], completed: [], skills: {}, xp: 0, days: [], 
@@ -74,8 +76,51 @@ export function recordAttempt(p: Progress, lesson: Lesson, q: Question, correct:
   // Earn 1 coin for every 5 XP gained
   const coinsGained = Math.floor(xpGained / 5);
   
+  // Update FSRS card for spaced repetition
+  let progressWithFSRS = p;
+  const existingCard = p.fsrsCards?.[q.id];
+  const fsrsCard = existingCard || initializeFSRSCard(q.id, lesson.unit);
+  
+  // Determine FSRS rating based on performance
+  let fsrsRating: 1 | 2 | 3 | 4 = 3; // Default to "good"
+  if (!correct) {
+    fsrsRating = 1; // Again
+  } else if (assisted || (hintsUsed && hintsUsed.length > 0)) {
+    fsrsRating = 2; // Hard
+  } else if (!rewarded) {
+    fsrsRating = 4; // Easy (first time correct without help)
+  }
+  
+  const reviewResult: FSRSReviewResult = {
+    rating: fsrsRating,
+    correct,
+    hintsUsed: hintsUsed?.length || 0
+  };
+  
+  const updatedCard = reviewFSRSCard(fsrsCard, reviewResult);
+  progressWithFSRS = updateFSRSCard(progressWithFSRS, updatedCard);
+  
+  // Update topic mastery
+  const topicFromLesson = lesson.unit || lesson.title.toLowerCase();
+  let progressWithMastery = updateTopicMastery(
+    progressWithFSRS,
+    topicFromLesson,
+    correct,
+    assisted || !!(hintsUsed && hintsUsed.length > 0)
+  );
+  
+  // Also track question-specific topic if available
+  if (q.topic) {
+    progressWithMastery = updateTopicMastery(
+      progressWithMastery,
+      q.topic,
+      correct,
+      assisted || !!(hintsUsed && hintsUsed.length > 0)
+    );
+  }
+  
   return { 
-    ...p, 
+    ...progressWithMastery, 
     xp: p.xp + xpGained,
     coins: (p.coins || 0) + coinsGained,
     days: [...new Set([...p.days, day])],
