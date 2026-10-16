@@ -5,7 +5,7 @@ import { grade } from '../src/engine';
 
 test('all 47 lessons offer ten distinct exercises ordered by difficulty', () => {
   assert.equal(lessons.length, 47);
-  assert.equal(lessons.reduce((sum, lesson) => sum + lesson.questions.length, 0), 492); // Updated: 470 original + 22 Phase 5c interactive
+  assert.equal(lessons.reduce((sum, lesson) => sum + lesson.questions.length, 0), 491); // Updated: 470 original + 21 Phase 5c interactive
   const ids = new Set<string>();
   for (const lesson of lessons) {
     assert.ok(lesson.questions.length >= 10, `${lesson.title} has ${lesson.questions.length} questions`); // Allow more than 10 now

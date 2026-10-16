@@ -171,6 +171,11 @@ addLessonPractice(lessons);
 
 // Inject interactive questions into appropriate lessons (Phase 5c)
 function addInteractiveQuestions() {
+  // Check if interactive questions already added (prevent duplication on re-import)
+  const hasInteractive = lessons.some(l => 
+    l.questions.some(q => ['proofbuilder', 'interactive-table', 'order-steps', 'sort-cards', 'interactive-venn', 'graph-slider', 'match-graphs'].includes(q.type))
+  );
+  if (hasInteractive) return;
   // ProofBuilder: Add to "Reglas de inferencia" and "Demostraciones y falacias"
   const inferenceLessons = lessons.filter(l => 
     l.title === 'Reglas de inferencia' || l.title === 'Demostraciones y falacias'
@@ -220,41 +225,35 @@ function addInteractiveQuestions() {
   );
   vennLessons.forEach((lesson, lessonIdx) => {
     interactiveVennQuestions.forEach((q, i) => {
-      if (lessonIdx === 0 || i < 2) { // Distribute across both lessons
+      // First lesson gets first 2, second lesson gets third one
+      if ((lessonIdx === 0 && i < 2) || (lessonIdx === 1 && i === 2)) {
         const newQ = { ...q, id: `${lesson.id}-interactive-venn-${i}`, tag: lesson.title };
         lesson.questions.push(newQ);
       }
     });
   });
 
-  // GraphSlider: Add to Precálculo lessons with functions
+  // GraphSlider: Add all 3 to first Precálculo lesson
   const functionLessons = lessons.filter(l => 
-    (l.course === 'precalculo' && l.title.includes('Raíces racionales')) ||
-    l.title.includes('Factorización')
+    l.course === 'precalculo' && (l.title.includes('Raíces racionales') || l.title.includes('División sintética') || l.title.includes('Factorización'))
   );
   if (functionLessons.length > 0) {
-    functionLessons.forEach((lesson, lessonIdx) => {
-      graphSliderQuestions.forEach((q, i) => {
-        if (i === lessonIdx && lessonIdx < graphSliderQuestions.length) {
-          const newQ = { ...q, id: `${lesson.id}-graph-slider-${i}`, tag: lesson.title };
-          lesson.questions.push(newQ);
-        }
-      });
+    const targetLesson = functionLessons[0];
+    graphSliderQuestions.forEach((q, i) => {
+      const newQ = { ...q, id: `${targetLesson.id}-graph-slider-${i}`, tag: targetLesson.title };
+      targetLesson.questions.push(newQ);
     });
   }
 
-  // MatchGraphs: Add to Precálculo lessons
+  // MatchGraphs: Add all 3 to first Precálculo lesson with División or Fracciones
   const algebraLessons = lessons.filter(l => 
-    l.course === 'precalculo' && (l.title.includes('División') || l.title.includes('Fracciones'))
+    l.course === 'precalculo' && (l.title.includes('División') || l.title.includes('Fracciones') || l.title.includes('Radicales'))
   );
   if (algebraLessons.length > 0) {
-    algebraLessons.forEach((lesson, lessonIdx) => {
-      matchGraphsQuestions.forEach((q, i) => {
-        if (i === lessonIdx && lessonIdx < matchGraphsQuestions.length) {
-          const newQ = { ...q, id: `${lesson.id}-match-graphs-${i}`, tag: lesson.title };
-          lesson.questions.push(newQ);
-        }
-      });
+    const targetLesson = algebraLessons[0];
+    matchGraphsQuestions.forEach((q, i) => {
+      const newQ = { ...q, id: `${targetLesson.id}-match-graphs-${i}`, tag: targetLesson.title };
+      targetLesson.questions.push(newQ);
     });
   }
 }
