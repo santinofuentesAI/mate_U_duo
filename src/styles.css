@@ -177,3 +177,60 @@ button,a,input,select,textarea{touch-action:manipulation}
 @media(max-width:700px){.paused-session button{width:100%;justify-content:center}}
 [data-theme=dark] .response-state.validated{background:#153829;color:#b8f5cf}
 .technical-prose{font-family:inherit;font-size:.9rem;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}.technical-prose p{margin:14px 0}.technical-sheet h2{font-size:1.15rem}.technical-explanation{padding:18px 0}.technical-explanation p{font-size:.95rem;line-height:1.8}.technical-explanation .example p{margin:0}.technical-related{margin-top:20px;padding-top:12px;border-top:1px solid var(--border)}.technical-related button{display:flex;justify-content:space-between;gap:8px;width:100%;margin:8px 0;min-height:44px;font-size:.85rem;text-align:left}.auxiliary-text{border-top:1px solid var(--border);padding-top:10px}.auxiliary-text summary,.generated-exam>summary{min-height:44px;display:flex;align-items:center;font-weight:800;color:var(--purple);cursor:pointer;font-size:.82rem}.generated-exam{margin:20px 0;border:1px solid var(--border);padding:6px 14px;border-radius:14px}.generated-exam .exam-promo{margin-bottom:12px}.technical-sheet>.book-original{margin-top:16px}.technical-explanation .book-formula{font-size:.9rem}
+
+/* Phase 5c: Interactive Exercise Types */
+.proof-builder{display:flex;flex-direction:column;gap:20px}
+.proof-builder-prompt{display:flex;flex-direction:column;gap:16px}
+.premises-box{padding:18px;background:var(--bg);border:1.5px solid var(--border);border-radius:14px}
+.premises-box b{display:block;font-size:.82rem;margin-bottom:12px;color:var(--purple)}
+.premise-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.premise-item:last-child{border-bottom:none}
+.premise-number{display:grid;place-items:center;width:24px;height:24px;background:var(--soft);color:var(--purple);border-radius:6px;font-size:.75rem;font-weight:800;flex-shrink:0}
+.premise-item code{font-size:.88rem}
+.target-conclusion{padding:16px;background:var(--soft);border:1.5px solid var(--purple);border-radius:14px;display:flex;align-items:center;gap:8px}
+.target-conclusion b{color:var(--purple);font-size:.82rem}
+.target-conclusion code{font-size:.92rem;font-weight:700}
+.proof-workspace{padding:20px;background:var(--bg);border:2px dashed var(--border);border-radius:16px;min-height:180px}
+.proof-workspace>b{display:block;font-size:.85rem;margin-bottom:12px}
+.empty-proof{color:var(--muted);font-size:.8rem;text-align:center;padding:40px 20px}
+.proof-steps-list{display:flex;flex-direction:column;gap:10px}
+.proof-step-card{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);text-align:left;transition:transform .15s,box-shadow .15s}
+.proof-step-card.available{cursor:pointer}
+.proof-step-card.available:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(117,86,239,.15)}
+.proof-step-card.selected{background:var(--soft);border-color:var(--purple)}
+.step-number{display:grid;place-items:center;width:28px;height:28px;background:var(--purple);color:white;border-radius:8px;font-size:.8rem;font-weight:800;flex-shrink:0}
+.step-content{flex:1;min-width:0}
+.step-content code{display:block;font-size:.88rem;margin-bottom:4px;overflow-wrap:anywhere}
+.step-content small{font-size:.72rem;color:var(--muted)}
+.remove-step{display:grid;place-items:center;width:32px;height:32px;padding:6px;border-radius:8px;background:transparent;border:1px solid var(--border)}
+.available-steps>b{display:block;font-size:.85rem;margin-bottom:12px}
+.steps-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.no-steps{color:var(--muted);font-size:.78rem;text-align:center;padding:20px}
+.proof-feedback{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:12px;font-size:.85rem;font-weight:700}
+.proof-feedback.correct{background:#e0f4e8;color:#267849;border:1.5px solid #91c7a6}
+.proof-feedback.incorrect{background:#ffe8e3;color:#bd4156;border:1.5px solid #f5b8a8}
+.interactive-truth-table{display:flex;flex-direction:column;gap:20px}
+.table-header h3{font-size:1.05rem;margin:0 0 12px}
+.expression-display{padding:12px;background:var(--soft);border-radius:10px;text-align:center}
+.expression-display code{font-size:1.1rem;font-weight:700;color:var(--purple)}
+.table-instructions{display:block;color:var(--muted);line-height:1.6;margin-top:10px}
+.truth-table-container{overflow-x:auto}
+.interactive-table{width:100%;border-collapse:separate;border-spacing:0}
+.interactive-table th{background:var(--soft);color:var(--purple);padding:12px 10px;font-size:.8rem;border:1px solid var(--border)}
+.interactive-table th:first-child{border-top-left-radius:10px}
+.interactive-table th:last-child{border-top-right-radius:10px}
+.interactive-table td{padding:8px;border:1px solid var(--border);text-align:center}
+.premise-cell{background:var(--bg)}
+.premise-value{font-weight:800;font-size:.95rem}
+.input-cell{background:var(--surface)}
+.filled-cell{background:var(--soft)}
+.error-cell{background:#ffe8e3!important;border-color:#f5b8a8!important}
+.cell-buttons{display:flex;gap:6px;justify-content:center}
+.cell-button{min-width:40px;padding:6px 8px;font-size:.9rem;font-weight:800;border-radius:8px;border:1.5px solid var(--border);background:var(--surface)}
+.cell-button.selected{background:var(--purple);color:white;border-color:var(--purple)}
+.table-feedback{display:flex;align-items:center;gap:10px;padding:14px 16px;border-radius:12px;font-size:.85rem;font-weight:700}
+.table-feedback.success{background:#e0f4e8;color:#267849;border:1.5px solid #91c7a6}
+.table-feedback.error{background:#ffe8e3;color:#bd4156;border:1.5px solid #f5b8a8}
+[data-theme=dark] .proof-feedback.correct,[data-theme=dark] .table-feedback.success{background:#234032;color:#b7eccd;border-color:#4d7d61}
+[data-theme=dark] .proof-feedback.incorrect,[data-theme=dark] .table-feedback.error{background:#473126;color:#f2c7a7;border-color:#8d5a3e}
+[data-theme=dark] .error-cell{background:#473126!important;border-color:#8d5a3e!important}
