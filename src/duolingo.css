@@ -560,5 +560,58 @@
   .achievements-stats {
     grid-template-columns: 1fr;
   }
+  
+  .learn-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .learn-stats {
+    width: 100%;
+    justify-content: space-around;
+  }
+}
+
+/* Learn tab view */
+
+.learn-tab-view {
+  animation: arrive 0.2s ease-out;
+}
+
+.learn-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  padding: 0 4px;
+}
+
+.learn-header h1 {
+  font-size: 2rem;
+  margin: 0 0 8px;
+}
+
+.learn-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.learn-stats {
+  display: flex;
+  gap: 24px;
+}
+
+.learn-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.learn-stat svg {
+  color: var(--purple);
 }
 

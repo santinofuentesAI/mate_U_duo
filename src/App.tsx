@@ -13,16 +13,17 @@ import { palettes, validPalette, type Palette } from './palettes';
 import { bank, dailyChallenge, latestAttempts, practicePlan, sessionSummary, dailyPracticeSession, type PracticeItem } from './learning';
 import { makeSession, loadSession, saveSession, SESSION_KEY, type Session } from './sessions';
 import { HomeDashboard } from './HomeDashboard';
+import { LearningPath } from './LearningPath';
 import { LessonStory } from './LessonStory';
 import { ConfirmDialog, type Confirmation } from './ConfirmDialog';
 import { generateExam } from './exam';
 import { ExamResults } from './ExamResults';
 import { Achievements } from './Achievements';
 const PracticeHub=lazy(()=>import('./PracticeHub').then(m=>({default:m.PracticeHub})));
-const navigation=[{id:'learn',label:'Aprender',icon:Home},{id:'practice',label:'Practicar',icon:RefreshCw},{id:'achievements',label:'Logros',icon:Award},{id:'library',label:'Biblioteca',icon:GraduationCap},{id:'books',label:'Mi libro',icon:BookOpen},{id:'settings',label:'Ajustes',icon:Settings}];
+const navigation=[{id:'home',label:'Inicio',icon:Home},{id:'learn',label:'Aprender',icon:Trophy},{id:'practice',label:'Practicar',icon:RefreshCw},{id:'achievements',label:'Logros',icon:Award},{id:'library',label:'Biblioteca',icon:GraduationCap},{id:'books',label:'Mi libro',icon:BookOpen},{id:'settings',label:'Ajustes',icon:Settings}];
 function Mascot(){return <svg className="mascot" viewBox="0 0 160 170" aria-label="Milo, tu compañero de matemáticas" role="img"><ellipse cx="84" cy="156" rx="49" ry="8" fill="#30205820"/><path d="M38 51 Q23 9 51 30 L70 44 Q85 30 100 40 L124 26 Q141 19 130 65 Q149 92 136 131 Q117 155 66 149 Q30 143 29 103 Q24 70 38 51" fill="#d8f46d"/><path d="M37 53 Q35 23 51 39 L65 49 Q93 35 116 46 L129 35 L123 66 Q146 108 126 134 Q102 153 58 140 Q28 128 35 85Z" fill="#d8f46d" stroke="#b4d73f" strokeWidth="3"/><ellipse cx="70" cy="84" rx="12" ry="17" fill="white"/><ellipse cx="110" cy="84" rx="12" ry="17" fill="white"/><ellipse cx="74" cy="87" rx="5" ry="9" fill="#2c2441"/><ellipse cx="113" cy="87" rx="5" ry="9" fill="#2c2441"/><path d="M83 107 Q95 118 106 104" fill="none" stroke="#2c2441" strokeWidth="4" strokeLinecap="round"/><ellipse cx="56" cy="102" rx="9" ry="5" fill="#fa9eb3"/><ellipse cx="122" cy="102" rx="9" ry="5" fill="#fa9eb3"/><path d="M30 109 L14 99 M129 116 L145 104" stroke="#b4d73f" strokeWidth="9" strokeLinecap="round"/><path d="M72 146 L64 157 M110 145 L118 157" stroke="var(--button-accent)" strokeWidth="10" strokeLinecap="round"/><path d="M47 129 Q90 119 132 129 L132 139 Q86 130 48 140Z" fill="var(--button-accent)"/><text x="83" y="136" fill="white" fontSize="12" fontWeight="bold">π</text></svg>;}
 export default function App(){
-  const [p,setP]=useState<Progress>(loadProgress);const [tab,setTab]=useState('learn');const [session,setSession]=useState<Session|null>(null);const [index,setIndex]=useState(-1);const [result,setResult]=useState(false);const [storageError,setStorageError]=useState('');const [message,setMessage]=useState('');const [confirmation,setConfirmation]=useState<Confirmation|null>(null);const importRef=useRef<HTMLInputElement>(null);
+  const [p,setP]=useState<Progress>(loadProgress);const [tab,setTab]=useState('home');const [session,setSession]=useState<Session|null>(null);const [index,setIndex]=useState(-1);const [result,setResult]=useState(false);const [storageError,setStorageError]=useState('');const [message,setMessage]=useState('');const [confirmation,setConfirmation]=useState<Confirmation|null>(null);const importRef=useRef<HTMLInputElement>(null);
   const [bookProblemId,setBookProblemId]=useState<string|undefined>();
   const [bookPage,setBookPage]=useState<number|undefined>();const [pending,setPending]=useState(loadSession);
   const course=courseInfo[p.course],path=useMemo(()=>lessons.filter(l=>l.course===p.course),[p.course]);const units=[...new Set(path.map(l=>l.unit))];const next=path.find(l=>!p.completed.includes(l.id))||path[0];const coins=Math.max(0,20+Math.floor(p.xp/5)-(p.spentCoins||0));
@@ -54,7 +55,31 @@ export default function App(){
   return <div className="app-shell"><aside className="sidebar"><a className="brand" href="#" onClick={e=>{e.preventDefault();setTab('learn');}}><span>m<span className="brand-dot">•</span></span><div>mate<span>U DUO</span></div></a><nav aria-label="Navegación principal">{navigation.map(n=><button key={n.id} className={tab===n.id?'active':''} onClick={()=>{setBookProblemId(undefined);setTab(n.id);setMessage('');window.scrollTo(0,0);}}><span className="nav-icon"><n.icon size={23} strokeWidth={2.7}/></span><span>{n.label}</span>{n.id==='practice'&&due.length>0&&<b>{due.length}</b>}</button>)}</nav><div className="sidebar-bottom"><div className="avatar">S</div><div>Tu espacio de estudio<small>Progreso en este dispositivo</small></div></div></aside>
     <div className="main-shell"><header className="topbar"><span className="mobile-brand">mate <b>U DUO</b></span><label className="course-picker"><span>Tu curso</span><select aria-label="Elegir curso" value={p.course} onChange={e=>{setBookProblemId(undefined);setBookPage(undefined);setP({...p,course:e.target.value as Progress['course']});}}><option value="discreta">Matemática Discreta</option><option value="precalculo">Precálculo</option></select></label><div className="top-stats"><span title="Racha"><Flame size={20} color="#e77d32"/>{streak(p)}</span><span title="Experiencia"><Star size={20} color="#bd8b0c"/>{p.xp}</span><span title="Monedas ficticias"><Coins size={20} color="#168979"/>{coins}</span></div><button className={`icon-button sound-toggle ${p.sound?'active':''}`} aria-label={p.sound?"Silenciar sonidos":"Activar sonidos"} onClick={()=>setP({...p,sound:!p.sound})}>{p.sound?<Volume2 size={19}/>:<VolumeX size={19}/>}</button><button className="icon-button" aria-label="Cambiar tema claro u oscuro" onClick={()=>setP({...p,dark:!p.dark})}><Moon size={19}/></button></header>
     <div className="content-grid single"><main className="main-content">{message&&<p role="status" className="notice">{message}</p>}{storageError&&<p role="alert" className="notice">{storageError}</p>}
-      {tab==='learn'&&<HomeDashboard progress={p} path={path} pending={pending} onLesson={startLesson} onResume={resume} onDiscard={()=>setConfirmation({title:'¿Descartar la sesión guardada?',message:'Se elimina el borrador de esa sesión. Tu avance anterior se conserva.',confirmLabel:'Descartar sesión',destructive:true,onConfirm:clearPending})} onFavorite={favorite} onStartDailyPractice={startDailyPractice}/>}
+      {tab==='home'&&<HomeDashboard progress={p} path={path} pending={pending} onLesson={startLesson} onResume={resume} onDiscard={()=>setConfirmation({title:'¿Descartar la sesión guardada?',message:'Se elimina el borrador de esa sesión. Tu avance anterior se conserva.',confirmLabel:'Descartar sesión',destructive:true,onConfirm:clearPending})} onFavorite={favorite} onStartDailyPractice={startDailyPractice}/>}
+      {tab==='learn'&&<div className="learn-tab-view">
+        <div className="learn-header">
+          <div>
+            <h1>Tu ruta de aprendizaje</h1>
+            <p>Completá lecciones para avanzar y desbloquear nuevo contenido</p>
+          </div>
+          <div className="learn-stats">
+            <div className="learn-stat">
+              <Trophy size={18}/>
+              <span>{completed}/{path.length}</span>
+            </div>
+            <div className="learn-stat">
+              <Star size={18}/>
+              <span>{p.xp} XP</span>
+            </div>
+            <div className="learn-stat">
+              <Flame size={18}/>
+              <span>{streak(p)}</span>
+            </div>
+          </div>
+        </div>
+        {pending&&<div className="resume-strip"><button onClick={resume}><span>CONTINUAR</span><b>{pending.session.items[0].lesson.course!==p.course?`${pending.session.items[0].lesson.course==='precalculo'?'Precálculo':'Discreta'} · `:''}{pending.session.title}</b><small>{Math.max(1,index+1)}/{pending.session.items.length}</small></button><button className="resume-discard" aria-label="Descartar sesión" onClick={()=>setConfirmation({title:'¿Descartar la sesión guardada?',message:'Se elimina el borrador de esa sesión. Tu avance anterior se conserva.',confirmLabel:'Descartar sesión',destructive:true,onConfirm:clearPending})}><X size={17}/></button></div>}
+        <LearningPath key={p.course} path={path} progress={p} onStart={startLesson} onFavorite={favorite}/>
+      </div>}
       {tab==='practice'&&<Suspense fallback={<p role="status">Preparando tu práctica…</p>}><PracticeHub key={`${p.course}-${bookProblemId||'saved'}`} initialBookProblem={bookProblemId} progress={p} pending={pending} onResume={resume} onStart={startItems} onExam={startExam} onLesson={startLesson} onRead={page=>{setBookPage(page);setTab('books');window.scrollTo(0,0);}}/></Suspense>}
       {tab==='achievements'&&<Achievements progress={p}/>}
       {tab==='library'&&<Library key={p.course} course={p.course} onProblem={id=>{setBookProblemId(id);setTab('practice');window.scrollTo(0,0);}} onPractice={startLesson} onRead={page=>{setBookPage(page);setTab('books');window.scrollTo(0,0);}}/>}

@@ -12,8 +12,8 @@ const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors
 page.on('dialog',d=>d.accept());
 const url=process.env.TEST_URL||'http://127.0.0.1:5173/';
 await page.goto(url);await page.getByRole('heading',{name:'¡Hola de nuevo!'}).waitFor();
-// Expand the lessons disclosure
-await page.locator('details.route-disclosure summary').click();
+// Navigate to Aprender tab to see lesson path
+await page.locator('.sidebar button').filter({ hasText: 'Aprender' }).click();
 await page.waitForTimeout(500);
 // Click on first lesson by finding button with that title
 await page.locator('button.journey-level').first().waitFor();

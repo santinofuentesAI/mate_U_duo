@@ -1,9 +1,18 @@
 import { ArrowRight, Check, Play } from 'lucide-react';
 import type { Lesson, Progress } from './types';
 import { TopicIcon } from './TopicIcon';
+import { useEffect, useRef } from 'react';
 
-export function LearningPath({path,progress:p,onStart}:{path:Lesson[];progress:Progress;onStart:(l:Lesson)=>void;onFavorite:(id:string)=>void}) {
+export function LearningPath({path,progress:p,onStart,onFavorite}:{path:Lesson[];progress:Progress;onStart:(l:Lesson)=>void;onFavorite:(id:string)=>void}) {
   const next=path.find(lesson=>!p.completed.includes(lesson.id))||path[0];
+  const currentRef=useRef<HTMLButtonElement>(null);
+  
+  useEffect(()=>{
+    if(currentRef.current){
+      currentRef.current.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  },[]);
+  
   if(!next)return null;
   const units=[...new Set(path.map(lesson=>lesson.unit))];
   const done=path.filter(lesson=>p.completed.includes(lesson.id)).length;
@@ -15,7 +24,7 @@ export function LearningPath({path,progress:p,onStart}:{path:Lesson[];progress:P
       <div className="journey-unit-banner"><span>UNIDAD {unitIndex+1}</span><h2>{unit.split(' · ')[1]||unit}</h2><small>{unit.split(' · ')[0]}</small></div>
       <div className="journey-levels">{path.filter(lesson=>lesson.unit===unit).map(lesson=>{
         const level=path.indexOf(lesson)+1,completed=p.completed.includes(lesson.id),current=lesson.id===next.id;
-        return <button key={lesson.id} className={`journey-level ${current?'is-current':''} ${completed?'is-done':''}`} onClick={()=>onStart(lesson)} aria-label={`Nivel ${level}: ${lesson.title}, ${lesson.questions.length} ejercicios de fácil a difícil${completed?', completado':current?', siguiente':''}`}>
+        return <button ref={current?currentRef:null} key={lesson.id} className={`journey-level ${current?'is-current':''} ${completed?'is-done':''}`} onClick={()=>onStart(lesson)} aria-label={`Nivel ${level}: ${lesson.title}, ${lesson.questions.length} ejercicios de fácil a difícil${completed?', completado':current?', siguiente':''}`}>
           <span className="journey-orb">{completed?<Check size={27} strokeWidth={3}/>:<TopicIcon name={lesson.icon} topic={lesson.title} size={29}/>}</span>
           <span className="journey-level-copy"><small>{current?<><Play size={12} fill="currentColor"/> SIGUIENTE</>:completed?'COMPLETADO':`NIVEL ${level}`}</small><b>{lesson.title}</b><span className="journey-level-count">{lesson.questions.length} ejercicios · fácil a difícil</span></span>
           <ArrowRight className="journey-level-arrow" size={17}/>
