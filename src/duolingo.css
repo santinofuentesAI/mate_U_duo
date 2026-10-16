@@ -303,3 +303,262 @@
     animation: none !important;
   }
 }
+
+/* Achievements and Levels */
+
+.achievements-view {
+  max-width: 920px;
+  margin: 0 auto;
+  animation: arrive 0.2s ease-out;
+}
+
+.achievements-header {
+  margin-bottom: 32px;
+}
+
+.level-badge-large {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: linear-gradient(135deg, var(--soft), var(--surface));
+  border: 2px solid var(--border);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 4px 0 var(--border);
+}
+
+.level-badge-ring {
+  width: 100px;
+  height: 100px;
+  min-width: 100px;
+  border-radius: 50%;
+  background: var(--button-accent);
+  color: white;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 0 var(--accent-deep);
+}
+
+.level-info {
+  flex: 1;
+}
+
+.level-info .eyebrow {
+  margin-bottom: 6px;
+}
+
+.level-info h2 {
+  font-size: 2rem;
+  margin: 0 0 8px;
+}
+
+.level-info p {
+  font-size: 0.85rem;
+  margin: 0 0 16px;
+  color: var(--text);
+}
+
+.level-progress-bar {
+  height: 12px;
+  background: var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.level-progress-bar > div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--button-accent), #10b981);
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.achievements-section {
+  margin-bottom: 36px;
+}
+
+.achievements-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.15rem;
+  margin-bottom: 20px;
+  color: var(--purple);
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.achievement-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  padding: 24px 20px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.achievement-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--border);
+}
+
+.achievement-card.earned {
+  border-color: var(--purple);
+  background: var(--soft);
+}
+
+.achievement-card.locked {
+  opacity: 0.6;
+}
+
+.achievement-icon {
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.achievement-icon.grayscale {
+  filter: grayscale(100%);
+}
+
+.achievement-card h4 {
+  font-size: 1rem;
+  margin: 0 0 8px;
+  color: var(--text);
+}
+
+.achievement-card p {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0 0 16px;
+  line-height: 1.4;
+}
+
+.achievement-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--purple);
+  color: white;
+}
+
+.locked-badge {
+  background: var(--border);
+  color: var(--muted);
+}
+
+.achievements-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.stat-card b {
+  font-size: 1.8rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.stat-card small {
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.empty-state-text {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Sound toggle in topbar */
+
+.sound-toggle {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  padding: 0;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.sound-toggle.active {
+  color: var(--purple);
+}
+
+/* Coming soon indicator */
+
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fbbf24;
+  color: #78350f;
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 5px 10px;
+  border-radius: 8px;
+  letter-spacing: 0.05em;
+}
+
+.lesson-card.coming-soon {
+  opacity: 0.7;
+  border: 2px dashed var(--border);
+  background: var(--bg);
+}
+
+.lesson-card.coming-soon .level-orb {
+  background: var(--border);
+  color: var(--muted);
+  box-shadow: none;
+}
+
+/* Mobile responsive */
+
+@media (max-width: 700px) {
+  .level-badge-large {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px 18px;
+  }
+
+  .level-badge-ring {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+  }
+
+  .level-info h2 {
+    font-size: 1.5rem;
+  }
+
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .achievements-stats {
+    grid-template-columns: 1fr;
+  }
+}
+

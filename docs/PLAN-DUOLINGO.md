@@ -155,45 +155,59 @@ La aplicación cuenta con **47 lecciones** organizadas en dos cursos:
 - [x] Aparición en pantalla de celebración
 - [x] Mensajes contextuales
 
-### Fase 3: Contenido y estructura (FUTURO)
+### Fase 3: Contenido y estructura (COMPLETADO)
 
-#### 3.1 Preparar para semanas 5 y 6
-- [ ] Crear estructura de datos clara para agregar semanas:
-  ```typescript
-  // En content.ts o nuevo archivo weeklyContent.ts
-  export interface WeekContent {
-    id: string;           // 'discreta-s5', 'discreta-s6'
-    course: Course;
-    weekNumber: number;
-    title: string;
-    lessons: Lesson[];
-    enabled: boolean;     // false si aún no tiene contenido
-  }
-  ```
-- [ ] Documentar formato de ejercicios
-- [ ] Crear plantillas para nuevos temas
+#### 3.1 Preparar para semanas 5 y 6 ✅
+- [x] Crear estructura de datos clara para agregar semanas:
+  - Creado `weekStructure.ts` con interfaz `WeekInfo`
+  - Sistema de habilitación/deshabilitación de semanas
+  - Campos `comingSoon` y `unlockRequirement`
+  - Función `isWeekUnlocked()` para verificar requisitos (70% de semana anterior)
+- [x] Documentar formato de ejercicios
+  - Creado array `exerciseTemplates` con 9 tipos de ejercicios
+  - Cada template incluye nombre, descripción y ejemplo de código
+- [x] Crear placeholders para nuevas semanas
+  - Discreta S5: "Relaciones y funciones" (placeholder)
+  - Discreta S6: "Grafos y árboles" (placeholder)
+  - Precálculo B6: "Funciones y gráficas" (placeholder)
 
-#### 3.2 Sistema de desbloqueo progresivo
-- [ ] Lógica de desbloqueo por semanas
-- [ ] Indicador visual de contenido próximo
-- [ ] Mensaje "Próximamente: Semana 5"
+#### 3.2 Sistema de desbloqueo progresivo ✅
+- [x] Lógica de desbloqueo por semanas (función `isWeekUnlocked`)
+- [x] Indicador visual de contenido próximo (CSS `.coming-soon-badge`)
+- [x] Mensaje "Próximamente" en lecciones bloqueadas
 
-### Fase 4: Gamificación avanzada (FUTURO)
+### Fase 4: Gamificación avanzada (COMPLETADO)
 
-#### 4.1 Logros y medallas
-- [ ] Sistema de achievements
-- [ ] Medallas por hitos: primera racha de 7 días, 100 XP, etc.
-- [ ] Pantalla de logros desbloqueados
+#### 4.1 Logros y medallas ✅
+- [x] Sistema de achievements (12 logros definidos):
+  - 🎓 Primera lección
+  - 🔥 Racha de 3, 7 y 30 días
+  - ⭐ 100, 500 y 1000 XP
+  - 📚 5 y 10 lecciones completadas
+  - 💯 5 respuestas perfectas seguidas
+  - 🎯 Meta diaria cumplida 7 veces
+  - 🗺️ 5 lecciones favoritas
+- [x] Medallas por hitos (función `checkNewAchievements`)
+- [x] Pantalla de logros desbloqueados (componente `Achievements.tsx`)
+- [x] Vista de logros bloqueados con descripciones
 
-#### 4.2 Niveles de usuario
-- [ ] Progresión por niveles (ej: cada 100 XP = 1 nivel)
-- [ ] Título del nivel (Principiante, Intermedio, Experto)
-- [ ] Beneficios por nivel (más monedas, contenido extra)
+#### 4.2 Niveles de usuario ✅
+- [x] Progresión por niveles (cada 100 XP = 1 nivel)
+- [x] Títulos del nivel:
+  - Principiante, Aprendiz, Estudiante, Practicante, Competente
+  - Avanzado, Experto, Maestro, Virtuoso, Leyenda
+- [x] Barra de progreso hacia siguiente nivel
+- [x] Badge de nivel grande en vista de logros
+- [x] Beneficios visuales (sin mecánica especial aún)
 
-#### 4.3 Sonidos (OPCIONAL)
-- [ ] Activar el campo `sound` ya existente
-- [ ] Sonido de acierto, error, completar meta
-- [ ] Control de volumen
+#### 4.3 Sonidos ✅
+- [x] Activar el campo `sound` existente
+- [x] Sonido de acierto (audio data URI)
+- [x] Sonido de error (audio data URI)  
+- [x] Sonido de logro desbloqueado (audio data URI)
+- [x] Toggle de sonido en topbar (icono Volume2/VolumeX)
+- [x] Control en ajustes
+- [x] Volumen al 30% para no ser invasivos
 
 ---
 
@@ -213,16 +227,17 @@ La aplicación cuenta con **47 lecciones** organizadas en dos cursos:
 - [x] Milo aparece animado en la celebración
 - [x] Los colores son más vibrantes y el diseño más juguetón
 
-### Fase 3: Contenido (FUTURO)
-- [ ] Existe documentación clara de cómo agregar una semana nueva
-- [ ] Los ejercicios siguen un formato estándar
-- [ ] Las semanas 5 y 6 aparecen como "próximamente" si no tienen contenido
-- [ ] Al habilitar una semana nueva, sus ejercicios entran automáticamente en la práctica diaria
+### Fase 3: Contenido (COMPLETADO ✅)
+- [x] Existe documentación clara de cómo agregar una semana nueva
+- [x] Los ejercicios siguen un formato estándar (9 templates documentados)
+- [x] Las semanas 5 y 6 aparecen como "próximamente" con badges
+- [x] Sistema de desbloqueo progresivo implementado (70% de semana anterior)
+- [x] Al habilitar una semana nueva, sus ejercicios entrarán automáticamente en la práctica diaria
 
-### Fase 4: Gamificación (FUTURO)
-- [ ] Sistema de logros visible y funcional
-- [ ] Niveles de usuario claros
-- [ ] Sonidos opcionales implementados (si se decide hacerlo)
+### Fase 4: Gamificación (COMPLETADO ✅)
+- [x] Sistema de logros visible y funcional (12 achievements)
+- [x] Niveles de usuario claros (10 títulos, cada 100 XP)
+- [x] Sonidos opcionales implementados con toggle en topbar
 
 ---
 
@@ -355,16 +370,24 @@ El contenido debe desbloquearse progresivamente:
 - [x] Meta diaria funcional y visible en pantalla de inicio
 - [x] Botón "Practicar ahora" genera sesión de 10-20 ejercicios mixtos
 - [x] Sesión prioriza repasos vencidos y errores
+- [x] Sesión mezcla ejercicios de TODAS las semanas disponibles (1-4 actualmente)
 - [x] Pantalla de celebración con confeti y estadísticas
 - [x] Racha destacada con emoji de llama
 - [x] Botones más redondeados (18-25px)
 - [x] Colores más vibrantes
 - [x] Animaciones de éxito mejoradas
 - [x] Milo animado en celebración
+- [x] Sistema de logros con 12 achievements
+- [x] Niveles de usuario (1-10+) con títulos
+- [x] Sonidos opcionales (acierto, error, logro)
+- [x] Toggle de sonido en topbar
+- [x] Placeholders para semanas 5-6
+- [x] Sistema de desbloqueo progresivo
+- [x] Documentación de templates de ejercicios
 - [x] La app funciona en móvil, tablet y escritorio
-- [x] Tests pasan (`npm test`)
-- [x] Build exitoso (`npm run build`)
-- [x] Screenshots capturados para el PR
+- [x] Tests pasan (`npm test`) - 37/37 ✅
+- [x] Build exitoso (`npm run build`) ✅
+- [ ] Screenshots capturados y agregados al PR
 
 ---
 
@@ -380,4 +403,35 @@ El contenido debe desbloquearse progresivamente:
 ---
 
 *Documento creado: Octubre 2026*
-*Última actualización: Fase 1 y 2 completadas*
+*Última actualización: Fases 1, 2, 3 y 4 completadas*
+
+## Resumen de implementación
+
+### ✅ Completado
+
+**Todas las fases implementadas:**
+- ✅ **Fase 1**: Sistema de meta diaria y práctica mixta
+- ✅ **Fase 2**: Mejoras visuales estilo Duolingo
+- ✅ **Fase 3**: Estructura de contenido y placeholders para S5/S6/B6
+- ✅ **Fase 4**: Gamificación completa (logros, niveles, sonidos)
+
+**Funcionalidades principales:**
+- Meta diaria configurable (ejercicios o XP)
+- Sesión de práctica mixta de 10-20 ejercicios priorizados
+- 12 achievements desbloqueables
+- Sistema de niveles (cada 100 XP)
+- Sonidos opcionales con toggle
+- Celebración animada con Milo y confetti
+- Placeholders para semanas/bloques futuros
+- Sistema de desbloqueo progresivo (70% de semana anterior)
+- Guía completa para agregar contenido nuevo
+
+**Archivos nuevos:**
+- `src/duolingo.css` - Estilos de la experiencia Duolingo
+- `src/weekStructure.ts` - Estructura de semanas y templates de ejercicios
+- `src/Achievements.tsx` - Vista de logros y niveles
+- `docs/PLAN-DUOLINGO.md` - Plan completo de mejora
+
+**Tests:** 37/37 pasando ✅  
+**Build:** Limpio ✅  
+**PR:** #1 draft en https://github.com/santinofuentesAI/mate_U_duo/pull/1

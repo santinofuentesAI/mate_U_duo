@@ -1,7 +1,7 @@
 import type { Progress, Question, Lesson, AnswerDetails } from './types';
 import { validPalette } from './palettes';
 export const STORAGE_KEY = 'mate-u-duo.v1';
-export const freshProgress = (): Progress => ({ version: 1, attempts: [], completed: [], skills: {}, xp: 0, days: [], course: 'discreta', dark: false, fontScale: 1, sound: false, reduceMotion: false, goal: 8, dailyGoalType: 'exercises', dailyGoalValue: 10, dailyProgress: {} });
+export const freshProgress = (): Progress => ({ version: 1, attempts: [], completed: [], skills: {}, xp: 0, days: [], course: 'discreta', dark: false, fontScale: 1, sound: false, reduceMotion: false, goal: 8, dailyGoalType: 'exercises', dailyGoalValue: 10, dailyProgress: {}, achievements: [], level: 1 });
 const studyDayFormatter=new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Costa_Rica', year: 'numeric', month: '2-digit', day: '2-digit' });
 export function dayKey(now = new Date()) { return studyDayFormatter.format(now); }
 export function validateProgress(v: unknown): Progress {
@@ -15,7 +15,7 @@ export function validateProgress(v: unknown): Progress {
   if (p.attempts.length > 100000 || p.attempts.some(a => !a || typeof a.questionId !== 'string' || typeof a.lessonId !== 'string' || typeof a.correct !== 'boolean' || typeof a.assisted !== 'boolean' || !Number.isFinite(Date.parse(a.date)))) throw new Error('El historial contiene entradas inválidas.');
   if (p.completed.some(x => typeof x !== 'string') || p.days.some(x => typeof x !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(x))) throw new Error('Datos de avance inválidos.');
   for (const s of Object.values(p.skills)) if (!s || !Number.isInteger(s.stage) || s.stage < 0 || s.stage > 4 || !Number.isInteger(s.successes) || s.successes < 0 || !Number.isFinite(Date.parse(s.due)) || !Number.isFinite(Date.parse(s.last))) throw new Error('Calendario de repaso inválido.');
-  return { ...freshProgress(), ...p, palette: validPalette(p.palette), fontScale: Math.min(1.3, Math.max(1, Number(p.fontScale) || 1)), goal: Math.min(30, Math.max(4, Number(p.goal) || 8)), dark: !!p.dark, sound: !!p.sound, reduceMotion: !!p.reduceMotion, dailyGoalType: p.dailyGoalType || 'exercises', dailyGoalValue: Math.min(30, Math.max(3, Number(p.dailyGoalValue) || 10)), dailyProgress: p.dailyProgress || {} };
+  return { ...freshProgress(), ...p, palette: validPalette(p.palette), fontScale: Math.min(1.3, Math.max(1, Number(p.fontScale) || 1)), goal: Math.min(30, Math.max(4, Number(p.goal) || 8)), dark: !!p.dark, sound: !!p.sound, reduceMotion: !!p.reduceMotion, dailyGoalType: p.dailyGoalType || 'exercises', dailyGoalValue: Math.min(30, Math.max(3, Number(p.dailyGoalValue) || 10)), dailyProgress: p.dailyProgress || {}, achievements: p.achievements || [], level: Math.max(1, Math.floor((p.xp || 0) / 100) + 1) };
 }
 export function loadProgress(): Progress { try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? validateProgress(JSON.parse(raw)) : freshProgress(); } catch { return freshProgress(); } }
 export function recordAttempt(p: Progress, lesson: Lesson, q: Question, correct: boolean, assisted: boolean, now = new Date(), details?: AnswerDetails): Progress {
@@ -56,4 +56,62 @@ export function recordDailyProgress(p: Progress, exercisesCompleted: number, xpE
       }
     }
   };
+}
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  check: (p: Progress) => boolean;
+}
+
+export const achievements: Achievement[] = [
+  { id: 'first-lesson', title: 'Primera lección', description: 'Completá tu primera lección', icon: '🎓', check: p => p.completed.length >= 1 },
+  { id: 'streak-3', title: 'Racha de 3 días', description: 'Practicá 3 días seguidos', icon: '🔥', check: p => streak(p) >= 3 },
+  { id: 'streak-7', title: 'Racha de 7 días', description: 'Una semana de práctica constante', icon: '⚡', check: p => streak(p) >= 7 },
+  { id: 'streak-30', title: 'Racha de 30 días', description: 'Un mes completo de aprendizaje', icon: '💎', check: p => streak(p) >= 30 },
+  { id: 'xp-100', title: '100 XP', description: 'Alcanzá 100 puntos de experiencia', icon: '⭐', check: p => p.xp >= 100 },
+  { id: 'xp-500', title: '500 XP', description: 'Alcanzá 500 puntos de experiencia', icon: '🌟', check: p => p.xp >= 500 },
+  { id: 'xp-1000', title: '1000 XP', description: 'Alcanzá 1000 puntos de experiencia', icon: '✨', check: p => p.xp >= 1000 },
+  { id: 'lessons-5', title: '5 lecciones', description: 'Completá 5 lecciones', icon: '📚', check: p => p.completed.length >= 5 },
+  { id: 'lessons-10', title: '10 lecciones', description: 'Completá 10 lecciones', icon: '📖', check: p => p.completed.length >= 10 },
+  { id: 'perfect-5', title: 'Perfección', description: '5 respuestas correctas seguidas sin ayuda', icon: '💯', check: p => {
+    const last5 = p.attempts.slice(-5);
+    return last5.length === 5 && last5.every(a => a.correct && !a.assisted);
+  }},
+  { id: 'daily-goal-7', title: 'Meta diaria × 7', description: 'Cumplí tu meta diaria 7 veces', icon: '🎯', check: p => {
+    const goalType = p.dailyGoalType || 'exercises';
+    const goalValue = p.dailyGoalValue || 10;
+    return Object.values(p.dailyProgress || {}).filter(d => 
+      goalType === 'exercises' ? d.exercises >= goalValue : d.xp >= goalValue
+    ).length >= 7;
+  }},
+  { id: 'explorer', title: 'Explorador', description: 'Guardá 5 lecciones favoritas', icon: '🗺️', check: p => (p.favorites?.length || 0) >= 5 },
+];
+
+export function checkNewAchievements(p: Progress): string[] {
+  const current = new Set(p.achievements || []);
+  const newOnes: string[] = [];
+  for (const achievement of achievements) {
+    if (!current.has(achievement.id) && achievement.check(p)) {
+      newOnes.push(achievement.id);
+    }
+  }
+  return newOnes;
+}
+
+export function userLevel(xp: number): { level: number; title: string; nextLevelXP: number; progress: number } {
+  const level = Math.max(1, Math.floor(xp / 100) + 1);
+  const currentLevelXP = (level - 1) * 100;
+  const nextLevelXP = level * 100;
+  const progress = Math.round(((xp - currentLevelXP) / 100) * 100);
+  
+  const titles = [
+    'Principiante', 'Aprendiz', 'Estudiante', 'Practicante', 'Competente',
+    'Avanzado', 'Experto', 'Maestro', 'Virtuoso', 'Leyenda'
+  ];
+  const titleIndex = Math.min(Math.floor((level - 1) / 2), titles.length - 1);
+  
+  return { level, title: titles[titleIndex], nextLevelXP, progress };
 }

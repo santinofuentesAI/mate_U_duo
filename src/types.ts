@@ -32,4 +32,6 @@ export interface Progress {
   dailyGoalType?: 'exercises' | 'xp';
   dailyGoalValue?: number;
   dailyProgress?: Record<string, { exercises: number; xp: number }>;
+  achievements?: string[];
+  level?: number;
 }
