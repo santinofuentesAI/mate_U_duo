@@ -1,487 +1,602 @@
 # Plan de mejora: Experiencia estilo Duolingo para Mate U Duo
 
-## Estado actual
+## Estado actual - ACTUALIZADO (Octubre 2026)
 
-### Contenido existente
+### Funcionalidades completadas ✅
 
-La aplicación cuenta con **47 lecciones** organizadas en dos cursos:
-
-**Matemática Discreta** (22 lecciones):
-- **S1 · Lógica proposicional** (7 lecciones): Proposiciones, conectores, implicación, tablas de verdad, equivalencias, traducción, formas normales
-- **S2 · Circuitos e inferencia** (4 lecciones): Circuitos lógicos, reglas de inferencia, demostraciones, métodos de demostración
-- **S3 · Predicados y cuantificadores** (6 lecciones): Predicados, universal/existencial, negar, anidados, matrices, inferencias
-- **S4 · Conjuntos** (5 lecciones): Pertenencia, operaciones, intervalos, Venn, aplicaciones
-
-**Precálculo** (25 lecciones):
-- **B1 · Números reales** (5 lecciones): Conjuntos numéricos, signos, fracciones, potencias, raíces
-- **B2 · Expresiones algebraicas** (6 lecciones): Variables, monomios, suma/resta, multiplicación, división
-- **B3 · Factorización** (4 lecciones): Factor común, trinomios, suma/diferencia de cubos
-- **B4 · Fracciones algebraicas** (3 lecciones): Raíces racionales, división sintética, fracciones
-- **B5 · Ecuaciones** (7 lecciones): Lineales, cuadráticas, grado superior, racionales, radicales, problemas
-
-### Funcionalidades actuales
-
-✅ **Sistema de avance**: 
-- XP por respuestas correctas (10 XP sin ayuda, 5 XP con ayuda)
-- Racha de días consecutivos
-- Monedas ficticias (20 iniciales + 1 por cada 5 XP)
-- Progreso local en navegador
-
-✅ **Práctica**:
-- Lecciones con narrativas y ejercicios
-- Repaso espaciado (1, 3, 7, 14, 30 días)
-- Diario de errores
-- Práctica personalizada (3, 8 o 15 ejercicios)
-- Reto diario (5 preguntas)
-- Simulacro (18 preguntas)
-
-✅ **Interfaz**:
-- Iconos SVG propios
-- Mascota "Milo"
-- Tema claro/oscuro
-- 4 paletas de colores
-- Feedback animado
-- Mobile-first design
-
-### Lo que falta para una experiencia Duolingo
-
-❌ **Práctica diaria como foco principal**: La pantalla principal muestra la ruta de lecciones, no una sesión de práctica diaria mixta
-❌ **Meta diaria clara**: Existe un "goal" (8 XP por defecto) pero no se presenta como objetivo central
-❌ **Sesión de práctica variada**: El reto diario tiene solo 5 preguntas y no mezcla todos los temas aprendidos
-❌ **Celebraciones más vistosas**: Las animaciones de éxito son sutiles
-❌ **UI más juguetona**: El diseño es limpio pero formal
-❌ **Onboarding claro**: No hay introducción a la meta diaria y el sistema de práctica
+**Fase 1-4 completadas:**
+- ✅ Meta diaria configurable y práctica mixta
+- ✅ Mejoras visuales estilo Duolingo
+- ✅ Sistema de logros y niveles
+- ✅ Sonidos opcionales
+- ✅ Mascota Mateo animada (SVG artesanal con 6 moods)
+- ✅ Sistema de temas (5 themes: Duolingo, Glassmorphism, Minimal, Neon, Pastel)
+- ✅ Tablas de referencia en ejercicios ("Consultar tablas")
+- ✅ PDFs semanales
 
 ---
 
-## Experiencia objetivo
+## FASE 5: Características avanzadas de aprendizaje (NUEVA)
 
-### Flujo principal rediseñado
+### 5.1 "¿Por qué me equivoqué?" - Explicación de errores comunes
 
-1. **Pantalla de inicio**: 
-   - Bienvenida personalizada con racha destacada
-   - **Meta diaria** prominente (ej: "10 ejercicios hoy" o "50 XP hoy")
-   - Botón grande "Practicar ahora" que lleva a una sesión mixta
-   - Resumen visual: progreso de la racha, XP del día, lecciones completadas
+**Objetivo**: Después de una respuesta incorrecta, mostrar un botón que explica por qué está mal, con explicaciones específicas para errores comunes.
 
-2. **Sesión de práctica diaria**:
-   - **10-20 ejercicios mezclados** de las semanas/bloques aprendidos hasta ahora
-   - Variedad de tipos: choice, input, logic, algebra, set, venn, table, etc.
-   - Prioriza: repasos vencidos > errores > contenido reciente > contenido aleatorio
-   - Barra de progreso hacia la meta del día
-   - Feedback inmediato con animaciones alegres
-   - Pantalla de celebración al completar la meta
-
-3. **Celebración y estadísticas**:
-   - Confeti, mascota animada, mensajes motivadores
-   - XP ganado, racha actualizada
-   - "¡Racha de X días!" con llama animada
-   - Opción de practicar más o explorar lecciones
-
-### Diseño visual renovado
-
-#### Colores y formas
-- Botones con bordes redondeados más pronunciados (border-radius: 18-25px)
-- Paleta más vibrante y alegre
-- Gradientes suaves en fondos de tarjetas importantes
-- Más uso del color púrpura principal (#7556ef)
-- Iconos más grandes y expresivos
-
-#### Animaciones
-- Confeti al completar meta diaria
-- Estrellitas al acertar (ya existe `answer-sparks` pero mejorar)
-- Milo animado (saltos, celebración)
-- Transiciones suaves entre ejercicios
-- Progress bar animada con efecto de "fill"
-
-#### Tipografía
-- Más uso de negritas para títulos
-- Emojis en contextos clave (🔥 racha, ⚡ XP, 🎯 meta)
-- Mensajes cortos y motivadores
-
-#### Feedback
-- ✅ **Correcto**: fondo verde claro, sonido opcional de éxito, mensaje alegre
-- ❌ **Incorrecto**: fondo naranja suave, mensaje de ánimo, explicación clara
-- Mantener la opción de intentos ilimitados
-
----
-
-## Roadmap de implementación
-
-### Fase 1: Sistema de meta diaria y sesión de práctica mixta (ESTA FASE)
-
-#### 1.1 Actualizar modelo de progreso
-- [x] Añadir campo `dailyGoalType: 'exercises' | 'xp'` (default: 'exercises')
-- [x] Añadir campo `dailyGoalValue: number` (default: 10)
-- [x] Rastrear progreso diario: `dailyProgress: { [day: string]: { exercises: number, xp: number } }`
-
-#### 1.2 Nueva pantalla de inicio con meta diaria
-- [x] Diseñar widget de meta diaria destacado
-- [x] Mostrar progreso del día (ej: "5 / 10 ejercicios")
-- [x] Botón principal "Practicar ahora" (CTA)
-- [x] Visualizar racha con llama animada
-- [x] Resumen de XP y logros
-
-#### 1.3 Sesión de práctica diaria
-- [x] Generar sesión mixta de 10-20 ejercicios
-- [x] Mezclar todos los temas aprendidos (semanas 1-4 de Discreta, bloques 1-5 de Precálculo)
-- [x] Priorizar: repasos vencidos > errores > nuevo contenido
-- [x] Mostrar progreso hacia meta durante la sesión
-- [x] Celebración al completar la meta
-
-#### 1.4 Pantalla de celebración mejorada
-- [x] Confeti animado
-- [x] Milo celebrando (mascota animada)
-- [x] Mensaje personalizado según racha
-- [x] Estadísticas del día (XP ganado, ejercicios completados)
-- [x] Animación de racha si es nueva o se mantiene
-
-### Fase 2: Mejoras visuales estilo Duolingo (ESTA FASE)
-
-#### 2.1 Rediseño de componentes clave
-- [x] Botones más redondeados y expresivos
-- [x] Tarjetas con sombras más suaves
-- [x] Colores más vibrantes (ajustar paleta)
-- [x] Iconos más grandes en pantalla de inicio
-
-#### 2.2 Animaciones mejoradas
-- [x] Confeti al completar meta (usando `answer-sparks` como base)
-- [x] Progreso animado de la barra
-- [x] Transiciones suaves entre pantallas
-- [x] Feedback visual más alegre (correcto/incorrecto)
-
-#### 2.3 Milo la mascota
-- [x] Estados animados: neutral, celebración, ánimo
-- [x] Aparición en pantalla de celebración
-- [x] Mensajes contextuales
-
-### Fase 3: Contenido y estructura (COMPLETADO)
-
-#### 3.1 Preparar para semanas 5 y 6 ✅
-- [x] Crear estructura de datos clara para agregar semanas:
-  - Creado `weekStructure.ts` con interfaz `WeekInfo`
-  - Sistema de habilitación/deshabilitación de semanas
-  - Campos `comingSoon` y `unlockRequirement`
-  - Función `isWeekUnlocked()` para verificar requisitos (70% de semana anterior)
-- [x] Documentar formato de ejercicios
-  - Creado array `exerciseTemplates` con 9 tipos de ejercicios
-  - Cada template incluye nombre, descripción y ejemplo de código
-- [x] Crear placeholders para nuevas semanas
-  - Discreta S5: "Relaciones y funciones" (placeholder)
-  - Discreta S6: "Grafos y árboles" (placeholder)
-  - Precálculo B6: "Funciones y gráficas" (placeholder)
-
-#### 3.2 Sistema de desbloqueo progresivo ✅
-- [x] Lógica de desbloqueo por semanas (función `isWeekUnlocked`)
-- [x] Indicador visual de contenido próximo (CSS `.coming-soon-badge`)
-- [x] Mensaje "Próximamente" en lecciones bloqueadas
-
-### Fase 4: Gamificación avanzada (COMPLETADO)
-
-#### 4.1 Logros y medallas ✅
-- [x] Sistema de achievements (12 logros definidos):
-  - 🎓 Primera lección
-  - 🔥 Racha de 3, 7 y 30 días
-  - ⭐ 100, 500 y 1000 XP
-  - 📚 5 y 10 lecciones completadas
-  - 💯 5 respuestas perfectas seguidas
-  - 🎯 Meta diaria cumplida 7 veces
-  - 🗺️ 5 lecciones favoritas
-- [x] Medallas por hitos (función `checkNewAchievements`)
-- [x] Pantalla de logros desbloqueados (componente `Achievements.tsx`)
-- [x] Vista de logros bloqueados con descripciones
-
-#### 4.2 Niveles de usuario ✅
-- [x] Progresión por niveles (cada 100 XP = 1 nivel)
-- [x] Títulos del nivel:
-  - Principiante, Aprendiz, Estudiante, Practicante, Competente
-  - Avanzado, Experto, Maestro, Virtuoso, Leyenda
-- [x] Barra de progreso hacia siguiente nivel
-- [x] Badge de nivel grande en vista de logros
-- [x] Beneficios visuales (sin mecánica especial aún)
-
-#### 4.3 Sonidos ✅
-- [x] Activar el campo `sound` existente
-- [x] Sonido de acierto (audio data URI)
-- [x] Sonido de error (audio data URI)  
-- [x] Sonido de logro desbloqueado (audio data URI)
-- [x] Toggle de sonido en topbar (icono Volume2/VolumeX)
-- [x] Control en ajustes
-- [x] Volumen al 30% para no ser invasivos
-
----
-
-## Criterios de aceptación por fase
-
-### Fase 1: Meta diaria ✅
-- [x] El usuario ve claramente cuántos ejercicios le faltan para cumplir la meta del día
-- [x] Al abrir la app, el botón principal es "Practicar ahora"
-- [x] La sesión de práctica mezcla 10-20 ejercicios de las semanas/bloques ya estudiados
-- [x] Al completar la meta, aparece una pantalla de celebración con confeti y estadísticas
-- [x] La racha se muestra destacada con emoji de llama
-
-### Fase 2: Mejoras visuales ✅
-- [x] Los botones tienen bordes más redondeados (18-25px)
-- [x] La pantalla de inicio es visualmente más alegre y colorida
-- [x] Las animaciones de éxito son más vistosas (confeti, estrellitas)
-- [x] Milo aparece animado en la celebración
-- [x] Los colores son más vibrantes y el diseño más juguetón
-
-### Fase 3: Contenido (COMPLETADO ✅)
-- [x] Existe documentación clara de cómo agregar una semana nueva
-- [x] Los ejercicios siguen un formato estándar (9 templates documentados)
-- [x] Las semanas 5 y 6 aparecen como "próximamente" con badges
-- [x] Sistema de desbloqueo progresivo implementado (70% de semana anterior)
-- [x] Al habilitar una semana nueva, sus ejercicios entrarán automáticamente en la práctica diaria
-
-### Fase 4: Gamificación (COMPLETADO ✅)
-- [x] Sistema de logros visible y funcional (12 achievements)
-- [x] Niveles de usuario claros (10 títulos, cada 100 XP)
-- [x] Sonidos opcionales implementados con toggle en topbar
-
----
-
-## Cómo agregar una semana nueva (Guía para el dueño)
-
-### Paso 1: Preparar el contenido
-
-Decidí qué temas cubrirá la semana. Por ejemplo, para **Discreta S5**:
-- Tema 1: Relaciones binarias
-- Tema 2: Relaciones de equivalencia
-- Tema 3: Funciones
-
-### Paso 2: Crear las lecciones
-
-En `src/content.ts` o en un archivo separado `src/weekContent/` si se prefiere modularizar:
-
+**Implementación**:
 ```typescript
-D('S5 · Relaciones', 'Relaciones binarias', '🔗', '153-160',
-  [
-    'Una relación R de A en B es un subconjunto del producto cartesiano A × B.',
-    'Un par (a,b) ∈ R se puede escribir también como aRb.',
-    'Ejemplos: "menor que" en ℕ, "divide a" en ℤ.'
-  ],
-  ['R\\subseteq A\\times B', 'aRb\\iff(a,b)\\in R'],
-  [
-    'A = {1,2,3}, B = {a,b}. R = {(1,a), (2,b), (3,a)}.',
-    '1Ra porque (1,a) ∈ R.',
-    '2Rb pero 1Rb es falso.'
-  ],
-  [
-    choice('A = {1,2}, B = {x,y}. ¿Cuántos pares tiene A × B?', ['4','2','6'], '4', 'Cada elemento de A se puede emparejar con cada elemento de B.'),
-    choice('Si R = {(1,x), (2,y)}, ¿es (2,x) ∈ R?', ['No','Sí'], 'No', 'Solo los pares listados pertenecen a R.'),
-    // ... más ejercicios
-  ]
-),
+// src/errorExplanations.ts
+export interface ErrorPattern {
+  id: string;
+  pattern: (userAnswer: string, correctAnswer: string, question: Question) => boolean;
+  explanation: string;
+  example?: string;
+}
+
+const errorPatterns: ErrorPattern[] = [
+  {
+    id: 'modus-tollens-confusion',
+    pattern: (user, correct, q) => 
+      q.type === 'logic' && 
+      user.includes('P') && !user.includes('¬') &&
+      correct.includes('¬P'),
+    explanation: 'Confundiste el Modus Tollens (¬Q → ¬P) con negar el antecedente (una falacia). Si Q es falso, solo podemos concluir ¬P cuando tenemos P → Q.',
+    example: 'P → Q, ¬Q ⊢ ¬P es válido. Pero P → Q, ¬P no nos dice nada sobre Q.'
+  },
+  {
+    id: 'de-morgan-incomplete',
+    pattern: (user, correct, q) =>
+      q.type === 'logic' &&
+      user.includes('¬') && user.includes('∨') &&
+      correct.includes('∧'),
+    explanation: 'Olvidaste cambiar el conector al aplicar De Morgan. ¬(P ∨ Q) = ¬P ∧ ¬Q. El "o" se convierte en "y".',
+  },
+  // ... más patrones
+];
 ```
 
-### Paso 3: Agregar los ejercicios
+**UI**:
+- Botón "¿Por qué me equivoqué?" después del feedback de error
+- Modal/panel desplegable con la explicación
+- Ejemplos visuales cuando corresponda
+- Link a sección relevante de "Consultar tablas"
 
-Cada lección debe tener:
-- **Título claro** y emoji representativo
-- **3 puntos de teoría** (breves, directos)
-- **2-3 fórmulas clave** (notación LaTeX)
-- **3 pasos de ejemplo** (paso a paso)
-- **Al menos 3 ejercicios** (mejor 8-12 para variedad)
+---
 
-Tipos de ejercicios disponibles:
-- `choice`: opción múltiple
-- `input`: respuesta de texto corto
-- `logic`: expresión lógica
-- `algebra`: expresión algebraica
-- `set`: seleccionar elementos de un conjunto
-- `venn`: regiones de diagrama de Venn
-- `table`: tabla de verdad
-- `order`: ordenar pasos
-- `synthetic`: división sintética
+### 5.2 Sistema de pistas progresivas (3 niveles)
 
-### Paso 4: Probar la semana
+**Objetivo**: Pistas que guían sin dar la respuesta, reducen XP, con 3 niveles de ayuda.
 
-1. Agregar las lecciones al array `lessons` en `content.ts`
-2. Ejecutar `npm test` para verificar que no hay errores de sintaxis
-3. Probar en el navegador: iniciar la app y verificar que las lecciones aparecen
-4. Completar algunos ejercicios para verificar que funcionan
+**Implementación**:
+```typescript
+// src/hints.ts
+export interface HintLevel {
+  level: 1 | 2 | 3;
+  text: string;
+  xpPenalty: number; // XP reducido por usar esta pista
+}
 
-### Paso 5: Documentar
+export interface QuestionHints {
+  questionId: string;
+  hints: [HintLevel, HintLevel, HintLevel];
+  relatedTableSection?: string; // Link a "Consultar tablas"
+}
 
-Actualizar el README.md con las nuevas semanas:
-
-```markdown
-| Discreta S5 | Relaciones binarias, equivalencia, funciones | 153-160 |
-| Discreta S6 | Funciones inyectivas, sobreyectivas, biyectivas | 161-170 |
+// Ejemplo:
+{
+  questionId: 'logic-inference-mt-1',
+  hints: [
+    {
+      level: 1,
+      text: 'Mirá la regla del Modus Tollens. ¿Qué necesitás tener para poder negar el antecedente?',
+      xpPenalty: 2
+    },
+    {
+      level: 2,
+      text: 'Tenés P → Q y ¬Q. Modus Tollens dice: si el consecuente es falso, el antecedente también debe serlo.',
+      xpPenalty: 5
+    },
+    {
+      level: 3,
+      text: 'La respuesta es ¬P. Aplicá: P → Q, ¬Q ⊢ ¬P',
+      xpPenalty: 8
+    }
+  ],
+  relatedTableSection: 'inference-rules'
+}
 ```
 
----
-
-## Notas importantes
-
-### Diseño mobile-first
-Todas las mejoras deben funcionar primero en móvil (pantallas de 360px-480px) y luego adaptarse a tablet y escritorio.
-
-### Rendimiento
-- Mantener animaciones ligeras (usar CSS cuando sea posible)
-- No cargar imágenes pesadas
-- Lazy loading de componentes (ya implementado con `React.lazy`)
-
-### Accesibilidad
-- Mantener soporte de `reduceMotion`
-- Asegurar contraste de texto (ya verificado en modos claro/oscuro)
-- Navegación por teclado funcional
-
-### Progresión del usuario
-El contenido debe desbloquearse progresivamente:
-1. Semana 1 disponible siempre
-2. Semana 2 se desbloquea al completar 70% de la semana 1
-3. Práctica diaria mezcla solo contenido de semanas desbloqueadas
+**UI**:
+- Botón "💡 Pista" (muestra "Pista 1/3", "Pista 2/3", etc.)
+- Indica reducción de XP: "−2 XP por esta pista"
+- Link "📋 Ver reglas" abre "Consultar tablas" en la sección correcta
+- XP final ajustado: 10 XP base − penalidades de pistas usadas
 
 ---
 
-## Resumen de semanas actuales y futuras
+### 5.3 Streak freeze + weekend protection
 
-### Matemática Discreta
+**Objetivo**: Congelar la racha con XP/monedas, protección automática de fin de semana, racha separada de meta diaria.
 
-| Semana | Estado | Lecciones | Temas principales |
-|--------|--------|-----------|-------------------|
-| **Inicio** | ✅ Completa | 1 | Introducción al razonamiento lógico |
-| **S1** | ✅ Completa | 6 | Proposiciones, conectores, tablas, equivalencias, formas normales |
-| **S2** | ✅ Completa | 4 | Circuitos, inferencias, demostraciones |
-| **S3** | ✅ Completa | 6 | Cuantificadores, predicados, matrices |
-| **S4** | ✅ Completa | 5 | Conjuntos, operaciones, Venn, cardinalidad |
-| **S5** | ❌ Pendiente | 0 | Relaciones, funciones (páginas 153-170 aprox) |
-| **S6** | ❌ Pendiente | 0 | Grafos, árboles, inducción (páginas 171-190 aprox) |
+**Implementación**:
+```typescript
+// src/progress.ts
+export interface StreakData {
+  current: number;
+  longest: number;
+  lastDate: string;
+  freezesAvailable: number; // Congeladores disponibles
+  freezeUsedDates: string[]; // Días donde se usó freeze
+  weekendProtection: boolean; // true = no perder racha sábado/domingo
+}
 
-### Precálculo
+// Costo: 100 XP o 50 monedas por freeze
+function buyStreakFreeze(progress: Progress): Progress {
+  if (progress.xp >= 100) {
+    return {
+      ...progress,
+      xp: progress.xp - 100,
+      streakFreezes: (progress.streakFreezes || 0) + 1
+    };
+  }
+  if (progress.coins >= 50) {
+    return {
+      ...progress,
+      coins: progress.coins - 50,
+      streakFreezes: (progress.streakFreezes || 0) + 1
+    };
+  }
+  return progress;
+}
 
-| Bloque | Estado | Lecciones | Temas principales |
-|--------|--------|-----------|-------------------|
-| **B1** | ✅ Completo | 5 | Números reales, signos, fracciones, potencias, raíces |
-| **B2** | ✅ Completo | 6 | Variables, monomios, polinomios, productos notables |
-| **B3** | ✅ Completo | 4 | Factorización: factor común, trinomios, cubos |
-| **B4** | ✅ Completo | 3 | División sintética, fracciones algebraicas |
-| **B5** | ✅ Completo | 7 | Ecuaciones lineales, cuadráticas, racionales, radicales |
-| **B6** | ❌ Pendiente | 0 | Funciones, dominio, gráficas (páginas 64+ aprox) |
+// Racha se mantiene con 1 lección/día (independiente de meta diaria 10-20)
+function checkStreak(progress: Progress): StreakData {
+  const today = dayKey();
+  const yesterday = dayKey(new Date(Date.now() - 86400000));
+  
+  // Si completó al menos 1 lección hoy, racha continúa
+  const completedToday = progress.completed.some(id => 
+    progress.attempts.some(a => a.questionId.startsWith(id) && a.date.startsWith(today))
+  );
+  
+  // Weekend protection
+  const isWeekend = [0, 6].includes(new Date().getDay());
+  if (isWeekend && progress.weekendProtection) {
+    // No se pierde racha en fin de semana
+  }
+  
+  // Usar freeze si disponible
+  if (!completedToday && progress.streakFreezes > 0) {
+    return useFreeze(progress);
+  }
+  
+  // ...
+}
+```
 
-**Nota**: Las semanas/bloques 5 y 6 son placeholders. El contenido debe ser agregado por el instructor siguiendo la guía de este documento.
-
----
-
-## Checklist final antes de entregar Fase 1 + Fase 2
-
-- [x] Meta diaria funcional y visible en pantalla de inicio
-- [x] Botón "Practicar ahora" genera sesión de 10-20 ejercicios mixtos
-- [x] Sesión prioriza repasos vencidos y errores
-- [x] Sesión mezcla ejercicios de TODAS las semanas disponibles (1-4 actualmente)
-- [x] Pantalla de celebración con confeti y estadísticas
-- [x] Racha destacada con emoji de llama
-- [x] Botones más redondeados (18-25px)
-- [x] Colores más vibrantes
-- [x] Animaciones de éxito mejoradas
-- [x] Milo animado en celebración
-- [x] Sistema de logros con 12 achievements
-- [x] Niveles de usuario (1-10+) con títulos
-- [x] Sonidos opcionales (acierto, error, logro)
-- [x] Toggle de sonido en topbar
-- [x] Placeholders para semanas 5-6
-- [x] Sistema de desbloqueo progresivo
-- [x] Documentación de templates de ejercicios
-- [x] La app funciona en móvil, tablet y escritorio
-- [x] Tests pasan (`npm test`) - 37/37 ✅
-- [x] Build exitoso (`npm run build`) ✅
-- [x] Screenshots capturados y agregados al PR ✅
-
----
-
-## Capturas requeridas para el PR
-
-1. **Home con meta diaria**: Pantalla de inicio mostrando la meta del día y racha
-2. **Sesión de práctica**: Un ejercicio de la práctica diaria con feedback
-3. **Respuesta correcta**: Feedback de éxito con animación
-4. **Respuesta incorrecta**: Feedback de error con mensaje de ánimo
-5. **Celebración**: Pantalla de completar la meta con confeti y Milo
-6. **Racha actualizada**: Vista de la racha después de completar ejercicios
-
----
-
-*Documento creado: Octubre 2026*
-*Última actualización: Fases 1, 2, 3 y 4 completadas*
-
-## Resumen de implementación
-
-### ✅ Completado
-
-**Todas las fases implementadas:**
-- ✅ **Fase 1**: Sistema de meta diaria y práctica mixta
-- ✅ **Fase 2**: Mejoras visuales estilo Duolingo
-- ✅ **Fase 3**: Estructura de contenido y placeholders para S5/S6/B6
-- ✅ **Fase 4**: Gamificación completa (logros, niveles, sonidos)
-- ✅ **Mejoras UI adicionales**: Tabs separados para Inicio/Aprender, auto-scroll a nivel actual
-- ✅ **Sistema de PDFs semanales**: Upload desde UI o carpeta public/semanas/
-
-**Funcionalidades principales:**
-- Meta diaria configurable (ejercicios o XP)
-- Sesión de práctica mixta de 10-20 ejercicios garantizados
-- Tab 'Inicio' con dashboard y meta diaria prominente
-- Tab 'Aprender' con ruta completa, auto-scroll a nivel actual
-- 12 achievements desbloqueables
-- Sistema de niveles (cada 100 XP)
-- Sonidos opcionales con toggle
-- Celebración animada con Milo y confetti
-- Placeholders para semanas/bloques futuros
-- Sistema de desbloqueo progresivo (70% de semana anterior)
-- **PDFs por semana**: Upload desde UI (localStorage) o servidor (public/semanas/)
-- Guía completa para agregar contenido nuevo
-
-**Archivos nuevos:**
-- `src/duolingo.css` - Estilos de la experiencia Duolingo
-- `src/weekStructure.ts` - Estructura de semanas y templates de ejercicios
-- `src/Achievements.tsx` - Vista de logros y niveles
-- `src/WeeklyPDFs.tsx` - Sistema de PDFs semanales
-- `public/semanas/README.md` - Documentación para agregar PDFs
-- `docs/PLAN-DUOLINGO.md` - Plan completo de mejora
-
-**Tests:** 37/37 pasando ✅  
-**Build:** Limpio ✅  
-**PR:** #1 draft en https://github.com/santinofuentesAI/mate_U_duo/pull/1
+**UI**:
+- Botón "🛡️ Comprar congelador" en ajustes/tienda
+- Badge "🛡️ × 2" mostrando freezes disponibles
+- Indicador "Protección de fin de semana activa" cuando aplique
+- Notificación "Congelador usado automáticamente" si se usa
 
 ---
 
-## Cómo agregar PDFs semanales
+### 5.4 Spaced Repetition (FSRS-like) por ejercicio
 
-### Opción 1: Desde la interfaz (para uso personal)
+**Objetivo**: Repetición espaciada real que agenda cada ejercicio/regla individualmente para la sesión diaria.
 
-1. Ir a la pestaña "Mi libro"
-2. Seleccionar "📚 PDFs por semana"
-3. Hacer clic en "Subir PDF" en la semana deseada
-4. Seleccionar el archivo PDF
-5. El archivo se guarda en localStorage del navegador
+**Implementación**:
+```typescript
+// src/fsrs.ts
+export interface FSRSCard {
+  questionId: string;
+  state: 'new' | 'learning' | 'review' | 'relearning';
+  difficulty: number; // 1-10
+  stability: number; // días hasta próxima revisión
+  lastReview: string;
+  nextReview: string;
+  retrievability: number; // 0-1, probabilidad de recordar
+  lapses: number; // veces que falló
+}
 
-### Opción 2: Desde el servidor (para todos los usuarios)
+export function updateFSRS(
+  card: FSRSCard,
+  rating: 1 | 2 | 3 | 4 // Again, Hard, Good, Easy
+): FSRSCard {
+  // Algoritmo FSRS simplificado
+  const newStability = calculateStability(card, rating);
+  const newDifficulty = adjustDifficulty(card.difficulty, rating);
+  
+  return {
+    ...card,
+    state: rating === 1 ? 'relearning' : 'review',
+    difficulty: newDifficulty,
+    stability: newStability,
+    lastReview: dayKey(),
+    nextReview: dayKey(new Date(Date.now() + newStability * 86400000)),
+    retrievability: 0.9,
+    lapses: rating === 1 ? card.lapses + 1 : card.lapses
+  };
+}
 
-1. Colocar archivos PDF en `public/semanas/`
-2. Usar nombres de archivo específicos:
+// Rating automático basado en rendimiento:
+// 1 (Again) = incorrecto, incluso con pistas
+// 2 (Hard) = correcto después de 2-3 pistas
+// 3 (Good) = correcto con 0-1 pistas
+// 4 (Easy) = correcto sin pistas ni demora
+```
 
-**Matemática Discreta:**
-- `discreta-intro.pdf` - Introducción
-- `discreta-s1.pdf` - Semana 1
-- `discreta-s2.pdf` - Semana 2
-- `discreta-s3.pdf` - Semana 3
-- `discreta-s4.pdf` - Semana 4
-- `discreta-s5.pdf` - Semana 5 (cuando esté disponible)
-- `discreta-s6.pdf` - Semana 6 (cuando esté disponible)
+**UI**:
+- No se muestra directamente al usuario (algoritmo en background)
+- Dashboard muestra "Repasos pendientes hoy: 12"
+- Sección "Estadísticas" muestra progreso por tema
+- Indicador sutil "Primer repaso" / "Revisión espaciada" en ejercicios
 
-**Precálculo:**
-- `precalculo-b1.pdf` - Bloque 1
-- `precalculo-b2.pdf` - Bloque 2
-- `precalculo-b3.pdf` - Bloque 3
-- `precalculo-b4.pdf` - Bloque 4
-- `precalculo-b5.pdf` - Bloque 5
-- `precalculo-b6.pdf` - Bloque 6 (cuando esté disponible)
+---
 
-3. Los PDFs estarán disponibles automáticamente para todos
+### 5.5 Niveles de maestría por tema (3 niveles)
 
-### Prioridad de carga
+**Objetivo**: Familiar → Competente → Dominado, con unit checks y visualización en Aprender.
 
-El sistema busca PDFs en este orden:
-1. localStorage del usuario (PDFs subidos desde la UI)
-2. Carpeta `public/semanas/` del servidor
-3. Si no hay PDF, muestra botón "Subir PDF"
+**Implementación**:
+```typescript
+// src/mastery.ts
+export type MasteryLevel = 'locked' | 'familiar' | 'competente' | 'dominado';
+
+export interface TopicMastery {
+  topicId: string; // e.g., 'proposiciones', 'implicacion', etc.
+  level: MasteryLevel;
+  progress: number; // 0-100%
+  exercises: {
+    total: number;
+    correct: number;
+    withHints: number;
+    perfect: number; // sin pistas, primer intento
+  };
+  lastPracticed: string;
+  unitCheckPassed: boolean;
+}
+
+export function calculateMastery(topic: TopicMastery): MasteryLevel {
+  const { correct, total, perfect, withHints } = topic.exercises;
+  const accuracy = correct / total;
+  const perfectRate = perfect / total;
+  
+  if (accuracy < 0.5 || total < 3) return 'familiar';
+  if (accuracy >= 0.7 && perfectRate >= 0.3 && total >= 8) return 'competente';
+  if (accuracy >= 0.85 && perfectRate >= 0.5 && total >= 15 && topic.unitCheckPassed) return 'dominado';
+  
+  return 'competente';
+}
+
+// Unit check = mini-examen de 5 preguntas del tema
+export function generateUnitCheck(topicId: string): Question[] {
+  // Seleccionar 5 preguntas variadas del tema
+  // 80% de aciertos = aprueba unit check
+}
+```
+
+**UI**:
+- Badge de nivel junto a cada lección en "Aprender"
+  - 🌱 Familiar (verde claro)
+  - ⭐ Competente (amarillo)
+  - 👑 Dominado (dorado)
+- Barra de progreso hacia siguiente nivel
+- Botón "Unit Check" cuando esté listo
+- Vista de maestría por curso en estadísticas
+
+---
+
+### 5.6 Dificultad adaptativa (target 70-85% success)
+
+**Objetivo**: Ajustar dificultad del contenido para mantener ~75% de éxito, con review de prerequisitos si es necesario.
+
+**Implementación**:
+```typescript
+// src/adaptive.ts
+export interface AdaptiveSession {
+  targetAccuracy: number; // 0.70 - 0.85
+  currentAccuracy: number;
+  difficultyLevel: 'easy' | 'medium' | 'hard';
+  prerequisiteReview: boolean;
+}
+
+export function adaptDifficulty(session: Session, progress: Progress): Question[] {
+  const recentAccuracy = calculateRecentAccuracy(progress, session.lessonId);
+  
+  // Si accuracy < 60%, review prerequisitos
+  if (recentAccuracy < 0.6) {
+    const prerequisites = getPrerequisites(session.lessonId);
+    return [
+      ...generatePrerequisiteReview(prerequisites, 3), // 3 preguntas de repaso
+      ...selectQuestions(session.items, 'easy', 7)
+    ];
+  }
+  
+  // Si accuracy > 85%, aumentar dificultad
+  if (recentAccuracy > 0.85) {
+    return selectQuestions(session.items, 'hard', 10);
+  }
+  
+  // Range objetivo 70-85%
+  return selectQuestions(session.items, 'medium', 10);
+}
+
+function selectQuestions(items: Item[], difficulty: string, count: number): Question[] {
+  // Filtrar preguntas por dificultad estimada
+  // Dificultad basada en: tipo de ejercicio, tasa de error histórica, complejidad
+}
+```
+
+**UI**:
+- Indicador sutil "Repaso rápido de [tema]" al iniciar prerequisite review
+- No mostrar explícitamente el nivel de dificultad (mantener flow natural)
+- En estadísticas: gráfico de accuracy por tema
+
+---
+
+### 5.7 Nuevos tipos de ejercicios interactivos
+
+**Objetivo**: 7 nuevos tipos de ejercicio más engaging.
+
+#### 7.1 Drag premises to build a proof
+```typescript
+type ProofBuilderQuestion = {
+  type: 'proof-builder';
+  premises: string[]; // Premisas disponibles
+  conclusion: string;
+  correctOrder: string[]; // IDs de premisas en orden correcto
+  rules: string[]; // Reglas usadas entre pasos
+};
+```
+
+**UI**: Drag & drop de premisas, validación paso a paso.
+
+#### 7.2 Fill truth table cell by cell
+```typescript
+type TruthTableQuestion = {
+  type: 'truth-table-interactive';
+  expression: string;
+  variables: string[];
+  rows: number; // 2^n
+  correctTable: boolean[][]; // [row][variable]
+};
+```
+
+**UI**: Grid interactiva, click en celdas para toggle V/F.
+
+#### 7.3 Order inference steps
+```typescript
+type OrderStepsQuestion = {
+  type: 'order-steps';
+  steps: { id: string; text: string }[];
+  correctOrder: string[];
+};
+```
+
+**UI**: Drag & drop para reordenar pasos numerados.
+
+#### 7.4 Sort equivalence cards
+```typescript
+type SortEquivalenceQuestion = {
+  type: 'sort-equivalence';
+  expressions: string[];
+  groups: string[][]; // Expresiones equivalentes agrupadas
+};
+```
+
+**UI**: Drag cards para agrupar expresiones equivalentes.
+
+#### 7.5 Interactive Venn diagrams
+```typescript
+type InteractiveVennQuestion = {
+  type: 'venn-interactive';
+  sets: { name: string; elements: string[] }[];
+  operation: '∪' | '∩' | '\\' | 'complement';
+  correctRegions: string[]; // IDs de regiones que deben estar sombreadas
+};
+```
+
+**UI**: Tap en regiones del diagrama para seleccionar, visualizar operación.
+
+#### 7.6 Function graphs with sliders (Precálculo)
+```typescript
+type GraphSliderQuestion = {
+  type: 'graph-slider';
+  function: string; // 'ax² + bx + c'
+  parameters: { name: string; min: number; max: number; step: number }[];
+  target: { description: string; check: (params: number[]) => boolean };
+};
+```
+
+**UI**: Sliders para ajustar parámetros, gráfico actualizado en tiempo real.
+
+#### 7.7 Match equations with graphs
+```typescript
+type MatchGraphQuestion = {
+  type: 'match-graph';
+  equations: string[];
+  graphs: string[]; // SVG paths o canvas renders
+  correctMatches: Record<string, string>;
+};
+```
+
+**UI**: Drag & drop para emparejar ecuaciones con gráficas.
+
+---
+
+### 5.8 Liga semanal (vs. semana anterior)
+
+**Objetivo**: Competencia local contra tu semana anterior (no necesita backend).
+
+**Implementación**:
+```typescript
+// src/weeklyLeague.ts
+export interface WeeklyStats {
+  week: string; // ISO week 'YYYY-WW'
+  xp: number;
+  exercisesCompleted: number;
+  accuracy: number;
+  streak: number;
+}
+
+export interface LeagueComparison {
+  thisWeek: WeeklyStats;
+  lastWeek: WeeklyStats;
+  change: {
+    xp: number; // +/− vs última semana
+    exercises: number;
+    accuracy: number;
+  };
+  rank: 'ahead' | 'behind' | 'tied';
+  message: string;
+}
+
+export function getWeeklyComparison(progress: Progress): LeagueComparison {
+  const thisWeek = getCurrentWeekStats(progress);
+  const lastWeek = getLastWeekStats(progress);
+  
+  return {
+    thisWeek,
+    lastWeek,
+    change: {
+      xp: thisWeek.xp - lastWeek.xp,
+      exercises: thisWeek.exercisesCompleted - lastWeek.exercisesCompleted,
+      accuracy: thisWeek.accuracy - lastWeek.accuracy,
+    },
+    rank: thisWeek.xp > lastWeek.xp ? 'ahead' : thisWeek.xp < lastWeek.xp ? 'behind' : 'tied',
+    message: generateMessage(thisWeek, lastWeek)
+  };
+}
+```
+
+**UI**:
+- Widget en Home: "Liga semanal"
+  - "Esta semana: 450 XP"
+  - "Semana pasada: 380 XP"
+  - "⬆ +70 XP (+18%)"
+- Badge animado si estás "ganando" a tu yo de la semana pasada
+- Gráfico de barras comparativo (esta vs. última semana)
+
+---
+
+## Cronograma de implementación
+
+### Semana 1: Core features
+- [ ] 5.1: Error explanations system (errorExplanations.ts, UI integration)
+- [ ] 5.2: Progressive hints (hints.ts, UI with XP penalties)
+- [ ] 5.3: Streak freeze + weekend protection
+
+### Semana 2: Spaced repetition & mastery
+- [ ] 5.4: FSRS implementation (fsrs.ts, card scheduling)
+- [ ] 5.5: Topic mastery levels (mastery.ts, UI badges)
+- [ ] 5.6: Adaptive difficulty (adaptive.ts, prerequisite review)
+
+### Semana 3: Interactive exercises (Parte 1)
+- [ ] 5.7.1: Proof builder (drag premises)
+- [ ] 5.7.2: Interactive truth table
+- [ ] 5.7.3: Order inference steps
+- [ ] 5.7.4: Sort equivalence cards
+
+### Semana 4: Interactive exercises (Parte 2) + Liga
+- [ ] 5.7.5: Interactive Venn diagrams
+- [ ] 5.7.6: Graph sliders (Precálculo)
+- [ ] 5.7.7: Match equations with graphs
+- [ ] 5.8: Weekly league (vs. last week)
+
+### Semana 5: Integration, testing & polish
+- [ ] Fix browser test (tests/browser.mjs)
+- [ ] Integrate all features with existing flows
+- [ ] Create screenshots for each feature
+- [ ] Update PR description
+- [ ] Ensure all 37 tests pass + build green + verify check green
+
+---
+
+## Criterios de aceptación
+
+### 5.1 Error explanations ✓
+- [ ] Botón "¿Por qué me equivoqué?" visible después de error
+- [ ] Al menos 10 patrones de error común implementados
+- [ ] Explicaciones claras en español
+- [ ] Link a sección relevante de "Consultar tablas"
+
+### 5.2 Progressive hints ✓
+- [ ] 3 niveles de pistas por ejercicio
+- [ ] Botón "💡 Pista" muestra nivel actual (1/3, 2/3, 3/3)
+- [ ] XP reducido según pistas usadas (−2, −5, −8)
+- [ ] Link a "Consultar tablas" desde panel de pistas
+
+### 5.3 Streak freeze ✓
+- [ ] Comprar freeze con 100 XP o 50 monedas
+- [ ] Freezes disponibles mostrados en UI
+- [ ] Protección de fin de semana opcional
+- [ ] Racha se mantiene con 1 lección/día (separado de meta diaria)
+- [ ] Uso automático de freeze cuando falta completar día
+
+### 5.4 FSRS ✓
+- [ ] Cada ejercicio tiene su propio schedule
+- [ ] Rating automático basado en rendimiento (1-4)
+- [ ] "Repasos pendientes hoy" en dashboard
+- [ ] Algoritmo FSRS funcional (stability, difficulty, retrievability)
+
+### 5.5 Mastery levels ✓
+- [ ] 3 niveles: Familiar, Competente, Dominado
+- [ ] Badges visuales en lecciones de "Aprender"
+- [ ] Barra de progreso hacia siguiente nivel
+- [ ] Unit checks para pasar a "Dominado"
+- [ ] Vista de maestría por tema en estadísticas
+
+### 5.6 Adaptive difficulty ✓
+- [ ] Target accuracy 70-85%
+- [ ] Prerequisite review si accuracy < 60%
+- [ ] Ajuste automático de dificultad de preguntas
+- [ ] Indicador "Repaso rápido" cuando aplique
+
+### 5.7 Interactive exercises ✓
+- [ ] 7 nuevos tipos de ejercicio implementados
+- [ ] Drag & drop funcional (proof, steps, cards)
+- [ ] Interactive truth table (cell by cell)
+- [ ] Interactive Venn con tap en regiones
+- [ ] Graph sliders con preview en tiempo real
+- [ ] Match graphs con drag & drop
+
+### 5.8 Weekly league ✓
+- [ ] Widget "Liga semanal" en Home
+- [ ] Comparación con semana anterior (XP, ejercicios, accuracy)
+- [ ] Badge animado si vas ganando
+- [ ] Gráfico comparativo de barras
+- [ ] Mensaje motivador según performance
+
+---
+
+## Tests requeridos
+
+- [ ] Todos los 37 tests actuales siguen pasando
+- [ ] Browser test (tests/browser.mjs) actualizado y pasando
+- [ ] Build limpio (`npm run build`)
+- [ ] Verify check ✅ en GitHub CI
+
+---
+
+## Screenshots requeridos para PR
+
+1. **Error explanation**: Botón "¿Por qué me equivoqué?" + modal con explicación
+2. **Progressive hints**: Panel de pistas con 3 niveles
+3. **Streak freeze**: Tienda/compra de freezes + indicador de protección
+4. **FSRS dashboard**: "Repasos pendientes hoy"
+5. **Mastery badges**: Lecciones con badges Familiar/Competente/Dominado
+6. **Adaptive difficulty**: Mensaje de "Repaso rápido de prerequisitos"
+7. **Proof builder**: Drag & drop de premisas
+8. **Interactive truth table**: Grid cell-by-cell
+9. **Order steps**: Drag & drop para reordenar pasos
+10. **Sort equivalence**: Agrupar expresiones equivalentes
+11. **Interactive Venn**: Tap en regiones para operaciones
+12. **Graph sliders**: Sliders + gráfico en tiempo real
+13. **Match graphs**: Emparejar ecuaciones con gráficas
+14. **Weekly league**: Widget comparativo con semana anterior
+
+---
+
+*Documento actualizado: Octubre 2026*
+*Fase 5 en progreso: Características avanzadas de aprendizaje*

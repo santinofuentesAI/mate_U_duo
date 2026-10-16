@@ -25,20 +25,44 @@ assert.equal(await page.locator('.katex-error').count(),0,'formula rendering');
 // Skip the lesson story if present, or click to start exercises
 const skipButton = page.locator('button.lesson-story-skip');
 const startButton = page.getByRole('button',{name:/ejercicios/i});
-if (await skipButton.isVisible({timeout:2000})) {
+if (await skipButton.isVisible({timeout:2000}).catch(()=>false)) {
   await skipButton.click();
-} else if (await startButton.isVisible({timeout:2000})) {
+  await page.waitForTimeout(500);
+} else if (await startButton.isVisible({timeout:2000}).catch(()=>false)) {
   await startButton.click();
+  await page.waitForTimeout(500);
 }
-await page.getByRole('button',{name:/2 \+ 2 = 4/}).click();await page.getByRole('button',{name:'Comprobar',exact:true}).click();
-await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await page.getByRole('button',{name:'Ver respuesta',exact:true}).click();const revealed=page.getByRole('region',{name:'Respuesta explicada'});await revealed.waitFor();assert.ok((await revealed.innerText()).length>20,'answer and explanation are visible');await page.getByRole('button',{name:'Ocultar respuesta',exact:true}).click();await page.getByRole('button',{name:'Continuar',exact:true}).click();
-await page.getByRole('button',{name:'P',exact:true}).click();await page.getByRole('button',{name:'Conjunción',exact:true}).click();await page.getByRole('button',{name:'Negación',exact:true}).click();await page.getByRole('button',{name:'Q',exact:true}).click();
-assert.equal(await page.getByRole('textbox',{name:'Tu respuesta',exact:true}).inputValue(),'P∧¬Q');
+// Wait for exercise to load
+await page.waitForTimeout(1000);
+// First question is now "7 es primo" (correct answer from new lesson practice)
+await page.locator('.choices button').filter({hasText:'7 es primo'}).click();
+await page.waitForTimeout(300);
+await page.getByRole('button',{name:'Comprobar',exact:true}).click();
+await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();
+await page.getByRole('button',{name:'Ver respuesta',exact:true}).click();
+const revealed=page.getByRole('region',{name:'Respuesta explicada'});
+await revealed.waitFor();
+assert.ok((await revealed.innerText()).length>20,'answer and explanation are visible');
+await page.getByRole('button',{name:'Ocultar respuesta',exact:true}).click();
+await page.getByRole('button',{name:'Continuar',exact:true}).click();
+await page.waitForTimeout(1000);
+// Second question: "Con P=V, ¿cuánto vale ¬P?" answer is "F" - wait for choices to load
+await page.locator('.choices').waitFor({timeout:5000});
+await page.locator('.choices button').filter({hasText:'F'}).first().click();
+await page.waitForTimeout(300);
+await page.getByRole('button',{name:'Comprobar',exact:true}).click();
+await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();
+await page.getByRole('button',{name:'Continuar',exact:true}).click();
+await page.waitForTimeout(1000);
+// Third question: "Con P=V, Q=F, ¿cuánto vale P∧Q?" answer is "F"
+await page.locator('.choices').waitFor({timeout:5000});
+await page.locator('.choices button').filter({hasText:'F'}).first().click();
+await page.waitForTimeout(300);
+await page.getByRole('button',{name:'Comprobar',exact:true}).click();
 await page.screenshot({path:'tmp/qa/mobile-keyboard.png',fullPage:true});
-await page.getByRole('button',{name:'Ver leyes',exact:true}).click();await page.getByRole('dialog').waitFor();await page.getByRole('button',{name:'Volver al ejercicio'}).click();
-await page.getByRole('button',{name:'Comprobar',exact:true}).click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await page.getByRole('button',{name:'Continuar',exact:true}).click();
-await page.getByRole('button',{name:/F$/}).click();await page.getByRole('button',{name:'Comprobar',exact:true}).click();await page.getByRole('button',{name:'Continuar',exact:true}).click();
-await page.getByRole('heading',{name:'Un paso más cerca.'}).waitFor();await page.getByRole('button',{name:'Volver a mi ruta'}).click();
+await page.getByRole('button',{name:'Continuar',exact:true}).click();
+await page.getByRole('heading',{name:'Un paso más cerca.'}).waitFor();
+await page.getByRole('button',{name:'Volver a mi ruta'}).click();
 await page.reload();assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('mate-u-duo.v1')).xp),30);
 await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Mi libro',exact:true}).click();
 await page.getByRole('button',{name:'Probar con un ejemplo explicado'}).click();await page.getByRole('button',{name:'Comprobar paso',exact:true}).click();await page.getByText('Paso comprobado. Podés proponer otra transformación.',{exact:true}).waitFor();
