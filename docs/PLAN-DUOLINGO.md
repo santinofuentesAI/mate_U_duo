@@ -414,24 +414,74 @@ El contenido debe desbloquearse progresivamente:
 - ✅ **Fase 2**: Mejoras visuales estilo Duolingo
 - ✅ **Fase 3**: Estructura de contenido y placeholders para S5/S6/B6
 - ✅ **Fase 4**: Gamificación completa (logros, niveles, sonidos)
+- ✅ **Mejoras UI adicionales**: Tabs separados para Inicio/Aprender, auto-scroll a nivel actual
+- ✅ **Sistema de PDFs semanales**: Upload desde UI o carpeta public/semanas/
 
 **Funcionalidades principales:**
 - Meta diaria configurable (ejercicios o XP)
-- Sesión de práctica mixta de 10-20 ejercicios priorizados
+- Sesión de práctica mixta de 10-20 ejercicios garantizados
+- Tab 'Inicio' con dashboard y meta diaria prominente
+- Tab 'Aprender' con ruta completa, auto-scroll a nivel actual
 - 12 achievements desbloqueables
 - Sistema de niveles (cada 100 XP)
 - Sonidos opcionales con toggle
 - Celebración animada con Milo y confetti
 - Placeholders para semanas/bloques futuros
 - Sistema de desbloqueo progresivo (70% de semana anterior)
+- **PDFs por semana**: Upload desde UI (localStorage) o servidor (public/semanas/)
 - Guía completa para agregar contenido nuevo
 
 **Archivos nuevos:**
 - `src/duolingo.css` - Estilos de la experiencia Duolingo
 - `src/weekStructure.ts` - Estructura de semanas y templates de ejercicios
 - `src/Achievements.tsx` - Vista de logros y niveles
+- `src/WeeklyPDFs.tsx` - Sistema de PDFs semanales
+- `public/semanas/README.md` - Documentación para agregar PDFs
 - `docs/PLAN-DUOLINGO.md` - Plan completo de mejora
 
 **Tests:** 37/37 pasando ✅  
 **Build:** Limpio ✅  
 **PR:** #1 draft en https://github.com/santinofuentesAI/mate_U_duo/pull/1
+
+---
+
+## Cómo agregar PDFs semanales
+
+### Opción 1: Desde la interfaz (para uso personal)
+
+1. Ir a la pestaña "Mi libro"
+2. Seleccionar "📚 PDFs por semana"
+3. Hacer clic en "Subir PDF" en la semana deseada
+4. Seleccionar el archivo PDF
+5. El archivo se guarda en localStorage del navegador
+
+### Opción 2: Desde el servidor (para todos los usuarios)
+
+1. Colocar archivos PDF en `public/semanas/`
+2. Usar nombres de archivo específicos:
+
+**Matemática Discreta:**
+- `discreta-intro.pdf` - Introducción
+- `discreta-s1.pdf` - Semana 1
+- `discreta-s2.pdf` - Semana 2
+- `discreta-s3.pdf` - Semana 3
+- `discreta-s4.pdf` - Semana 4
+- `discreta-s5.pdf` - Semana 5 (cuando esté disponible)
+- `discreta-s6.pdf` - Semana 6 (cuando esté disponible)
+
+**Precálculo:**
+- `precalculo-b1.pdf` - Bloque 1
+- `precalculo-b2.pdf` - Bloque 2
+- `precalculo-b3.pdf` - Bloque 3
+- `precalculo-b4.pdf` - Bloque 4
+- `precalculo-b5.pdf` - Bloque 5
+- `precalculo-b6.pdf` - Bloque 6 (cuando esté disponible)
+
+3. Los PDFs estarán disponibles automáticamente para todos
+
+### Prioridad de carga
+
+El sistema busca PDFs en este orden:
+1. localStorage del usuario (PDFs subidos desde la UI)
+2. Carpeta `public/semanas/` del servidor
+3. Si no hay PDF, muestra botón "Subir PDF"
