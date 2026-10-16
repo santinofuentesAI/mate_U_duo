@@ -615,3 +615,212 @@
   color: var(--purple);
 }
 
+/* Weekly PDFs */
+
+.weekly-pdfs {
+  animation: arrive 0.2s ease-out;
+}
+
+.weekly-pdfs-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 0 4px;
+}
+
+.weekly-pdfs-header svg {
+  color: var(--purple);
+  min-width: 24px;
+}
+
+.weekly-pdfs-header h2 {
+  margin: 0 0 4px;
+  font-size: 1.8rem;
+}
+
+.weekly-pdfs-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.weekly-pdfs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.weekly-pdf-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.weekly-pdf-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--border);
+}
+
+.weekly-pdf-card.coming-soon {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+.weekly-pdf-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--soft);
+  display: grid;
+  place-items: center;
+  color: var(--purple);
+}
+
+.weekly-pdf-info h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.custom-badge {
+  display: inline-block;
+  background: var(--button-accent);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.03em;
+}
+
+.weekly-pdf-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--soft);
+  border: 2px solid var(--border);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-btn:hover {
+  background: var(--button-accent);
+  border-color: var(--accent-deep);
+  color: white;
+}
+
+.upload-btn.secondary {
+  background: transparent;
+  font-size: 0.8rem;
+  padding: 8px 12px;
+}
+
+.primary.compact {
+  padding: 10px 16px;
+  font-size: 0.85rem;
+}
+
+.weekly-pdfs-help {
+  background: var(--soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 24px;
+}
+
+.weekly-pdfs-help summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--purple);
+  list-style: none;
+}
+
+.weekly-pdfs-help summary::-webkit-details-marker {
+  display: none;
+}
+
+.weekly-pdfs-help div {
+  margin-top: 16px;
+}
+
+.weekly-pdfs-help p {
+  margin: 0 0 12px;
+}
+
+.weekly-pdfs-help ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.weekly-pdfs-help li {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.weekly-pdfs-help code {
+  background: var(--border);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-family: 'Courier New', monospace;
+}
+
+.weekly-pdfs-help ul {
+  list-style: disc;
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+/* Books tab wrapper */
+
+.books-tab-wrapper {
+  animation: arrive 0.2s ease-out;
+}
+
+.books-tab-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 6px;
+  background: var(--soft);
+  border-radius: 16px;
+  border: 2px solid var(--border);
+}
+
+.books-tab-selector button {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.books-tab-selector button.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
