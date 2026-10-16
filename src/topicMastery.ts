@@ -127,14 +127,24 @@ export function getAllTopicMasteries(progress: Progress): TopicMastery[] {
   return Object.values(progress.topicMasteries || {});
 }
 
-export function getMasteryBadge(level: MasteryLevel): { emoji: string; color: string; label: string } {
+export function getMasteryBadge(level: MasteryLevel): string {
   const badges = {
+    ninguno: '⚪',
+    familiar: '🟡',
+    competente: '🟠',
+    dominado: '🟢'
+  };
+  return badges[level];
+}
+
+export function getMasteryDetails(level: MasteryLevel): { emoji: string; color: string; label: string } {
+  const details = {
     ninguno: { emoji: '⚪', color: '#cbd5e1', label: 'Sin practica' },
     familiar: { emoji: '🟡', color: '#fbbf24', label: 'Familiar' },
     competente: { emoji: '🟠', color: '#f97316', label: 'Competente' },
     dominado: { emoji: '🟢', color: '#22c55e', label: 'Dominado' }
   };
-  return badges[level];
+  return details[level];
 }
 
 export function getUnitMasteryProgress(progress: Progress, unitTopics: string[]): {

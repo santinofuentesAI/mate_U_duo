@@ -1,5 +1,5 @@
 export type Course = 'discreta' | 'precalculo';
-export type QuestionType = 'choice' | 'text' | 'logic' | 'table' | 'set' | 'order' | 'venn' | 'algebra' | 'synthetic' | 'guidedproof' | 'examproof';
+export type QuestionType = 'choice' | 'text' | 'logic' | 'table' | 'set' | 'order' | 'venn' | 'algebra' | 'synthetic' | 'guidedproof' | 'examproof' | 'proofbuilder' | 'interactive-table' | 'order-steps' | 'sort-cards' | 'interactive-venn' | 'graph-slider' | 'match-graphs';
 export interface BookSource {
   course: Course; page: number; printedPage: number; section: string; exercise: string;
   crop: { x: number; y: number; width: number; height: number };

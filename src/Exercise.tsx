@@ -13,10 +13,63 @@ import { StepWorkspace } from './StepWorkspace';
 import { ReferenceTablesDialog } from './ReferenceTablesDialog';
 import { getHintsForQuestion, calculateXPWithHints } from './hints';
 import { findErrorExplanation } from './errorExplanations';
+import { ProofBuilder } from './ProofBuilder';
+import { InteractiveTruthTable } from './InteractiveTruthTable';
+import { OrderStepsExercise } from './OrderStepsExercise';
+import { CardSortExercise } from './CardSortExercise';
+import { InteractiveVennExercise } from './InteractiveVennExercise';
+import { FunctionGraphSlider } from './FunctionGraphSlider';
+import { MatchGraphExercise } from './MatchGraphExercise';
 import katex from 'katex';
 export function Exercise({question:q,course,coins,onSpend,onAttempt,onNext,draftKey,rewardAvailable=false}:{question:Question;course:Course;coins:number;onSpend:(n:number)=>void;onAttempt:(correct:boolean,assisted:boolean,details:AnswerDetails)=>void;onNext:()=>void;draftKey?:string;rewardAvailable?:boolean}) {
   if(q.type==='guidedproof')return <GuidedProofExercise question={q} course={course} coins={coins} onSpend={onSpend} onAttempt={onAttempt} onNext={onNext} rewardAvailable={rewardAvailable}/>;
   if(q.type==='examproof')return <ExamReasoningExercise question={q} onAttempt={onAttempt} onNext={onNext} draftKey={draftKey} rewardAvailable={rewardAvailable}/>;
+  
+  // Interactive exercise types (Phase 5c)
+  if(q.type==='proofbuilder'){
+    const premises=q.premises||[];
+    const targetConclusion=Array.isArray(q.answer)?q.answer[0]:String(q.answer);
+    const validSteps=(q as any).validSteps||[];
+    return <ProofBuilder question={q} premises={premises} targetConclusion={targetConclusion} validSteps={validSteps} onComplete={(proof,correct)=>{onAttempt(correct,false,{answer:proof.map(s=>s.expression)});if(correct)onNext();}}/>;
+  }
+  
+  if(q.type==='interactive-table'){
+    const correctTable=truthRows(q.expression!,q.variables).map(r=>[...Object.values(r.values),r.result]);
+    return <InteractiveTruthTable expression={q.expression!} variables={q.variables||[]} correctTable={correctTable} onComplete={(correct)=>{onAttempt(correct,false,{answer:['completed']});onNext();}}/>;
+  }
+
+  if(q.type==='order-steps'){
+    const steps=(q as any).steps||[];
+    const correctOrder=(q as any).correctOrder||[];
+    return <OrderStepsExercise question={q} steps={steps} correctOrder={correctOrder} onComplete={(correct)=>{onAttempt(correct,false,{answer:['ordered']});if(correct)onNext();}}/>;
+  }
+
+  if(q.type==='sort-cards'){
+    const cards=(q as any).cards||[];
+    const buckets=(q as any).buckets||[];
+    return <CardSortExercise question={q} cards={cards} buckets={buckets} onComplete={(correct)=>{onAttempt(correct,false,{answer:['sorted']});if(correct)onNext();}}/>;
+  }
+
+  if(q.type==='interactive-venn'){
+    const sets=(q as any).sets||[];
+    const operation=(q as any).operation||'';
+    const correctRegions=(q as any).correctRegions||[];
+    return <InteractiveVennExercise question={q} sets={sets} operation={operation} correctRegions={correctRegions} onComplete={(correct)=>{onAttempt(correct,false,{answer:['venn-completed']});if(correct)onNext();}}/>;
+  }
+
+  if(q.type==='graph-slider'){
+    const functionType=(q as any).functionType||'quadratic';
+    const targetParams=(q as any).targetParams||{a:1,b:0,c:0};
+    const tolerance=(q as any).tolerance||0.3;
+    return <FunctionGraphSlider question={q} functionType={functionType} targetParams={targetParams} tolerance={tolerance} onComplete={(correct)=>{onAttempt(correct,false,{answer:['graph-matched']});if(correct)onNext();}}/>;
+  }
+
+  if(q.type==='match-graphs'){
+    const graphs=(q as any).graphs||[];
+    const correctMatches=(q as any).correctMatches||{};
+    return <MatchGraphExercise question={q} graphs={graphs} correctMatches={correctMatches} onComplete={(correct)=>{onAttempt(correct,false,{answer:['matched']});if(correct)onNext();}}/>;
+  }
+  
   const [restored]=useState(()=>loadAnswerDraft(q,draftKey));
   const [value,setValue]=useState<string|string[]>(restored.value);
   const [steps,setSteps]=useState<string[]>(restored.steps||[String(restored.value)]);

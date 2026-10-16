@@ -2,9 +2,11 @@ import type { Lesson, Progress } from './types';
 import type { Session } from './sessions';
 import { LearningPath } from './LearningPath';
 import { MateoMascot } from './MateoMascot';
-import { ArrowRight, X, Flame, Star, Trophy, Target, TrendingUp, TrendingDown, Award } from 'lucide-react';
+import { ArrowRight, X, Flame, Star, Trophy, Target, TrendingUp, TrendingDown, Award, Clock, Sparkles } from 'lucide-react';
 import { dailyGoalProgress, streak } from './progress';
 import { getWeeklyComparison } from './weeklyLeague';
+import { getDueCards } from './fsrs';
+import { getAllTopicMasteries, getMasteryBadge } from './topicMastery';
 
 interface Props {
   progress:Progress;
@@ -23,6 +25,14 @@ export function HomeDashboard({progress,path,pending,onLesson,onDiscard,onResume
   const completed = path.filter(l=>progress.completed.includes(l.id)).length;
   const percent = Math.min(100, Math.round((goalData.current / goalData.target) * 100));
   const weeklyComparison = getWeeklyComparison(progress);
+  const dueCards = getDueCards(progress);
+  const allMasteries = getAllTopicMasteries(progress);
+  const masteryByLevel = {
+    dominado: allMasteries.filter(m => m.level === 'dominado').length,
+    competente: allMasteries.filter(m => m.level === 'competente').length,
+    familiar: allMasteries.filter(m => m.level === 'familiar').length,
+    ninguno: allMasteries.filter(m => m.level === 'ninguno').length
+  };
   
   return <div className="home-dashboard">
     {pending&&<div className="resume-strip"><button onClick={onResume}><span>CONTINUAR</span><b>{pending.session.items[0].lesson.course!==progress.course?`${pending.session.items[0].lesson.course==='precalculo'?'Precálculo':'Discreta'} · `:''}{pending.session.title}</b><small>{Math.max(1,pending.index+1)}/{pending.session.items.length}</small></button><button className="resume-discard" aria-label="Descartar sesión" onClick={onDiscard}><X size={17}/></button></div>}
@@ -123,6 +133,44 @@ export function HomeDashboard({progress,path,pending,onLesson,onDiscard,onResume
       </div>
       <p className="weekly-league-message">{weeklyComparison.motivationalQuote}</p>
     </div>}
+
+    {dueCards.length > 0 && <div className="fsrs-review-card card">
+      <div className="row">
+        <Clock size={22} color="var(--orange)"/>
+        <h3>Repasos pendientes</h3>
+      </div>
+      <p>{dueCards.length} {dueCards.length === 1 ? 'concepto necesita' : 'conceptos necesitan'} repaso espaciado</p>
+      <button className="button primary" onClick={onStartDailyPractice}>
+        Repasar ahora
+        <ArrowRight size={18}/>
+      </button>
+    </div>}
+
+    <div className="mastery-overview-card card">
+      <div className="row">
+        <Sparkles size={22} color="var(--green)"/>
+        <h3>Dominio por tema</h3>
+      </div>
+      <div className="mastery-badges">
+        {masteryByLevel.dominado > 0 && <div className="mastery-badge-item">
+          <span className="mastery-badge">{getMasteryBadge('dominado')}</span>
+          <span className="mastery-badge-label">{masteryByLevel.dominado} Dominado{masteryByLevel.dominado > 1 ? 's' : ''}</span>
+        </div>}
+        {masteryByLevel.competente > 0 && <div className="mastery-badge-item">
+          <span className="mastery-badge">{getMasteryBadge('competente')}</span>
+          <span className="mastery-badge-label">{masteryByLevel.competente} Competente{masteryByLevel.competente > 1 ? 's' : ''}</span>
+        </div>}
+        {masteryByLevel.familiar > 0 && <div className="mastery-badge-item">
+          <span className="mastery-badge">{getMasteryBadge('familiar')}</span>
+          <span className="mastery-badge-label">{masteryByLevel.familiar} Familiar{masteryByLevel.familiar > 1 ? 'es' : ''}</span>
+        </div>}
+        {masteryByLevel.ninguno > 0 && <div className="mastery-badge-item">
+          <span className="mastery-badge">{getMasteryBadge('ninguno')}</span>
+          <span className="mastery-badge-label">{masteryByLevel.ninguno} Sin dominio</span>
+        </div>}
+        {allMasteries.length === 0 && <p>Completa ejercicios para desbloquear insignias de dominio.</p>}
+      </div>
+    </div>
 
     <details className="route-disclosure">
       <summary>
