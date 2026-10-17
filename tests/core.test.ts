@@ -45,7 +45,7 @@ test('named law validation distinguishes correct rule and verifies subexpression
 test('curriculum integrity: unique ids, valid choice keys, every saved answer grades correctly',()=>{
   assert.equal(lessons.length,47);const ids=new Set<string>();
   for(const l of lessons){assert.ok(!ids.has(l.id));ids.add(l.id);assert.ok(l.questions.length>=3);for(const q of l.questions){assert.ok(!ids.has(q.id));ids.add(q.id);assert.equal(grade(q,q.answer,q.exclusions).correct,true, q.id);if(q.type==='choice')assert.ok(q.options?.includes(String(q.answer)));if(q.type==='synthetic')assert.deepEqual(synthetic(q.coefficients!,q.root!).map(String),q.answer);if(q.type==='table')assert.deepEqual(truthRows(q.expression!,q.variables).map(r=>r.result?'V':'F'),q.answer);}}
-  assert.equal(ids.size,517);
+  assert.equal(ids.size,538); // 47 lessons + 491 questions (470 original + 21 interactive)
 });
 test('book scope: all pages covered by reading or practice, stops at current topic',()=>{
   assert.equal(bookScope.precalculo.lastPage,63);assert.equal(bookScope.discreta.lastPage,152);

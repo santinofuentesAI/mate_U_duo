@@ -1,7 +1,12 @@
 import type { Lesson, Progress } from './types';
 import type { Session } from './sessions';
 import { LearningPath } from './LearningPath';
-import { ArrowRight, X } from 'lucide-react';
+import { MateoMascot } from './MateoMascot';
+import { ArrowRight, X, Flame, Star, Trophy, Target, TrendingUp, TrendingDown, Award, Clock, Sparkles } from 'lucide-react';
+import { dailyGoalProgress, streak } from './progress';
+import { getWeeklyComparison } from './weeklyLeague';
+import { getDueCards } from './fsrs';
+import { getAllTopicMasteries, getMasteryBadge } from './topicMastery';
 
 interface Props {
   progress:Progress;
@@ -11,11 +16,171 @@ interface Props {
   onResume:()=>void;
   onDiscard:()=>void;
   onFavorite:(id:string)=>void;
+  onStartDailyPractice:()=>void;
 }
 
-export function HomeDashboard({progress,path,pending,onLesson,onDiscard,onResume,onFavorite}:Props) {
+export function HomeDashboard({progress,path,pending,onLesson,onDiscard,onResume,onFavorite,onStartDailyPractice}:Props) {
+  const goalData = dailyGoalProgress(progress);
+  const currentStreak = streak(progress);
+  const completed = path.filter(l=>progress.completed.includes(l.id)).length;
+  const percent = Math.min(100, Math.round((goalData.current / goalData.target) * 100));
+  const weeklyComparison = getWeeklyComparison(progress);
+  const dueCards = getDueCards(progress);
+  const allMasteries = getAllTopicMasteries(progress);
+  const masteryByLevel = {
+    dominado: allMasteries.filter(m => m.level === 'dominado').length,
+    competente: allMasteries.filter(m => m.level === 'competente').length,
+    familiar: allMasteries.filter(m => m.level === 'familiar').length,
+    ninguno: allMasteries.filter(m => m.level === 'ninguno').length
+  };
+  
   return <div className="home-dashboard">
-    {pending&&<div className="resume-strip resume-mini"><button aria-label="Retomar sesión" onClick={onResume}><span>CONTINUAR</span><b>{pending.session.items[0].lesson.course!==progress.course?`${pending.session.items[0].lesson.course==='precalculo'?'Precálculo':'Discreta'} · `:''}{pending.session.title}</b><small>{Math.max(1,pending.index+1)}/{pending.session.items.length}</small><ArrowRight size={17}/></button><button className="resume-discard" aria-label="Descartar sesión guardada" onClick={onDiscard}><X size={17}/></button></div>}
-    <LearningPath key={progress.course} path={path} progress={progress} onStart={onLesson} onFavorite={onFavorite}/>
+    {pending&&<div className="resume-strip"><button onClick={onResume}><span>CONTINUAR</span><b>{pending.session.items[0].lesson.course!==progress.course?`${pending.session.items[0].lesson.course==='precalculo'?'Precálculo':'Discreta'} · `:''}{pending.session.title}</b><small>{Math.max(1,pending.index+1)}/{pending.session.items.length}</small></button><button className="resume-discard" aria-label="Descartar sesión" onClick={onDiscard}><X size={17}/></button></div>}
+    
+    <div className="home-welcome">
+      <MateoMascot mood={currentStreak >= 7 ? 'celebrate' : currentStreak >= 3 ? 'happy' : 'wave'} size={90} animate={true}/>
+      <div>
+        <h1>¡Hola de nuevo!</h1>
+        <p>Seguí practicando para mantener tu racha de aprendizaje</p>
+      </div>
+      {currentStreak > 0 && <div className="home-streak">
+        <Flame size={21}/>
+        <b>{currentStreak}</b>
+        <small>{currentStreak === 1 ? 'día' : 'días'}</small>
+      </div>}
+    </div>
+
+    <div className="daily-goal-hero">
+      <div className="daily-goal-content">
+        <div className="daily-goal-header">
+          <Target size={22}/>
+          <div>
+            <span className="eyebrow">META DE HOY</span>
+            <h2>{progress.dailyGoalType === 'exercises' ? 'Completá ejercicios' : 'Ganá XP'}</h2>
+          </div>
+        </div>
+        <div className="daily-goal-ring" style={{background: `conic-gradient(var(--button-accent) ${percent * 3.6}deg, var(--border) 0deg)`}}>
+          <div>
+            <b>{goalData.current}</b>
+            <span>de {goalData.target}</span>
+          </div>
+        </div>
+        <p>{goalData.met ? '¡Meta cumplida hoy! 🎉' : `Te faltan ${goalData.target - goalData.current} para completar tu meta`}</p>
+        <button className="primary daily-practice-btn" onClick={onStartDailyPractice}>
+          {goalData.met ? 'Practicar más' : 'Empezar práctica'}
+          <ArrowRight size={19}/>
+        </button>
+      </div>
+    </div>
+
+    <div className="home-progress">
+      <article className="home-progress-main">
+        <div className="home-progress-icon"><Trophy size={19}/></div>
+        <div>
+          <small>Lecciones completadas</small>
+          <b>{completed} / {path.length}</b>
+        </div>
+        <span className="home-progress-percent">{Math.round((completed/path.length)*100)}%</span>
+        <div className="home-progress-track">
+          <span style={{width: `${(completed/path.length)*100}%`}}/>
+        </div>
+      </article>
+      <article>
+        <div className="home-stat-icon"><Star size={18}/></div>
+        <div>
+          <small>Experiencia</small>
+          <b>{progress.xp} XP</b>
+        </div>
+      </article>
+      <article>
+        <div className="home-stat-icon"><Flame size={18}/></div>
+        <div>
+          <small>Racha actual</small>
+          <b>{currentStreak} {currentStreak === 1 ? 'día' : 'días'}</b>
+        </div>
+      </article>
+    </div>
+
+    {weeklyComparison.lastWeek && <div className="weekly-league-card card">
+      <div className="row">
+        <Award size={22} color="var(--purple)"/>
+        <h3>Liga semanal</h3>
+      </div>
+      <p className="weekly-league-intro">Tu progreso esta semana vs. la semana pasada</p>
+      <div className="weekly-league-stats">
+        <div className="weekly-stat">
+          <span className="weekly-stat-label">XP ganada</span>
+          <div className="weekly-stat-row">
+            <b className="weekly-stat-value">{weeklyComparison.thisWeek.xp}</b>
+            <span className={`weekly-stat-change ${weeklyComparison.change.xp >= 0 ? 'positive' : 'negative'}`}>
+              {weeklyComparison.change.xp >= 0 ? <TrendingUp size={16}/> : <TrendingDown size={16}/>}
+              {weeklyComparison.change.xp > 0 && '+'}{Math.round((weeklyComparison.change.xp / (weeklyComparison.lastWeek.xp || 1)) * 100)}%
+            </span>
+          </div>
+          <small className="weekly-stat-compare">vs. {weeklyComparison.lastWeek.xp} XP la semana pasada</small>
+        </div>
+        <div className="weekly-stat">
+          <span className="weekly-stat-label">Ejercicios</span>
+          <div className="weekly-stat-row">
+            <b className="weekly-stat-value">{weeklyComparison.thisWeek.exercisesCompleted}</b>
+            <span className={`weekly-stat-change ${weeklyComparison.change.exercises >= 0 ? 'positive' : 'negative'}`}>
+              {weeklyComparison.change.exercises >= 0 ? <TrendingUp size={16}/> : <TrendingDown size={16}/>}
+              {weeklyComparison.change.exercises > 0 && '+'}{Math.round((weeklyComparison.change.exercises / (weeklyComparison.lastWeek.exercisesCompleted || 1)) * 100)}%
+            </span>
+          </div>
+          <small className="weekly-stat-compare">vs. {weeklyComparison.lastWeek.exercisesCompleted} la semana pasada</small>
+        </div>
+      </div>
+      <p className="weekly-league-message">{weeklyComparison.motivationalQuote}</p>
+    </div>}
+
+    {dueCards.length > 0 && <div className="fsrs-review-card card">
+      <div className="row">
+        <Clock size={22} color="var(--orange)"/>
+        <h3>Repasos pendientes</h3>
+      </div>
+      <p>{dueCards.length} {dueCards.length === 1 ? 'concepto necesita' : 'conceptos necesitan'} repaso espaciado</p>
+      <button className="button primary" onClick={onStartDailyPractice}>
+        Repasar ahora
+        <ArrowRight size={18}/>
+      </button>
+    </div>}
+
+    <div className="mastery-overview-card card">
+      <div className="row">
+        <Sparkles size={22} color="var(--green)"/>
+        <h3>Dominio por tema</h3>
+      </div>
+      <div className="mastery-badges">
+        {masteryByLevel.dominado > 0 && <div className="mastery-badge-item">
+          <span className="mastery-badge">{getMasteryBadge('dominado')}</span>
+          <span className="mastery-badge-label">{masteryByLevel.dominado} Dominado{masteryByLevel.dominado > 1 ? 's' : ''}</span>
+        </div>}
+        {masteryByLevel.competente > 0 && <div className="mastery-badge-item">
+          <span className="mastery-badge">{getMasteryBadge('competente')}</span>
+          <span className="mastery-badge-label">{masteryByLevel.competente} Competente{masteryByLevel.competente > 1 ? 's' : ''}</span>
+        </div>}
+        {masteryByLevel.familiar > 0 && <div className="mastery-badge-item">
+          <span className="mastery-badge">{getMasteryBadge('familiar')}</span>
+          <span className="mastery-badge-label">{masteryByLevel.familiar} Familiar{masteryByLevel.familiar > 1 ? 'es' : ''}</span>
+        </div>}
+        {masteryByLevel.ninguno > 0 && <div className="mastery-badge-item">
+          <span className="mastery-badge">{getMasteryBadge('ninguno')}</span>
+          <span className="mastery-badge-label">{masteryByLevel.ninguno} Sin dominio</span>
+        </div>}
+        {allMasteries.length === 0 && <p>Completa ejercicios para desbloquear insignias de dominio.</p>}
+      </div>
+    </div>
+
+    <details className="route-disclosure">
+      <summary>
+        <span>
+          <Trophy size={19}/>
+          <b>Explorar lecciones</b>
+        </span>
+        <small>{path.length} lecciones</small>
+      </summary>
+      <LearningPath key={progress.course} path={path} progress={progress} onStart={onLesson} onFavorite={onFavorite}/>
+    </details>
   </div>;
 }

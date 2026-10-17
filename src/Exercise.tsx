@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, BookOpen, Check, Lightbulb, Coins } from 'lucide-react';
+import { ArrowRight, BookOpen, Check, Lightbulb, Coins, HelpCircle } from 'lucide-react';
 import type { Question, AnswerDetails, Course } from './types';
 import { loadAnswerDraft } from './exerciseDraft';
 import { grade, shuffle, truthRows } from './engine';
@@ -10,21 +10,119 @@ import { GuidedProofExercise } from './GuidedProofExercise';
 import { AnswerReveal } from './AnswerReveal';
 import { ExamReasoningExercise } from './ExamReasoningExercise';
 import { StepWorkspace } from './StepWorkspace';
+import { ReferenceTablesDialog } from './ReferenceTablesDialog';
+import { getHintsForQuestion, calculateXPWithHints } from './hints';
+import { findErrorExplanation } from './errorExplanations';
+import { ProofBuilder } from './ProofBuilder';
+import { InteractiveTruthTable } from './InteractiveTruthTable';
+import { OrderStepsExercise } from './OrderStepsExercise';
+import { CardSortExercise } from './CardSortExercise';
+import { InteractiveVennExercise } from './InteractiveVennExercise';
+import { FunctionGraphSlider } from './FunctionGraphSlider';
+import { MatchGraphExercise } from './MatchGraphExercise';
 import katex from 'katex';
 export function Exercise({question:q,course,coins,onSpend,onAttempt,onNext,draftKey,rewardAvailable=false}:{question:Question;course:Course;coins:number;onSpend:(n:number)=>void;onAttempt:(correct:boolean,assisted:boolean,details:AnswerDetails)=>void;onNext:()=>void;draftKey?:string;rewardAvailable?:boolean}) {
   if(q.type==='guidedproof')return <GuidedProofExercise question={q} course={course} coins={coins} onSpend={onSpend} onAttempt={onAttempt} onNext={onNext} rewardAvailable={rewardAvailable}/>;
   if(q.type==='examproof')return <ExamReasoningExercise question={q} onAttempt={onAttempt} onNext={onNext} draftKey={draftKey} rewardAvailable={rewardAvailable}/>;
+  
+  // Interactive exercise types (Phase 5c)
+  if(q.type==='proofbuilder'){
+    const premises=q.premises||[];
+    const targetConclusion=Array.isArray(q.answer)?q.answer[0]:String(q.answer);
+    const validSteps=(q as any).validSteps||[];
+    return <ProofBuilder question={q} premises={premises} targetConclusion={targetConclusion} validSteps={validSteps} onComplete={(proof,correct)=>{onAttempt(correct,false,{answer:proof.map(s=>s.expression)});if(correct)onNext();}}/>;
+  }
+  
+  if(q.type==='interactive-table'){
+    const correctTable=truthRows(q.expression!,q.variables).map(r=>[...Object.values(r.values),r.result]);
+    return <InteractiveTruthTable expression={q.expression!} variables={q.variables||[]} correctTable={correctTable} onComplete={(correct)=>{onAttempt(correct,false,{answer:['completed']});onNext();}}/>;
+  }
+
+  if(q.type==='order-steps'){
+    const steps=(q as any).steps||[];
+    const correctOrder=(q as any).correctOrder||[];
+    return <OrderStepsExercise question={q} steps={steps} correctOrder={correctOrder} onComplete={(correct)=>{onAttempt(correct,false,{answer:['ordered']});if(correct)onNext();}}/>;
+  }
+
+  if(q.type==='sort-cards'){
+    const cards=(q as any).cards||[];
+    const buckets=(q as any).buckets||[];
+    return <CardSortExercise question={q} cards={cards} buckets={buckets} onComplete={(correct)=>{onAttempt(correct,false,{answer:['sorted']});if(correct)onNext();}}/>;
+  }
+
+  if(q.type==='interactive-venn'){
+    const sets=(q as any).sets||[];
+    const operation=(q as any).operation||'';
+    const correctRegions=(q as any).correctRegions||[];
+    return <InteractiveVennExercise question={q} sets={sets} operation={operation} correctRegions={correctRegions} onComplete={(correct)=>{onAttempt(correct,false,{answer:['venn-completed']});if(correct)onNext();}}/>;
+  }
+
+  if(q.type==='graph-slider'){
+    const functionType=(q as any).functionType||'quadratic';
+    const targetParams=(q as any).targetParams||{a:1,b:0,c:0};
+    const tolerance=(q as any).tolerance||0.3;
+    return <FunctionGraphSlider question={q} functionType={functionType} targetParams={targetParams} tolerance={tolerance} onComplete={(correct)=>{onAttempt(correct,false,{answer:['graph-matched']});if(correct)onNext();}}/>;
+  }
+
+  if(q.type==='match-graphs'){
+    const graphs=(q as any).graphs||[];
+    const correctMatches=(q as any).correctMatches||{};
+    return <MatchGraphExercise question={q} graphs={graphs} correctMatches={correctMatches} onComplete={(correct)=>{onAttempt(correct,false,{answer:['matched']});if(correct)onNext();}}/>;
+  }
+  
   const [restored]=useState(()=>loadAnswerDraft(q,draftKey));
   const [value,setValue]=useState<string|string[]>(restored.value);
   const [steps,setSteps]=useState<string[]>(restored.steps||[String(restored.value)]);
-  const [exclusions,setExclusions]=useState(restored.exclusions);const [hint,setHint]=useState(restored.hint);const [feedback,setFeedback]=useState<{correct:boolean;error?:string}|null>(restored.feedback);const [rules,setRules]=useState(false);const [retried,setRetried]=useState(restored.retried);const [revealed,setRevealed]=useState(restored.revealed);const [showAnswer,setShowAnswer]=useState(restored.revealed);const [draftError,setDraftError]=useState('');
-  const [earned,setEarned]=useState(0),[celebrate,setCelebrate]=useState(false);
+  const [exclusions,setExclusions]=useState(restored.exclusions);
+  const [hint,setHint]=useState(restored.hint);
+  const [feedback,setFeedback]=useState<{correct:boolean;error?:string}|null>(restored.feedback);
+  const [rules,setRules]=useState(false);
+  const [retried,setRetried]=useState(restored.retried);
+  const [revealed,setRevealed]=useState(restored.revealed);
+  const [showAnswer,setShowAnswer]=useState(restored.revealed);
+  const [draftError,setDraftError]=useState('');
+  const [earned,setEarned]=useState(0);
+  const [celebrate,setCelebrate]=useState(false);
+  const [showTables,setShowTables]=useState(false);
+  const [hintsUsedLevels,setHintsUsedLevels]=useState<number[]>([]);
+  const [showErrorExplanation,setShowErrorExplanation]=useState(false);
+  const [errorExplanation,setErrorExplanation]=useState<{explanation:string;example?:string;relatedTableSection?:string}|null>(null);
   useEffect(()=>{if(!draftKey)return;try{localStorage.setItem(draftKey,JSON.stringify({value,exclusions,hint,feedback,retried,revealed,...(['logic','algebra'].includes(q.type)?{steps}:{})}));setDraftError('');}catch{setDraftError('No se pudo guardar el borrador de esta respuesta.');}},[draftKey,q.type,value,steps,exclusions,hint,feedback,retried,revealed]);
   const options=useMemo(()=>shuffle(q.options||[]),[q]); const selected=Array.isArray(value)?value:[];
   function toggle(s:string){setValue(selected.includes(s)?selected.filter(x=>x!==s):[...selected,s]);setFeedback(null);}
   function update(s:string){setValue(s);setFeedback(null);}
   const canCheck=Array.isArray(value)?(['table','synthetic'].includes(q.type)?value.every(s=>s.trim()!==''):q.type==='order'?value.length===q.options?.length:true):value.trim().length>0;
-  function check(){const domains=exclusions.split(/[,;]/).map(s=>s.trim()).filter(Boolean);const result=grade(q,value,domains),assisted=hint>0||retried||revealed;setFeedback(result);setEarned(result.correct&&rewardAvailable?(assisted?5:10):0);setCelebrate(result.correct);onAttempt(result.correct,assisted,{answer:Array.isArray(value)?[...value]:value,exclusions:domains,error:result.error});if(!result.correct)setRetried(true);}
+  
+  const questionHints=useMemo(()=>getHintsForQuestion(q.id||'',q.type,q.topic||''),[q]);
+  
+  function check(){
+    const domains=exclusions.split(/[,;]/).map(s=>s.trim()).filter(Boolean);
+    const result=grade(q,value,domains);
+    const assisted=hintsUsedLevels.length>0||retried||revealed;
+    setFeedback(result);
+    
+    if(!result.correct){
+      const userAnswer=Array.isArray(value)?value.join(' '):value;
+      const correctAnswer=Array.isArray(q.answer)?q.answer.join(' '):String(q.answer||'');
+      const explanation=findErrorExplanation(userAnswer,correctAnswer,q.prompt,q.type,q.topic||'');
+      setErrorExplanation(explanation);
+      setRetried(true);
+    }else{
+      setErrorExplanation(null);
+    }
+    
+    const baseXP=rewardAvailable?10:0;
+    const finalXP=result.correct?(assisted?calculateXPWithHints(baseXP,hintsUsedLevels):baseXP):0;
+    setEarned(finalXP);
+    setCelebrate(result.correct);
+    
+    onAttempt(result.correct,assisted,{
+      answer:Array.isArray(value)?[...value]:value,
+      exclusions:domains,
+      error:result.error,
+      hintsUsed:hintsUsedLevels
+    });
+  }
   const rows=q.type==='table'?truthRows(q.expression!,q.variables):[];
   const vennRegions=[{code:'100',x:86,y:89},{code:'010',x:222,y:89},{code:'001',x:155,y:207},{code:'110',x:155,y:77},{code:'101',x:111,y:156},{code:'011',x:200,y:156},{code:'111',x:155,y:129},{code:'000',x:280,y:235}];
   return <section className="exercise"><span className="eyebrow">{({choice:'ELEGÍ',logic:'CONSTRUÍ',table:'COMPLETÁ',set:'SELECCIONÁ',order:'ORDENÁ',venn:'EXPLORÁ',algebra:'RESOLVÉ',synthetic:'CALCULÁ',text:'RESPONDÉ'} as Record<string,string>)[q.type]}</span><h2>{q.prompt}</h2>
@@ -38,9 +136,11 @@ export function Exercise({question:q,course,coins,onSpend,onAttempt,onNext,draft
     {q.type==='table'&&<div className="table-scroll"><table><thead><tr>{q.variables?.map(v=><th key={v}>{v}</th>)}<th>{q.expression}</th></tr></thead><tbody>{rows.map((r,i)=><tr key={i}>{Object.values(r.values).map((v,j)=><td key={j}>{v?'V':'F'}</td>)}<td><div className="truth-buttons">{['V','F'].map(v=><button key={v} disabled={!!feedback?.correct} aria-label={`Fila ${i+1}: ${v}`} className={selected[i]===v?'selected':''} onClick={()=>{const copy=[...selected];copy[i]=v;setValue(copy);setFeedback(null);}}>{v}</button>)}</div></td></tr>)}</tbody></table></div>}
     {q.type==='synthetic'&&<div className="synthetic"><p>Raíz r = {q.root} · coeficientes: {q.coefficients?.join(' · ')}</p><div>{q.coefficients?.map((c,i)=><label key={i}><b>{c}</b><input aria-label={`Fila final, posición ${i+1}`} type="text" inputMode="numeric" value={selected[i]} disabled={!!feedback?.correct} onChange={e=>{const copy=[...selected];copy[i]=e.target.value;setValue(copy);setFeedback(null);}}/></label>)}</div><small>La última casilla es el resto.</small></div>}
     {q.type==='order'&&<><div className="order-slots">{selected.length?selected.map((s,i)=><button key={s} disabled={!!feedback?.correct} onClick={()=>toggle(s)}><b>{i+1}</b>{s} <small>✕</small></button>):<p>Tocá cada paso en el orden correcto.</p>}</div><div className="set-options">{options.filter(s=>!selected.includes(s)).map(s=><button key={s} onClick={()=>toggle(s)}>{s}</button>)}</div></>}
-    {!feedback?.correct&&<details className="exercise-help"><summary><Lightbulb size={17}/> Necesito ayuda</summary><div className="help-row"><button className="secondary" disabled={hint>=1} onClick={()=>setHint(1)}><Lightbulb size={17}/>Una pista</button><button className="secondary" disabled={hint>=2||coins<5} onClick={()=>{onSpend(5);setHint(2);}}><Coins size={17}/>Ayuda guiada · 5</button><button className="secondary" onClick={()=>setRules(true)}><BookOpen size={17}/>Ver leyes</button><small>{coins} monedas ficticias</small></div></details>}
-    {hint>0&&<aside className="hint" role="status"><b>{hint===1?'Una pista para empezar':'Veámoslo paso a paso'}</b><p>{q.hints[hint-1]}</p><small>Con ayuda, este ejercicio queda pendiente de repaso sin pistas.</small></aside>}
+    {!feedback?.correct&&<details className="exercise-help"><summary><Lightbulb size={17}/> Necesito ayuda</summary><div className="help-row"><button className="secondary" disabled={hintsUsedLevels.includes(1)} onClick={()=>setHintsUsedLevels([...hintsUsedLevels,1])}><Lightbulb size={17}/>Pista 1/3 {!hintsUsedLevels.includes(1)&&<small>−{questionHints.hints[0].xpPenalty} XP</small>}</button><button className="secondary" disabled={hintsUsedLevels.includes(2)||!hintsUsedLevels.includes(1)} onClick={()=>setHintsUsedLevels([...hintsUsedLevels,2])}><Lightbulb size={17}/>Pista 2/3 {!hintsUsedLevels.includes(2)&&<small>−{questionHints.hints[1].xpPenalty} XP</small>}</button><button className="secondary" disabled={hintsUsedLevels.includes(3)||!hintsUsedLevels.includes(2)} onClick={()=>setHintsUsedLevels([...hintsUsedLevels,3])}><Lightbulb size={17}/>Pista 3/3 {!hintsUsedLevels.includes(3)&&<small>−{questionHints.hints[2].xpPenalty} XP</small>}</button><button className="secondary" onClick={()=>setShowTables(true)}><BookOpen size={17}/>Consultar tablas</button></div></details>}
+    {hintsUsedLevels.map(level=><aside key={level} className="hint" role="status"><b>💡 Pista {level}/3</b><p>{questionHints.hints[level-1].text}</p>{level===1&&<small>Usaste una pista. El XP ganado se reduce.</small>}</aside>)}
     <AnswerReveal question={q} open={showAnswer} completed={!!feedback?.correct} onToggle={()=>{const next=!showAnswer;setShowAnswer(next);if(next)setRevealed(true);}}/>
+    {feedback&&!feedback.correct&&errorExplanation&&!showErrorExplanation&&<button className="secondary wide" onClick={()=>setShowErrorExplanation(true)}><HelpCircle size={18}/>¿Por qué me equivoqué?</button>}
+    {showErrorExplanation&&errorExplanation&&<aside className="error-explanation" role="alert"><b>💭 Veamos qué pasó</b><p>{errorExplanation.explanation}</p>{errorExplanation.example&&<pre>{errorExplanation.example}</pre>}{errorExplanation.relatedTableSection&&<button className="secondary" onClick={()=>{setShowTables(true);setShowErrorExplanation(false);}}><BookOpen size={17}/>Ver en las tablas</button>}<button className="secondary" onClick={()=>setShowErrorExplanation(false)}>Cerrar</button></aside>}
     {feedback&&<AnswerFeedback correct={feedback.correct} error={feedback.error} explanation={q.explanation} xp={earned} celebrate={celebrate}/>}
-    {draftError&&<p className="notice" role="alert">{draftError}</p>}<button className="primary wide" disabled={!canCheck} onClick={feedback?.correct?onNext:check}>{feedback?.correct?'Continuar':'Comprobar'}<ArrowRight size={18}/></button>{rules&&<Laws mode={course==='precalculo'?'algebra':'logic'} onClose={()=>setRules(false)}/>}</section>;
+    {draftError&&<p className="notice" role="alert">{draftError}</p>}<button className="primary wide" disabled={!canCheck} onClick={feedback?.correct?onNext:check}>{feedback?.correct?'Continuar':'Comprobar'}<ArrowRight size={18}/></button>{rules&&<Laws mode={course==='precalculo'?'algebra':'logic'} onClose={()=>setRules(false)}/>}<ReferenceTablesDialog course={course} open={showTables} onClose={()=>setShowTables(false)}/></section>;
 }

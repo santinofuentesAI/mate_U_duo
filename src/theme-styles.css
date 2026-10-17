@@ -1,0 +1,687 @@
+/* Theme System - Visual Themes */
+
+/* Base theme variables are applied via data-theme attribute on html element */
+
+/* ========================================
+   GLASSMORPHISM THEME
+   ======================================== */
+
+[data-theme="glassmorphism"] {
+  --border-radius-sm: 8px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 20px;
+  --border-radius-xl: 28px;
+  --border-radius-button: 12px;
+  --border-radius-card: 20px;
+  
+  --shadow-sm: 0 4px 6px rgba(0,0,0,0.05), 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-md: 0 8px 16px rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.1);
+  --shadow-lg: 0 12px 24px rgba(0,0,0,0.08), 0 6px 32px rgba(0,0,0,0.12);
+  --shadow-button: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-card: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+/* Background gradient - cover full height including scroll */
+[data-theme="glassmorphism"] html,
+[data-theme="glassmorphism"] body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+[data-theme="glassmorphism"][data-dark="true"] html,
+[data-theme="glassmorphism"][data-dark="true"] body {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Main layout elements */
+[data-theme="glassmorphism"] .app-shell,
+[data-theme="glassmorphism"] .main-shell,
+[data-theme="glassmorphism"] .content-grid {
+  background: transparent;
+}
+
+/* All cards and surfaces */
+[data-theme="glassmorphism"] .card,
+[data-theme="glassmorphism"] .modal,
+[data-theme="glassmorphism"] .modal-backdrop,
+[data-theme="glassmorphism"] .reference-content,
+[data-theme="glassmorphism"] .topbar,
+[data-theme="glassmorphism"] .sidebar,
+[data-theme="glassmorphism"] .session-shell,
+[data-theme="glassmorphism"] .session-content,
+[data-theme="glassmorphism"] .exercise,
+[data-theme="glassmorphism"] .result,
+[data-theme="glassmorphism"] .daily-celebration,
+[data-theme="glassmorphism"] .home-dashboard,
+[data-theme="glassmorphism"] .home-welcome,
+[data-theme="glassmorphism"] .daily-goal-hero,
+[data-theme="glassmorphism"] .journey-route,
+[data-theme="glassmorphism"] .journey-unit,
+[data-theme="glassmorphism"] .journey-level,
+[data-theme="glassmorphism"] .practice-hub,
+[data-theme="glassmorphism"] .achievements-page,
+[data-theme="glassmorphism"] .achievement-card,
+[data-theme="glassmorphism"] .library-grid,
+[data-theme="glassmorphism"] .library-topic,
+[data-theme="glassmorphism"] .books-tab-wrapper,
+[data-theme="glassmorphism"] .weekly-pdfs,
+[data-theme="glassmorphism"] .week-card,
+[data-theme="glassmorphism"] .simple-flow,
+[data-theme="glassmorphism"] .settings,
+[data-theme="glassmorphism"] aside,
+[data-theme="glassmorphism"] section.card,
+[data-theme="glassmorphism"] .hint,
+[data-theme="glassmorphism"] .notice,
+[data-theme="glassmorphism"] details,
+[data-theme="glassmorphism"] .book-original,
+[data-theme="glassmorphism"] .pdf-viewer,
+[data-theme="glassmorphism"] .lesson-story,
+[data-theme="glassmorphism"] .exam-results,
+[data-theme="glassmorphism"] .mobile-nav,
+[data-theme="glassmorphism"] .home-progress > article,
+[data-theme="glassmorphism"] .route-disclosure {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-card);
+}
+
+/* Dark mode surfaces */
+[data-theme="glassmorphism"][data-dark="true"] .card,
+[data-theme="glassmorphism"][data-dark="true"] .modal,
+[data-theme="glassmorphism"][data-dark="true"] .modal-backdrop,
+[data-theme="glassmorphism"][data-dark="true"] .reference-content,
+[data-theme="glassmorphism"][data-dark="true"] .topbar,
+[data-theme="glassmorphism"][data-dark="true"] .sidebar,
+[data-theme="glassmorphism"][data-dark="true"] .session-shell,
+[data-theme="glassmorphism"][data-dark="true"] .session-content,
+[data-theme="glassmorphism"][data-dark="true"] .exercise,
+[data-theme="glassmorphism"][data-dark="true"] .result,
+[data-theme="glassmorphism"][data-dark="true"] .daily-celebration,
+[data-theme="glassmorphism"][data-dark="true"] .home-dashboard,
+[data-theme="glassmorphism"][data-dark="true"] .home-welcome,
+[data-theme="glassmorphism"][data-dark="true"] .daily-goal-hero,
+[data-theme="glassmorphism"][data-dark="true"] .journey-route,
+[data-theme="glassmorphism"][data-dark="true"] .journey-unit,
+[data-theme="glassmorphism"][data-dark="true"] .journey-level,
+[data-theme="glassmorphism"][data-dark="true"] .practice-hub,
+[data-theme="glassmorphism"][data-dark="true"] .achievements-page,
+[data-theme="glassmorphism"][data-dark="true"] .achievement-card,
+[data-theme="glassmorphism"][data-dark="true"] .library-grid,
+[data-theme="glassmorphism"][data-dark="true"] .library-topic,
+[data-theme="glassmorphism"][data-dark="true"] .books-tab-wrapper,
+[data-theme="glassmorphism"][data-dark="true"] .weekly-pdfs,
+[data-theme="glassmorphism"][data-dark="true"] .week-card,
+[data-theme="glassmorphism"][data-dark="true"] .simple-flow,
+[data-theme="glassmorphism"][data-dark="true"] .settings,
+[data-theme="glassmorphism"][data-dark="true"] aside,
+[data-theme="glassmorphism"][data-dark="true"] section.card,
+[data-theme="glassmorphism"][data-dark="true"] .hint,
+[data-theme="glassmorphism"][data-dark="true"] .notice,
+[data-theme="glassmorphism"][data-dark="true"] details,
+[data-theme="glassmorphism"][data-dark="true"] .book-original,
+[data-theme="glassmorphism"][data-dark="true"] .pdf-viewer,
+[data-theme="glassmorphism"][data-dark="true"] .lesson-story,
+[data-theme="glassmorphism"][data-dark="true"] .exam-results,
+[data-theme="glassmorphism"][data-dark="true"] .mobile-nav,
+[data-theme="glassmorphism"][data-dark="true"] .home-progress > article,
+[data-theme="glassmorphism"][data-dark="true"] .route-disclosure {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Home progress stat icons - glass effect */
+[data-theme="glassmorphism"] .home-progress-icon,
+[data-theme="glassmorphism"] .home-stat-icon {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* All buttons */
+[data-theme="glassmorphism"] button,
+[data-theme="glassmorphism"] button.primary,
+[data-theme="glassmorphism"] button.secondary,
+[data-theme="glassmorphism"] button.icon-button,
+[data-theme="glassmorphism"] .simple-link,
+[data-theme="glassmorphism"] .choices button,
+[data-theme="glassmorphism"] .set-options button,
+[data-theme="glassmorphism"] .journey-level,
+[data-theme="glassmorphism"] .nav-icon {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: var(--shadow-button);
+}
+
+[data-theme="glassmorphism"] button:hover,
+[data-theme="glassmorphism"] button.primary:hover,
+[data-theme="glassmorphism"] button.secondary:hover {
+  background: rgba(255, 255, 255, 0.28) !important;
+  transform: translateY(-1px);
+}
+
+[data-theme="glassmorphism"] button:disabled {
+  background: rgba(255, 255, 255, 0.1) !important;
+  opacity: 0.5;
+}
+
+/* All inputs and form elements */
+[data-theme="glassmorphism"] input,
+[data-theme="glassmorphism"] select,
+[data-theme="glassmorphism"] textarea {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="glassmorphism"] input:focus,
+[data-theme="glassmorphism"] select:focus,
+[data-theme="glassmorphism"] textarea:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+/* Tables */
+[data-theme="glassmorphism"] table,
+[data-theme="glassmorphism"] .reference-table {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+[data-theme="glassmorphism"] th {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+[data-theme="glassmorphism"] td {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Modal backdrops */
+[data-theme="glassmorphism"] .modal-backdrop {
+  background: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Session header */
+[data-theme="glassmorphism"] .session-header {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Progress tracks and rings */
+[data-theme="glassmorphism"] .progress-track,
+[data-theme="glassmorphism"] .daily-goal-ring,
+[data-theme="glassmorphism"] .home-progress-track {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Badges and tags */
+[data-theme="glassmorphism"] .eyebrow,
+[data-theme="glassmorphism"] .badge,
+[data-theme="glassmorphism"] .achievement-count,
+[data-theme="glassmorphism"] .home-streak {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Reference tables specific */
+[data-theme="glassmorphism"] .inference-rule,
+[data-theme="glassmorphism"] .laws-list > div,
+[data-theme="glassmorphism"] .formula-box {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Practice components */
+[data-theme="glassmorphism"] .exercise-help,
+[data-theme="glassmorphism"] .exercise-meta,
+[data-theme="glassmorphism"] .answer-feedback,
+[data-theme="glassmorphism"] .answer-reveal {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Books and PDFs */
+[data-theme="glassmorphism"] .books-tab-selector button,
+[data-theme="glassmorphism"] .pdf-toolbar {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+[data-theme="glassmorphism"] .books-tab-selector button.active {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Achievement cards specific styling */
+[data-theme="glassmorphism"] .achievement-card.unlocked {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="glassmorphism"] .achievement-card.locked {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Library topics */
+[data-theme="glassmorphism"] .library-topic:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+/* Journey levels (Aprender path) */
+[data-theme="glassmorphism"] .journey-level.is-current {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="glassmorphism"] .journey-level.is-done {
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Remove any solid backgrounds that might override */
+[data-theme="glassmorphism"] .main-content {
+  background: transparent !important;
+}
+
+/* Sidebar navigation */
+[data-theme="glassmorphism"] .sidebar button.active {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+[data-theme="glassmorphism"] .mobile-nav button.active {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Improved text readability with enhanced contrast */
+[data-theme="glassmorphism"] {
+  color: #1a1a2e;
+}
+
+[data-theme="glassmorphism"] h1,
+[data-theme="glassmorphism"] h2,
+[data-theme="glassmorphism"] h3,
+[data-theme="glassmorphism"] b,
+[data-theme="glassmorphism"] strong {
+  color: #0d0d1a;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="glassmorphism"] small,
+[data-theme="glassmorphism"] .muted {
+  color: rgba(26, 26, 46, 0.75);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="glassmorphism"][data-dark="true"] {
+  color: #e0e7ff;
+}
+
+[data-theme="glassmorphism"][data-dark="true"] h1,
+[data-theme="glassmorphism"][data-dark="true"] h2,
+[data-theme="glassmorphism"][data-dark="true"] h3,
+[data-theme="glassmorphism"][data-dark="true"] b,
+[data-theme="glassmorphism"][data-dark="true"] strong {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="glassmorphism"][data-dark="true"] small,
+[data-theme="glassmorphism"][data-dark="true"] .muted {
+  color: rgba(224, 231, 255, 0.8);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   DUOLINGO THEME (Default/Enhanced)
+   ======================================== */
+
+[data-theme="duolingo"] {
+  --border-radius-sm: 6px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
+  --border-radius-button: 14px;
+  --border-radius-card: 16px;
+  
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.12);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.15);
+  --shadow-button: 0 4px 0 rgba(0,0,0,0.15);
+  --shadow-card: 0 4px 0 var(--border);
+}
+
+[data-theme="duolingo"] button.primary,
+[data-theme="duolingo"] button.secondary {
+  box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+  font-weight: 700;
+}
+
+[data-theme="duolingo"] button.primary:active,
+[data-theme="duolingo"] button.secondary:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.15);
+}
+
+[data-theme="duolingo"] .card {
+  box-shadow: 0 4px 0 var(--border);
+}
+
+/* ========================================
+   MINIMAL THEME
+   ======================================== */
+
+[data-theme="minimal"] {
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 12px;
+  --border-radius-button: 6px;
+  --border-radius-card: 8px;
+  
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 8px rgba(0,0,0,0.08);
+  --shadow-button: 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-card: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+[data-theme="minimal"] * {
+  font-weight: 400;
+}
+
+[data-theme="minimal"] h1,
+[data-theme="minimal"] h2,
+[data-theme="minimal"] h3,
+[data-theme="minimal"] b,
+[data-theme="minimal"] strong {
+  font-weight: 600;
+}
+
+[data-theme="minimal"] button.primary,
+[data-theme="minimal"] button.secondary {
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  transition: all 0.15s ease-out;
+}
+
+[data-theme="minimal"] button.primary:hover,
+[data-theme="minimal"] button.secondary:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+[data-theme="minimal"] .card {
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+}
+
+[data-theme="minimal"] input,
+[data-theme="minimal"] select,
+[data-theme="minimal"] textarea {
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* ========================================
+   NEON CYBER THEME
+   ======================================== */
+
+[data-theme="neon"] {
+  --border-radius-sm: 2px;
+  --border-radius-md: 4px;
+  --border-radius-lg: 6px;
+  --border-radius-xl: 8px;
+  --border-radius-button: 4px;
+  --border-radius-card: 6px;
+  
+  --shadow-sm: 0 0 8px rgba(139, 92, 246, 0.3);
+  --shadow-md: 0 0 16px rgba(139, 92, 246, 0.4);
+  --shadow-lg: 0 0 24px rgba(139, 92, 246, 0.5);
+  --shadow-button: 0 0 12px currentColor, 0 2px 4px rgba(0,0,0,0.5);
+  --shadow-card: 0 0 16px rgba(139, 92, 246, 0.2), 0 4px 8px rgba(0,0,0,0.6);
+  
+  --button-accent: #8b5cf6;
+  --text: #e0e7ff;
+  --text-secondary: #c7d2fe;
+}
+
+[data-theme="neon"] body {
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+}
+
+[data-theme="neon"] .card,
+[data-theme="neon"] .modal,
+[data-theme="neon"] .reference-content {
+  background: rgba(15, 12, 41, 0.9);
+  border: 1px solid #8b5cf6;
+  box-shadow: var(--shadow-card);
+}
+
+[data-theme="neon"] button.primary {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 12px #8b5cf6, 0 2px 4px rgba(0,0,0,0.5);
+  border: 1px solid #a78bfa;
+}
+
+[data-theme="neon"] button.primary:hover {
+  box-shadow: 0 0 20px #8b5cf6, 0 2px 4px rgba(0,0,0,0.5);
+  transform: translateY(-1px);
+}
+
+[data-theme="neon"] button.secondary {
+  background: transparent;
+  color: #8b5cf6;
+  border: 2px solid #8b5cf6;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
+}
+
+[data-theme="neon"] button.secondary:hover {
+  background: rgba(139, 92, 246, 0.1);
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.5);
+}
+
+[data-theme="neon"] input,
+[data-theme="neon"] select,
+[data-theme="neon"] textarea {
+  background: rgba(15, 12, 41, 0.8);
+  border: 1px solid #8b5cf6;
+  color: #e0e7ff;
+  box-shadow: inset 0 0 8px rgba(139, 92, 246, 0.2);
+}
+
+[data-theme="neon"] h1,
+[data-theme="neon"] h2,
+[data-theme="neon"] h3 {
+  color: #e0e7ff;
+  text-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+}
+
+[data-theme="neon"] .topbar,
+[data-theme="neon"] .sidebar {
+  background: rgba(15, 12, 41, 0.95);
+  border-bottom: 2px solid #8b5cf6;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.3);
+}
+
+[data-theme="neon"] .mobile-nav {
+  background: rgba(15, 12, 41, 0.95);
+  border-top: 2px solid #8b5cf6;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.3);
+}
+
+/* ========================================
+   PASTEL NOTEBOOK THEME
+   ======================================== */
+
+[data-theme="pastel"] {
+  --border-radius-sm: 3px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --border-radius-button: 8px;
+  --border-radius-card: 12px;
+  
+  --shadow-sm: 2px 2px 4px rgba(0,0,0,0.08);
+  --shadow-md: 3px 3px 8px rgba(0,0,0,0.1);
+  --shadow-lg: 4px 4px 12px rgba(0,0,0,0.12);
+  --shadow-button: 2px 2px 6px rgba(0,0,0,0.1);
+  --shadow-card: 3px 3px 10px rgba(0,0,0,0.1);
+}
+
+[data-theme="pastel"] body {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  background-attachment: fixed;
+}
+
+[data-theme="pastel"][data-dark="true"] body {
+  background: linear-gradient(135deg, #614385 0%, #516395 100%);
+}
+
+[data-theme="pastel"] .card,
+[data-theme="pastel"] .modal,
+[data-theme="pastel"] .reference-content {
+  background: rgba(255, 250, 245, 0.95);
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+[data-theme="pastel"] .card::before,
+[data-theme="pastel"] .modal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 24px,
+    rgba(139, 92, 246, 0.05) 24px,
+    rgba(139, 92, 246, 0.05) 25px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+[data-theme="pastel"][data-dark="true"] .card,
+[data-theme="pastel"][data-dark="true"] .modal,
+[data-theme="pastel"][data-dark="true"] .reference-content {
+  background: rgba(81, 99, 149, 0.9);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="pastel"] button.primary {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+  color: #2d3436;
+  font-weight: 600;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-button);
+}
+
+[data-theme="pastel"] button.primary:hover {
+  transform: translateY(-1px) rotate(-0.5deg);
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.15);
+}
+
+[data-theme="pastel"] button.secondary {
+  background: linear-gradient(135deg, #dfe6e9 0%, #b2bec3 100%);
+  color: #2d3436;
+  font-weight: 600;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-button);
+}
+
+[data-theme="pastel"] button.secondary:hover {
+  transform: translateY(-1px) rotate(0.5deg);
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.15);
+}
+
+[data-theme="pastel"] input,
+[data-theme="pastel"] select,
+[data-theme="pastel"] textarea {
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(139, 92, 246, 0.2);
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
+}
+
+[data-theme="pastel"] h1,
+[data-theme="pastel"] h2,
+[data-theme="pastel"] h3 {
+  font-weight: 600;
+}
+
+/* ========================================
+   UNIVERSAL THEME UTILITIES
+   ======================================== */
+
+/* Apply border radius from theme */
+button, .card, .modal, input, select, textarea {
+  border-radius: var(--border-radius-md);
+}
+
+button.primary, button.secondary {
+  border-radius: var(--border-radius-button);
+}
+
+.card, .modal, .reference-content {
+  border-radius: var(--border-radius-card);
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+button, input, select, textarea {
+  transition-property: all;
+  transition-duration: 0.2s;
+}
+
+/* Theme-specific mascot adjustments */
+[data-theme="neon"] .mateo-mascot {
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
+}
+
+[data-theme="glassmorphism"] .mateo-mascot {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+[data-theme="pastel"] .mateo-mascot {
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+[data-theme="minimal"] .mateo-mascot {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
