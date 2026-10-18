@@ -88,6 +88,14 @@ export function isFactored(input: string) {
     return unwrap(s.slice(1,-1));
   }
   raw=unwrap(raw).replace(/([a-z0-9)])\(/g,'$1*(').replace(/\)([a-z])/g,')*$1');
+  // A sum is not a factorization, even when terms contain explicit products: -5*x^2-2*x-5.
+  let scan=0;
+  for(let i=0;i<raw.length;i++){
+    const ch=raw[i];
+    if(ch==='(')scan++;
+    else if(ch===')')scan--;
+    else if(scan===0&&(ch==='+'||(ch==='-'&&i>0&&/[0-9a-z)]/.test(raw[i-1]))))return false;
+  }
   let depth=0,start=0;const factors:string[]=[];
   for(let i=0;i<raw.length;i++){if(raw[i]==='(')depth++;if(raw[i]===')')depth--;if(raw[i]==='*'&&depth===0){factors.push(raw.slice(start,i));start=i+1;}}
   factors.push(raw.slice(start));let count=0;

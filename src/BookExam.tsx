@@ -4,6 +4,7 @@ import type { Course, Progress } from './types';
 import type { PracticeItem } from './learning';
 import { BookProblem } from './BookProblem';
 import { assignmentLabel, bookCatalog, readBookPosition, responseStatus, reviewedActivities } from './bookCatalog';
+import { missingCourseWeeks } from './bookStudy';
 
 interface Props { course:Course; items:PracticeItem[]; progress:Progress; onStart:(items:PracticeItem[],title:string,mode:string)=>void; onRead:(page:number)=>void; initialProblem?:string; }
 
@@ -52,7 +53,7 @@ export function BookExam({course,items,progress,onStart,initialProblem}:Props) {
         {start&&<small>{start.sectionCode} · ejercicio {start.number}{start.part} · PDF {start.page}{status(start)==='submitted'?' · borrador guardado':''}</small>}
       </div>
       <details className="book-journey-picker"><summary>Elegir otro ejercicio</summary><div><label>Sección<select aria-label="Sección de Book Exam" value={section} onChange={e=>changeSection(e.target.value)}><option value="all">Todas las secciones</option>{sections.map(([code,name])=><option key={code} value={code}>{code} · {name}</option>)}</select></label><label>Inciso<select aria-label="Problema de Book Exam" value="" onChange={e=>e.target.value&&choose(e.target.value)}><option value="">Elegí un inciso</option>{catalog.map(p=><option key={p.id} value={p.id}>{p.sectionCode} · {p.number}{p.part} · PDF {p.page}{status(p)==='validated'?' ✓':status(p)==='submitted'?' · guardado':''}</option>)}</select></label></div></details>
-      <p className="book-journey-fineprint">Solo los ejercicios con solución revisada se comprueban automáticamente. En los demás podés guardar tus pasos.</p>
+      <p className="book-journey-fineprint">Solo los ejercicios con solución revisada se comprueban automáticamente. En los demás podés guardar tus pasos. {missingCourseWeeks(course).length?`Las semanas ${missingCourseWeeks(course).join(' y ')} aparecen aquí cuando llegue ese material.` :''}</p>
     </>:<>
       <div className="book-journey-top"><button className="text-button" onClick={()=>{setSelected(null);setMessage('');}}><ArrowLeft size={18}/> Elegir ejercicio</button><span>{index>=0?`${index+1} de ${catalog.length}`:'Ejercicio del libro'}</span></div>
       {index>=0&&<div className="book-journey-track" role="progressbar" aria-valuenow={index+1} aria-valuemin={1} aria-valuemax={catalog.length} aria-label="Avance en la selección"><span style={{width:`${((index+1)/catalog.length)*100}%`}}/></div>}

@@ -21,6 +21,7 @@ export function LessonStory({lesson,onStart}:{lesson:Lesson;onStart:()=>void}) {
       {current.kind==='formula'?<div className="lesson-story-formulas">{lesson.formulas.map(f=><div className="math" key={f} dangerouslySetInnerHTML={{__html:katex.renderToString(f,{throwOnError:false,strict:false,displayMode:true})}}/>)}</div>:<p>{current.body}</p>}
     </article>
     <div className="lesson-story-actions">{page>0&&<button className="secondary" onClick={()=>setPage(page-1)}><ArrowLeft size={17}/>Anterior</button>}<button className="primary" onClick={()=>page+1<slides.length?setPage(page+1):onStart()}>{page+1<slides.length?'Continuar':`Empezar ${lesson.questions.length} ejercicios`}<ArrowRight size={18}/></button></div>
+    {page+1===slides.length&&<p className="lesson-story-rule">El nivel queda marcado si acertás al menos {Math.ceil(lesson.questions.length*0.7)} de {lesson.questions.length} al primer intento, sin pista.</p>}
     {page<slides.length-1&&<button className="lesson-story-skip" onClick={onStart}>Ir a los {lesson.questions.length} ejercicios</button>}
   </section>;
 }

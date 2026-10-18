@@ -420,7 +420,7 @@ const practice: Record<string, Seed[]> = {
   ],
   'Aplicaciones e inclusión-exclusión': [
     ['t','|A|=8, |B|=7, |A∩B|=3. Calculá |A∪B|.','12','8+7−3=12.'],
-    ['t','De 20 personas, 14 usan A y 6 no usan A. ¿Cuántas usan A?','14','Es el dato del enunciado; comprobá 14+6=20.'],
+    ['t','De 20 personas, 14 usan A, 9 usan B y 5 usan ambos. ¿Cuántas no usan ni A ni B?','2','|A∪B|=14+9−5=18. Fuera de ambos: 20−18=2.'],
     ['t','|A|=12 y |A∩B|=5. ¿Cuántos están solo en A?','7','12−5=7.'],
     ['t','En 30 personas, |A∪B|=23. ¿Cuántas están fuera de ambos?','7','30−23=7.'],
     ['t','|A|=18, |B|=15, |A∪B|=27. Calculá |A∩B|.','6','18+15−27=6.'],

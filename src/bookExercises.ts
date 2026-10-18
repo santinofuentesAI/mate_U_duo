@@ -1,7 +1,8 @@
 import type { Course, Question } from './types';
+import { extraBookExercises } from './extraBookExercises';
 export interface BookExercise { course: Course; lessonTitle: string; question: Question; }
 // Selected original incisos. Image pixels remain in the user's locally imported PDF.
-export const bookExercises: BookExercise[] = [
+const selectedBookExercises: BookExercise[] = [
   {
     "course": "precalculo",
     "lessonTitle": "Conjuntos numéricos",
@@ -2084,3 +2085,4 @@ export const bookExercises: BookExercise[] = [
     }
   }
 ];
+export const bookExercises: BookExercise[] = [...selectedBookExercises, ...extraBookExercises];

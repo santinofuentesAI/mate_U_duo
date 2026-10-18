@@ -34,6 +34,8 @@ export function mistakeJournal(items:PracticeItem[],p:Progress) {
   return items.filter(i=>wrong.has(i.question.id)).map(i=>({...i,attempt:wrong.get(i.question.id)!,resolved:!!last.get(i.question.id)?.correct&&!last.get(i.question.id)?.assisted}))
     .sort((a,b)=>Date.parse(b.attempt.date)-Date.parse(a.attempt.date));
 }
+/** A level counts when most answers were right on the first try, without hints or the revealed solution. */
+export function lessonPassed(clean:number,total:number){return total>0&&clean>=Math.ceil(total*0.7);}
 export function sessionSummary(p:Progress,items:PracticeItem[],started:string) {
   const ids=new Set(items.map(i=>i.question.id)),first=new Map<string,Progress['attempts'][number]>(),attempts=p.attempts.filter(a=>ids.has(a.questionId)&&Date.parse(a.date)>=Date.parse(started));
   for(const a of attempts)if(!first.has(a.questionId))first.set(a.questionId,a);

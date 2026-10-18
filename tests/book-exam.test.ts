@@ -7,6 +7,7 @@ import { bookScope } from '../src/bookScope';
 import catalog from '../src/bookProblemCatalog.json';
 import { bookCatalog, pageInventory, responseStatus, reviewedActivities } from '../src/bookCatalog';
 import { freshProgress } from '../src/progress';
+import { bookExercises } from '../src/bookExercises';
 import katex from 'katex';
 
 test('Book Exam follows each source page in order and stays within the selected syllabus',()=>{
@@ -92,7 +93,7 @@ test('all 59 existing reviewed activities remain reachable; free response is nev
     progress.attempts.push({...progress.attempts[0],correct:false});
     assert.equal(responseStatus(p,items,progress,true),'submitted');
   }
-  assert.equal(count,59);
+  assert.equal(count,bookExercises.length);
   assert.deepEqual(bookCatalog.precalculo.filter(p=>p.classAssigned).map(p=>`${p.number}${p.part}`),['1g','2f','2l','3k']);
   assert.equal(bookCatalog.discreta.find(p=>p.sectionCode==='2.1'&&p.number===20&&p.part==='a')!.week,'S3');
 });
