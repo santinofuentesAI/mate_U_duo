@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { ArrowRight, BookOpen, Check, Coins, Lightbulb, ListTree, RotateCcw } from 'lucide-react';
 import type { AnswerDetails, Course, Question } from './types';
 import { equivalentLogic } from './engine';
@@ -25,7 +25,7 @@ export function GuidedProofExercise({question:q,course,coins,onSpend,onAttempt,o
   return <section className="exercise guided-proof"><div className="row"><span className="eyebrow">DEMOSTRÁ PASO A PASO</span><button className="text-button" onClick={()=>setShowLaws(true)}><BookOpen size={16}/>Ver leyes lógicas</button></div>
     <h2>{q.prompt}</h2><p className="guided-intro"><ListTree size={18}/> No adivinés la cadena: escribí una línea, elegí su razón y comprobala antes de continuar.</p>
     <section className="proof-premises" aria-label="Premisas de la demostración"><b>Premisas</b>{q.premises?.map((p,i)=><code key={p}>{i+1}. {p}</code>)}</section>
-    <div className="proof-progress" aria-label={`Paso ${Math.min(at+1,steps.length)} de ${steps.length}`}><span style={{width:`${complete?100:(at/steps.length)*100}%`}}/><small>{complete?'Demostración terminada':`Paso ${at+1} de ${steps.length}`}</small></div>
+    <div className="proof-progress" aria-label={`Paso ${Math.min(at+1,steps.length)} de ${steps.length}`}><span style={{'--progress':String(complete?1:at/steps.length)} as CSSProperties}/><small>{complete?'Demostración terminada':`Paso ${at+1} de ${steps.length}`}</small></div>
     <div className="proof-lines" aria-label="Líneas verificadas">{steps.slice(0,at).map((s,i)=><div className="proof-line" key={s.expression}><span>{i+1}</span><code>{s.expression}</code><small><Check size={14}/>{s.rule}</small></div>)}{!complete&&<div className="proof-line current"><span>{at+1}</span><code>{expression||'Tu siguiente conclusión'}</code><small>{rule||'Elegí una regla'}</small></div>}</div>
     {!complete&&<><SymbolInput value={expression} onChange={v=>{setExpression(v);setMessage('');}} mode="logic" label="Nueva línea de la demostración" onNextLine={()=>{if(expression.trim()&&rule)check();else setMessage('Escribí una conclusión y elegí su regla antes de bajar.');}}/>
       <fieldset className="proof-rules"><legend>¿Qué regla aplicaste?</legend><div>{rules.map(r=><button type="button" key={r} aria-pressed={rule===r} className={rule===r?'selected':''} onClick={()=>{setRule(r);setMessage('');}}>{r}</button>)}</div></fieldset>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { ArrowLeft, ArrowRight, BookOpenCheck } from 'lucide-react';
 import type { Course, Progress } from './types';
 import type { PracticeItem } from './learning';
@@ -47,7 +47,7 @@ export function BookExam({course,items,progress,onStart,initialProblem}:Props) {
 
   return <section className="book-exam card book-journey" aria-label="Modo Book Exam">
     {!current?<>
-      <header className="book-journey-intro"><span className="book-journey-icon"><BookOpenCheck size={26}/></span><h2>Ejercicios del libro</h2><p>Uno a la vez. Tu avance se guarda aquí.</p></header>
+      <header className="book-journey-intro"><span className="book-journey-icon"><BookOpenCheck size={26}/></span><h2>Ejercicios del libro</h2><p>Un ejercicio a la vez. Si hay clave, ves «Resultado correcto». Si no hay clave, queda «Guardado · sin corregir» y tus pasos se conservan.</p></header>
       <div className="book-journey-start"><label>Elegí la semana<select aria-label="Semana de Book Exam" value={week} onChange={e=>changeWeek(e.target.value)}><option value="all">Todo el alcance</option>{weeks.map(w=><option key={w} value={w}>{assignmentLabel(w)}</option>)}</select></label>
         <button className="primary wide" disabled={!start} onClick={()=>start&&choose(start.id)}>{position&&status(position)!=='validated'?'Continuar mi ejercicio':'Empezar a practicar'}<ArrowRight size={19}/></button>
         {start&&<small>{start.sectionCode} · ejercicio {start.number}{start.part} · PDF {start.page}{status(start)==='submitted'?' · borrador guardado':''}</small>}
@@ -56,7 +56,7 @@ export function BookExam({course,items,progress,onStart,initialProblem}:Props) {
       <p className="book-journey-fineprint">Solo los ejercicios con solución revisada se comprueban automáticamente. En los demás podés guardar tus pasos. {missingCourseWeeks(course).length?`Las semanas ${missingCourseWeeks(course).join(' y ')} aparecen aquí cuando llegue ese material.` :''}</p>
     </>:<>
       <div className="book-journey-top"><button className="text-button" onClick={()=>{setSelected(null);setMessage('');}}><ArrowLeft size={18}/> Elegir ejercicio</button><span>{index>=0?`${index+1} de ${catalog.length}`:'Ejercicio del libro'}</span></div>
-      {index>=0&&<div className="book-journey-track" role="progressbar" aria-valuenow={index+1} aria-valuemin={1} aria-valuemax={catalog.length} aria-label="Avance en la selección"><span style={{width:`${((index+1)/catalog.length)*100}%`}}/></div>}
+      {index>=0&&<div className="book-journey-track" role="progressbar" aria-valuenow={index+1} aria-valuemin={1} aria-valuemax={catalog.length} aria-label="Avance en la selección"><span style={{'--progress':String((index+1)/catalog.length)} as CSSProperties}/></div>}
       <div id="book-exam-current"><BookProblem key={current.id} problem={current} verified={reviewedActivities(current,items)} responseState={status(current)} onVerified={item=>onStart([item],`Book Exam · ${current.sectionCode} · ${current.number}${current.part}`,'book-exam')} onDone={markDone} onEdited={edited} onChecked={()=>refreshChecks(n=>n+1)} onNext={()=>move(1)} onPrevious={()=>move(-1)}/></div>
     </>}
     {message&&<p role="status" className="notice">{message}</p>}

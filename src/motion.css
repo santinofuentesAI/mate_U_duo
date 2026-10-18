@@ -1,0 +1,146 @@
+/* Motion stays on the compositor: transform and opacity only. */
+.fill-x {
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(var(--progress, 0));
+  transition: transform 240ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.progress-track > div,
+.lesson-story-track > span,
+.book-journey-track > span,
+.home-progress-track > span,
+.proof-progress > span {
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(var(--progress, 0));
+  transition: transform 240ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.proof-progress > span { right: 0; }
+
+@keyframes motion-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.motion-in { animation: motion-in .32s cubic-bezier(.22, 1, .36, 1) backwards; }
+
+.journey-level { animation: motion-in .36s cubic-bezier(.22, 1, .36, 1) backwards; }
+
+@keyframes orb-breathe {
+  50% { transform: scale(1.07); }
+}
+
+.journey-level.is-current .journey-orb { animation: orb-breathe 2.2s ease-in-out infinite; }
+
+.mobile-nav .nav-icon { transition: transform .18s cubic-bezier(.22, 1, .36, 1); }
+.mobile-nav button.active .nav-icon { transform: scale(1.12); }
+
+.study-guide {
+  max-width: 650px;
+  margin: 0 auto 14px;
+  padding: 16px 16px 8px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.study-guide h2 { margin: 0 0 8px; font-size: 1.05rem; }
+.study-guide ol { margin: 0; padding: 0 0 6px 1.15rem; display: grid; gap: 8px; }
+.study-guide li { color: var(--text); font-size: .9rem; line-height: 1.45; }
+.study-guide li b { color: var(--purple); }
+
+.journey-how { margin: -6px 0 14px; font-size: .86rem; line-height: 1.45; max-width: 36rem; }
+
+.top-stats em { font-style: normal; font-weight: 700; font-size: .68rem; color: var(--muted); }
+.top-stats b { font-weight: 900; }
+
+body, #root, .main-shell, .session-shell { overflow-x: clip; }
+.main-shell, .content-grid, .simple-flow, .journey-route { min-width: 0; }
+.book-problem-focus .book-enunciation { overflow-x: auto; }
+
+@media (max-width: 700px) {
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "brand theme"
+      "course course"
+      "stats stats";
+    align-items: center;
+    gap: 8px 10px;
+    min-height: 0;
+    padding: 12px 14px 10px;
+  }
+
+  .mobile-brand { grid-area: brand; font-size: 1.28rem; }
+  .mobile-brand b { font-size: .68rem; }
+  .icon-button { grid-area: theme; width: 44px; min-width: 44px; min-height: 44px; padding: 8px; justify-self: end; }
+  .course-picker { grid-area: course; order: 0; width: auto; }
+  .course-picker select { min-height: 44px; font-size: .9rem; }
+
+  .top-stats {
+    grid-area: stats;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin: 0;
+  }
+
+  .top-stats > span,
+  .top-stats > span:not(:first-child) {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    align-items: center;
+    column-gap: 4px;
+    min-width: 0;
+    min-height: 44px;
+    padding: 5px 2px 4px;
+    border-radius: 12px;
+    background: var(--soft);
+    font-size: .84rem;
+  }
+
+  .top-stats em { grid-column: 1 / -1; text-align: center; font-size: .64rem; line-height: 1.1; }
+
+  .top-stats svg { width: 16px; height: 16px; }
+
+  .mobile-nav button { min-height: 58px; }
+  .mobile-nav button > span:last-child {
+    font-size: .68rem;
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    text-align: center;
+  }
+
+  .content-grid,
+  .content-grid.single { padding: 16px 14px calc(112px + env(safe-area-inset-bottom)); }
+
+  .page-heading p,
+  .simple-flow > p,
+  .simple-feature p { font-size: .86rem; line-height: 1.5; }
+
+  .journey-level { min-height: 76px; }
+  .journey-level .journey-level-copy b { font-size: .92rem; }
+  .journey-level .journey-level-copy small { font-size: .66rem; }
+  .journey-level-count { font-size: .74rem; }
+
+  .session-header { gap: 10px; padding: 12px 12px; }
+  .session-content { padding: 8px 14px 32px; }
+  .book-journey .book-problem-navigation { margin-bottom: calc(12px + env(safe-area-inset-bottom)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-in,
+  .journey-level,
+  .journey-level.is-current .journey-orb,
+  .mobile-nav button.active .nav-icon { animation: none; }
+  .progress-track > div,
+  .lesson-story-track > span,
+  .book-journey-track > span,
+  .home-progress-track > span,
+  .proof-progress > span,
+  .mobile-nav .nav-icon { transition: none; }
+}

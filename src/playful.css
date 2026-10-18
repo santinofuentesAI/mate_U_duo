@@ -81,7 +81,7 @@ button{border-width:2px;border-radius:16px;font-weight:700}
 .proof-premises>b{font-size:.74rem;color:var(--purple);text-transform:uppercase;letter-spacing:.08em}
 .proof-premises code{font-size:.95rem;overflow-wrap:anywhere}
 .proof-progress{position:relative;height:20px;margin:16px 0 20px;border:2px solid var(--border);border-radius:999px;background:var(--bg);overflow:hidden}
-.proof-progress span{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--purple),var(--button-accent));transition:width .25s ease}
+.proof-progress span{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--purple),var(--button-accent))}
 .proof-progress small{position:relative;display:block;text-align:center;line-height:16px;font-weight:850;color:var(--text)}
 .proof-lines{display:grid;gap:9px;margin:16px 0}
 .proof-line{display:grid;grid-template-columns:34px minmax(0,1fr) minmax(120px,.7fr);gap:10px;align-items:center;border:2px solid var(--border);border-radius:16px;background:var(--surface);padding:10px}
