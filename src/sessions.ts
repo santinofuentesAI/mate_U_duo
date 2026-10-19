@@ -15,7 +15,7 @@ export function decodeSession(raw:unknown):SavedSession|null {
   if(typeof r.id!=='string'||!/^[a-f0-9-]{36}$/.test(r.id)||typeof r.title!=='string'||r.title.length>200||typeof r.mode!=='string'||r.mode.length>50||typeof r.started!=='string'||!Number.isFinite(Date.parse(r.started))||!Number.isFinite(r.startingXP)||Number(r.startingXP)<0||!Number.isInteger(r.index)||!Array.isArray(r.ids)||r.ids.length<1||r.ids.length>100||new Set(r.ids).size!==r.ids.length)return null;
   let items:(PracticeItem|undefined)[];
   if(r.mode==='exam'){
-    if(typeof r.examSeed!=='string'||!/^[a-f0-9-]{36}$/.test(r.examSeed)||!['discreta','precalculo'].includes(String(r.examCourse))||!Array.isArray(r.examUnits)||r.examUnits.length<1||r.examUnits.length>5||r.examUnits.some(u=>typeof u!=='string'||u.length>100)||r.ids.length!==35)return null;
+    if(typeof r.examSeed!=='string'||!/^[a-f0-9-]{36}$/.test(r.examSeed)||!['discreta','precalculo'].includes(String(r.examCourse))||!Array.isArray(r.examUnits)||r.examUnits.length<1||r.examUnits.length>12||r.examUnits.some(u=>typeof u!=='string'||u.length>100)||r.ids.length!==35)return null;
     if(r.examVersion!==undefined&&r.examVersion!==1&&r.examVersion!==2)return null;
     try{items=generateExam(r.examCourse as Course,r.examUnits as string[],r.examSeed,lessons,35,r.examVersion===2?2:1);}
     catch{return null;}

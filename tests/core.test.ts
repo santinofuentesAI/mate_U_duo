@@ -43,13 +43,13 @@ test('named law validation distinguishes correct rule and verifies subexpression
   assert.equal(checkLaw('¬¬R','R','Doble negación'),true);
 });
 test('curriculum integrity: unique ids, valid choice keys, every saved answer grades correctly',()=>{
-  assert.equal(lessons.length,47);const ids=new Set<string>();
+  assert.equal(lessons.length,51);const ids=new Set<string>();
   for(const l of lessons){assert.ok(!ids.has(l.id));ids.add(l.id);assert.ok(l.questions.length>=3);for(const q of l.questions){assert.ok(!ids.has(q.id));ids.add(q.id);assert.equal(grade(q,q.answer,q.exclusions).correct,true, q.id);if(q.type==='choice')assert.ok(q.options?.includes(String(q.answer)));if(q.type==='synthetic')assert.deepEqual(synthetic(q.coefficients!,q.root!).map(String),q.answer);if(q.type==='table')assert.deepEqual(truthRows(q.expression!,q.variables).map(r=>r.result?'V':'F'),q.answer);}}
-  assert.equal(ids.size,517);
+  assert.equal(ids.size,561);
 });
 test('book scope: all pages covered by reading or practice, stops at current topic',()=>{
   assert.equal(bookScope.precalculo.lastPage,63);assert.equal(bookScope.discreta.lastPage,152);
-  for(const course of ['precalculo','discreta'] as const){const ranges=[...readerPages[course],...bookRoutes[course]];for(let page=1;page<=bookScope[course].lastPage;page++)assert.ok(ranges.some(r=>page>=r.page&&page<=r.end),`${course} page ${page} missing`);for(const r of ranges)assert.ok(r.page>=1&&r.end<=bookScope[course].lastPage);}
+  for(const course of ['precalculo','discreta'] as const){const ranges=[...readerPages[course],...bookRoutes[course]];for(let page=1;page<=bookScope[course].lastPage;page++)assert.ok(ranges.some(r=>page>=r.page&&page<=r.end),`${course} page ${page} missing`);for(const r of ranges)assert.ok(r.page>=1&&(r.end<=bookScope[course].lastPage||r.page>=500));}
   assert.ok(lessons.some(l=>l.title==='Ecuaciones con radicales'));
   const q=lessons.flatMap(l=>l.questions).find(q=>q.prompt.includes('2c: resolvé'))!;assert.equal(grade(q,['4','12']).correct,false);assert.equal(grade(q,['12']).correct,true);
 });

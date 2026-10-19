@@ -17,7 +17,7 @@ test('Book Exam follows each source page in order and stays within the selected 
     const covered=new Set<string>();
     for(const block of blocks){
       assert.deepEqual(block.pages,[...block.pages].sort((a,b)=>a-b));
-      assert.ok(block.pages.every(page=>page>=1&&page<=bookScope[course].lastPage));
+      assert.ok(block.pages.every(page=>page>=1&&(page<=bookScope[course].lastPage||page>=500)));
       const pages=block.items.map(i=>i.question.bookSource!.page);
       assert.deepEqual(pages,[...pages].sort((a,b)=>a-b));
       for(const item of block.items){
@@ -57,7 +57,10 @@ test('each visually inventoried exercise page matches its ordered catalog, inclu
       assert.equal(entries.length,count,`${course} PDF ${page}`);
       assert.deepEqual(entries.map(p=>`${p.number}${p.part}`),row.labels);
     }
-    assert.ok(bookCatalog[course].every(p=>p.sourcePages.length&&p.visuals.length&&p.visuals.every(v=>v.page>=1&&v.page<=bookScope[course].lastPage)));
+    assert.ok(bookCatalog[course].filter(p=>p.page<=bookScope[course].lastPage).every(p=>p.sourcePages.length&&p.visuals.length&&p.visuals.every(v=>v.page>=1&&v.page<=bookScope[course].lastPage)));
+    const classProblems=bookCatalog[course].filter(p=>p.id.includes('-clase-'));
+    assert.equal(new Set(classProblems.map(p=>p.id)).size,classProblems.length);
+    assert.ok(classProblems.every(p=>p.sourcePages.length&&p.visuals.length===0&&p.classAssigned));
   }
   const prec=bookCatalog.precalculo.filter(p=>p.page===42&&p.number===1);
   assert.deepEqual(prec.map(p=>p.part),'abcdefghijklmnñopqrs'.split(''));

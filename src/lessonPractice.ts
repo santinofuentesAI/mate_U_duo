@@ -427,6 +427,42 @@ const practice: Record<string, Seed[]> = {
     ['t','|A|=10, |B|=12, |C|=8; pares 3,4,2 y triple 1. Hallá |A∪B∪C|.','22','10+12+8−3−4−2+1=22.'],
     ['t','En un grupo de 40, 22 estudian A, 19 B y 9 ambos. ¿Cuántos estudian exactamente uno?','23','Solo A=13, solo B=10; total 23.'],
   ],
+  'Regiones de Venn': [
+    ['t','50 hipertensión, 40 diabetes, 25 ambas. ¿Cuántos tienen solo hipertensión?','25','50 − 25 = 25.'],
+    ['t','20 al polen, 15 al polvo, 10 a ambos. ¿Cuántos tienen exactamente una alergia?','15','10 + 5 = 15.'],
+    ['s','U={1,…,9}, A={2,4,6,8}, B={1,2,3,4}. Seleccioná A ∩ B.','2,4','Solo 2 y 4 están en ambos.',['1','2','3','4','5','6','7','8','9']],
+    ['s','U={1,…,9}, A={2,4,6,8}, B={1,2,3,4}. Seleccioná A − B.','6,8','De A se van 2 y 4. Quedan 6 y 8.',['1','2','3','4','5','6','7','8','9']],
+    ['t','70 % respiratorios, 40 % fiebre, 25 % ambos. ¿Qué porcentaje no tiene ninguno?','15','100 − (70+40−25) = 15.'],
+    ['t','A=40, B=35, C=30; pares 10, 8 y 5; triple 3. ¿Cuántas recibieron solo A?','28','40 − 7 − 2 − 3 = 28.'],
+    ['t','IA=85, robótica∩IA=36, programación∩IA=24, las tres=7. ¿Cuántos tienen solo IA?','32','85 − 29 − 17 − 7 = 32.'],
+  ],
+  'Leyes de conjuntos de clase': [
+    ['c','¿A qué equivale A ∪ A?','A','Idempotencia.',['A','U','∅','Aᶜ']],
+    ['c','¿A qué equivale A ∩ U?','A','U es el neutro de la intersección.',['A','U','∅','Aᶜ']],
+    ['c','¿A qué equivale A ∩ ∅?','∅','Dominación: nada está en el vacío.',['∅','A','U','Aᶜ']],
+    ['c','¿A qué equivale A ∪ (B ∪ C) ∪ (B ∩ C)?','A ∪ B ∪ C','B ∩ C ya está en B ∪ C.',['A ∪ B ∪ C','A ∩ B ∩ C','B ∩ C','A']],
+    ['c','¿A qué equivale (A ∩ B) ∪ (A ∩ B ∩ C) ∪ (A ∩ C)?','(A ∩ B) ∪ (A ∩ C)','El triple está dentro de A ∩ B.',['(A ∩ B) ∪ (A ∩ C)','A ∩ B ∩ C','A ∪ B ∪ C','A']],
+    ['c','¿A qué equivale A ∪ (A ∩ B) ∪ B?','A ∪ B','El término del medio se absorbe en A.',['A ∪ B','A ∩ B','A','B']],
+    ['c','¿A qué equivale X ∩ (Xᶜ ∪ B) si X = A ∪ B?','B','Queda X ∩ B y B ⊆ X.',['B','A ∪ B','∅','Xᶜ']],
+  ],
+  'Conjunto potencia y producto': [
+    ['t','Calculá |P({a,b})|.','4','2² = 4: ∅, {a}, {b}, {a,b}.'],
+    ['t','A={1,3,5,7,9}. ¿Cuántos subconjuntos tienen exactamente 3 elementos?','10','C(5,3) = 10.'],
+    ['t','A={a,b}, B={1,2,3}. Calculá |P(A × B)|.','64','6 pares; 2⁶ = 64.'],
+    ['t','A={∅,{1}}, B={1,2}. Calculá |B × P(A)|.','8','|P(A)|=4 y |B|=2.'],
+    ['t','Con 4 bases nitrogenadas, ¿cuántos codones de longitud 3 hay?','64','4³ = 64.'],
+    ['t','A={a,b,c}, B={1,2,3,4}. ¿Cuántos subconjuntos de A × B tienen exactamente 3 pares?','220','C(12,3) = 220.'],
+    ['t','12 pares. ¿Cuántos subconjuntos tienen exactamente 4 pares?','495','C(12,4) = 495.'],
+  ],
+  'Cardinalidad y conteo': [
+    ['t','A={1,3,5}, B={2,3,4}. Calculá |A ∪ B|.','5','La unión tiene cinco números.'],
+    ['t','|A|=3, |B|=4, |C|=2; pares 1, 1 y 0; triple 0. Calculá |A ∪ B ∪ C|.','7','3+4+2 − 1 − 1 − 0 + 0 = 7.'],
+    ['t','|A|=3, |B|=4, |A∩B|=1, |C|=2. Calculá |(A ∪ B) × C|.','12','|A ∪ B|=6; 6·2=12.'],
+    ['t','A={1,2,5}, B={2,4,6}, C={1,6,9}. Calculá |P(A ∩ B ∩ C)|.','1','La triple es vacía; |P(∅)|=1.'],
+    ['t','|U|=20, |A|=10, |B|=8, |C|=6; pares 4, 3 y 2; triple 1. Calculá |A ∪ B ∪ C|.','16','10+8+6 − 4 − 3 − 2 + 1 = 16.'],
+    ['t','|P(A × B)| = 1024. ¿Cuántos pares de naturales positivos (|A|,|B|) lo cumplen?','4','mn=10: (1,10), (2,5), (5,2), (10,1).'],
+    ['t','De {1,…,20}, ¿cuántos 3-subconjuntos contienen al menos un primo ≤ 20?','920','C(20,3) − C(12,3) = 1140 − 220.'],
+  ],
 };
 
 export function addLessonPractice(lessons: Lesson[]): void {

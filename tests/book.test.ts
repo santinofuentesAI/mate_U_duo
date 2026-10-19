@@ -18,8 +18,8 @@ test('selected book incisos have valid references, crop bounds and independently
   for(const e of bookExercises){
     const q=e.question,s=q.bookSource!,c=s.crop;
     assert.ok(lessons.some(l=>l.title===e.lessonTitle&&l.course===e.course));assert.equal(s.course,e.course);
-    assert.ok(!ids.has(q.id));ids.add(q.id);assert.ok(s.page>=1&&s.page<=(e.course==='precalculo'?63:152));
-    assert.equal(s.printedPage,s.page-(e.course==='discreta'?2:0));
+    assert.ok(!ids.has(q.id));ids.add(q.id);    assert.ok(s.page>=1&&(s.page<=(e.course==='precalculo'?63:152)||(e.course==='discreta'&&s.page>=500&&s.page<700)));
+    assert.equal(s.printedPage,s.page>=500?s.page%100:s.page-(e.course==='discreta'?2:0));
     assert.ok(c.x>=0&&c.y>=0&&c.width>0&&c.height>0&&c.x+c.width<=1&&c.y+c.height<=1);
     assert.ok(grade(q,q.answer,q.exclusions).correct,q.id);
     if(q.math)assert.doesNotThrow(()=>katex.renderToString(q.math!,{throwOnError:true,strict:false}),q.id);

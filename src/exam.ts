@@ -44,6 +44,25 @@ function discrete(unit:string,variant:number,id:string,pick:(a:number,b:number)=
     if(kind%2===0)return {topic:'Universal y existencial',q:question(id,'choice',`En U={1,…,${n}}, P(x): “x es par”. ¿Cuál afirmación es verdadera?`,even.length?'∃x P(x)':'¬∃x P(x)',`Los testigos pares son ${even.join(', ')||'ninguno'}; el existencial es ${even.length?'verdadero':'falso'}.`,{options:['∃x P(x)','∀x P(x)','¬∃x P(x)']})};
     const symbolic=kind===1?'¬∀x P(x)':'¬∃x P(x)',answer=kind===1?'∃x ¬P(x)':'∀x ¬P(x)';return {topic:'Negar y distribuir',q:question(id,'choice',`Reescribí ${symbolic} con la negación dentro del cuantificador (U tiene ${n} elementos).`,answer,'Al pasar la negación al interior, se intercambia ∀ con ∃ y se niega el predicado.',{options:['∃x ¬P(x)','∀x ¬P(x)','∀x P(x)','∃x P(x)']})};
   }
+  if(unit.startsWith('S5')){
+    const a=11+variant,b=7+Math.floor(variant/2),both=2+variant%5,union=a+b-both,universe=union+4+variant%3;
+    const c=6+variant%7,abc=1+variant%2,ac=abc+variant%3,bc=abc+variant%4,three=a+b+c-both-ac-bc+abc;
+    const slot=variant%5;
+    if(slot===0)return {topic:'Regiones de Venn',q:question(id,'text',`En una muestra, |A|=${a}, |B|=${b} y |A ∩ B|=${both}. Calculá |A ∪ B|.`,String(union),`${a}+${b}−${both}=${union}.`)};
+    if(slot===1)return {topic:'Regiones de Venn',q:question(id,'text',`En un grupo de ${universe} personas, |A|=${a}, |B|=${b} y |A ∩ B|=${both}. ¿Cuántas no están en A ∪ B?`,String(universe-union),`La unión es ${union}; el exterior es ${universe}−${union}=${universe-union}.`)};
+    if(slot===2)return {topic:'Regiones de Venn',q:question(id,'text',`|A|=${a} y |A ∩ B|=${both}. Calculá cuántos elementos hay solo en A.`,String(a-both),`Solo A es ${a}−${both}=${a-both}.`)};
+    if(slot===3)return {topic:'Regiones de Venn',q:question(id,'text',`|A|=${a}, |B|=${b}, |C|=${c}; |A ∩ B|=${both}, |A ∩ C|=${ac}, |B ∩ C|=${bc}; triple ${abc}. Calculá |A ∪ B ∪ C|.`,String(three),`${a}+${b}+${c} − ${both} − ${ac} − ${bc} + ${abc} = ${three}.`)};
+    return {topic:'Leyes de conjuntos de clase',q:question(id,'text',`Si |A|=${a} y |A ∩ B|=${both}, calculá |A ∪ (A ∩ B)|.`,String(a),`Absorción: A ∪ (A ∩ B) = A, de cardinal ${a}.`)};
+  }
+  if(unit.startsWith('S6')){
+    const n=3+variant,m=2+variant%5,slot=variant%5,small=4+Math.floor(variant/5);
+    if(slot===0)return {topic:'Conjunto potencia y producto',q:question(id,'text',`Si |A|=${n} y |B|=${m}, calculá |A × B|.`,String(n*m),`La regla del producto da ${n}·${m}=${n*m}.`)};
+    if(slot===1)return {topic:'Cardinalidad y conteo',q:question(id,'text',`Un conjunto tiene ${n} elementos. ¿Cuántos subconjuntos de exactamente 2 elementos tiene?`,String(n*(n-1)/2),`C(${n},2)=${n}·${n-1}/2=${n*(n-1)/2}.`)};
+    if(slot===2)return {topic:'Conjunto potencia y producto',q:question(id,'text',`Un conjunto tiene ${small} elementos. Calculá |P(A)|.`,String(2**small),`|P(A)|=2^${small}=${2**small}.`)};
+    if(slot===3){const k=n+1,comb=k*(k-1)*(k-2)/6;return {topic:'Cardinalidad y conteo',q:question(id,'text',`Un conjunto tiene ${k} elementos. ¿Cuántos subconjuntos de exactamente 3 elementos tiene?`,String(comb),`C(${k},3)=${comb}.`)};}
+    const a=8+variant,b=6+Math.floor(variant/2),c=4+variant%5,ab=2+variant%3,ac=1+variant%3,bc=variant%3,abc=Math.min(ab,ac,bc,1),three=a+b+c-ab-ac-bc+abc;
+    return {topic:'Cardinalidad y conteo',q:question(id,'text',`|A|=${a}, |B|=${b}, |C|=${c}; pares ${ab}, ${ac} y ${bc}; triple ${abc}. Calculá |A ∪ B ∪ C|.`,String(three),`${a}+${b}+${c}−${ab}−${ac}−${bc}+${abc}=${three}.`)};
+  }
   const left=[String(variant+1),String(variant+5)],right=[left[1],String(variant+9)],operation=kind%3,answer=operation===0?[...new Set([...left,...right])]:operation===1?left.filter(x=>right.includes(x)):left.filter(x=>!right.includes(x));const op=['∪','∩','−'][operation];return {topic:'Operaciones con conjuntos',q:question(id,'set',`Sean A={${left.join(', ')}} y B={${right.join(', ')}}. Seleccioná los elementos de A ${op} B.`,answer,op==='∪'?'La unión reúne los elementos sin repetirlos.':op==='∩'?'La intersección conserva solo los elementos comunes.':'La diferencia conserva los elementos de A que no están en B.',{universe:[...new Set([...left,...right])]})};
 }
 function parseRows(expression:string):string[]{const variables=['P','Q','R'];return Array.from({length:8},(_,i)=>evaluateLogic(parseLogic(expression),Object.fromEntries(variables.map((v,j)=>[v,!(i&(1<<(2-j)))])))?'V':'F');}

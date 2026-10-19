@@ -38,15 +38,18 @@ test('a level needs mostly unaided first answers, and new book keys match the or
   assert.equal(Math.pow(256, 3), 16777216);
 });
 
-test('every catalog exercise is in the study tour once, and weeks 5 and 6 stay open for later material', () => {
+test('every catalog exercise is in the study tour once, and discrete weeks 5 and 6 are in the material', () => {
   for (const course of ['precalculo', 'discreta'] as const) {
     const tour = studyTour(course);
     assert.equal(tour.length, bookCatalog[course].length);
     assert.equal(new Set(tour.map(problem => problem.id)).size, tour.length);
-    assert.deepEqual(missingCourseWeeks(course), ['S5', 'S6']);
+    assert.deepEqual(missingCourseWeeks(course), []);
     const next = nextStudyProblem(tour, () => 'identified');
     assert.equal(next?.id, tour[0].id);
   }
+  assert.ok(bookCatalog.discreta.some(problem => problem.week === 'S5'));
+  assert.ok(bookCatalog.discreta.some(problem => problem.week === 'S6' && problem.sectionCode === '2.5'));
+  assert.ok(bookCatalog.discreta.some(problem => problem.week === 'S6' && problem.id.includes('-clase-')));
   for (const lesson of lessons) {
     const problems = bookProblemsForLesson(lesson);
     assert.ok(problems.length > 0, lesson.title);

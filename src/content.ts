@@ -119,6 +119,34 @@ export const lessons: Lesson[] = [
       input('text', '18 usan Drive, 15 LMS, 8 ambos. ¿Cuántos usan al menos uno?', '25', '18 + 15 − 8 = 25.'),
       input('text', 'De 30 personas, 25 usan al menos una herramienta. ¿Cuántas ninguna?', '5', 'El exterior de la unión tiene 30 − 25 = 5.'),
       input('text', '|A|=10, |B|=9, |C|=8; intersecciones por pares 4,3,2; triple 1. Hallá la unión.', '19', '10 + 9 + 8 − 4 − 3 − 2 + 1 = 19.')]),
+  D('S5 · Venn y leyes de clase', 'Regiones de Venn', '◉', '1–10',
+    ['Un diagrama de Venn marca regiones según pertenencia. Con dos conjuntos hay cuatro regiones, incluida la de afuera; con tres hay ocho.', 'Los números de un enunciado suelen ser |A|, |A ∩ B| o “solo A”. No son la misma cantidad: |A| incluye las lunas y el centro.', 'Si falta un par, algunas regiones no se pueden calcular. En este curso no se inventa ese dato.'],
+    ['|A\\cup B|=|A|+|B|-|A\\cap B|', '|A-B|=|A|-|A\\cap B|'],
+    ['156 niños: balón 52, carritos 63, videojuegos 87.', 'Pares: 26, 37 y 23; los tres juguetes 7. Solo videojuegos = 87 − (23−7) − (37−7) − 7 = 34.', 'La unión es 123. Los que eligieron otro juguete: 156 − 123 = 33.'], [
+      input('text', '80 en Biología, 60 en Química, 30 en ambas. ¿Cuántos están en al menos una?', '110', '80 + 60 − 30 = 110.'),
+      input('text', 'De 100 personas, 50 hipertensión, 40 diabetes, 25 ambas. ¿Cuántas no tienen ninguna?', '35', 'La unión es 65. 100 − 65 = 35.'),
+      input('text', 'A=40, B=35, C=30; pares 10, 8 y 5; triple 3. ¿Cuántas recibieron al menos una vacuna?', '85', '40+35+30 − 10 − 8 − 5 + 3 = 85.')]),
+  D('S5 · Venn y leyes de clase', 'Leyes de conjuntos de clase', '⚖️', '6–10',
+    ['Las leyes de conjuntos son las mismas que las proposicionales: ∪ se comporta como ∨, ∩ como ∧, el complemento como ¬.', 'El material de clase perdió algunas barras de complemento en el PDF. Acá se usan las identidades correctas: (A ∪ B)ᶜ = Aᶜ ∩ Bᶜ y A ∪ Aᶜ = U.', '∩ se resuelve antes que ∪, salvo que el folio traiga corchetes. Si un dato falta, el inciso queda abierto.'],
+    ['(A\\cup B)^{c}=A^{c}\\cap B^{c}', 'A\\cup(A\\cap B)=A', 'X\\cap(X^{c}\\cup B)=X\\cap B'],
+    ['Queremos (A ∪ B) ∩ ((A ∪ B)ᶜ ∪ B).', 'Con X = A ∪ B: X ∩ (Xᶜ ∪ B) = (X ∩ Xᶜ) ∪ (X ∩ B) = X ∩ B.', 'B ⊆ A ∪ B, así que el resultado es B.'], [
+      choice('¿A qué equivale (A ∪ B) ∩ ((A ∪ B)ᶜ ∪ B)?', ['B', 'A ∪ B', '∅', 'U'], 'B', 'Distribuí y usá X ∩ Xᶜ = ∅. Queda B porque B ⊆ A ∪ B.'),
+      choice('¿A qué equivale A ∪ (A ∩ B)?', ['A', 'B', 'A ∩ B', 'A ∪ B'], 'A', 'Es absorción: A ∩ B no agrega elementos fuera de A.'),
+      choice('¿Cuál es (A ∪ B)ᶜ?', ['Aᶜ ∩ Bᶜ', 'Aᶜ ∪ Bᶜ', 'A ∩ B', 'U'], 'Aᶜ ∩ Bᶜ', 'De Morgan: estar fuera de la unión es estar fuera de ambos.')]),
+  D('S6 · Potencia, producto y cardinalidad', 'Conjunto potencia y producto', '⧉', '1–6',
+    ['P(A) es el conjunto de todos los subconjuntos de A, incluido ∅ y el propio A. |P(A)| = 2^|A|.', 'A × B es el conjunto de pares ordenados (a, b) con a ∈ A y b ∈ B. (a, b) ≠ (b, a) si a ≠ b.', 'Un elemento y el conjunto que lo contiene no son el mismo objeto: 1 ≠ {1}.'],
+    ['P(A)=\\{S\\mid S\\subseteq A\\}', '|P(A)|=2^{|A|}', '|A\\times B|=|A|\\cdot|B|'],
+    ['A = {a, c}, B = {a, b, c}.', 'P(A) = {∅, {a}, {c}, {a,c}}. Tiene 4 elementos.', 'A × B tiene 2 · 3 = 6 pares, entre ellos (a, b) y (c, a).'], [
+      input('text', 'A = {1,3,5,7,9}. Calculá |P(A)|.', '32', '2⁵ = 32.'),
+      input('text', 'A={a,b}, B={1,2,3}. Calculá |A × B|.', '6', '2 · 3 = 6 pares ordenados.'),
+      choice('En A = {∅, {1}, 1}, ¿cuántos elementos hay?', ['3', '2', '4'], '3', '∅, {1} y 1 son objetos distintos.')]),
+  D('S6 · Potencia, producto y cardinalidad', 'Cardinalidad y conteo', '#️⃣', '6–16',
+    ['|A| cuenta elementos distintos. ∅ y { } son el mismo objeto; {5} y {√25, 5} también, porque √25 = 5.', '|A ∪ B ∪ C| = |A|+|B|+|C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|.', 'Si el enunciado no da un par, no se completa la región que depende de ese par.'],
+    ['|A-B|=|A|-|A\\cap B|', '|A\\times B|=|A|\\cdot|B|', '|P(A)|=2^{|A|}'],
+    ['|A|=8, |B|=6, |C|=5; pares 3, 2 y 1; triple 1.', 'Unión: 8+6+5 − 3 − 2 − 1 + 1 = 14.', 'Ese 14 ya no se puede “completar” inventando otra intersección.'], [
+      input('text', '|A|=8, |B|=6, |C|=5; pares 3, 2 y 1; triple 1. Calculá |A ∪ B ∪ C|.', '14', '8+6+5 − 3 − 2 − 1 + 1 = 14.'),
+      input('text', 'A = {1,2,…,8}. Calculá |P(A)|.', '256', '2⁸ = 256.'),
+      input('text', '|U|=10, |A|=6, |B|=5, |C|=4; pares 3, 2 y 1; triple 1. ¿Cuántos no están en ningún grupo?', '0', 'La unión da 10: nadie queda fuera.')]),
   P('Raíces racionales y factores', '🌱', '1–2',
     ['Si p/q es raíz racional en forma irreducible, p divide el término independiente y q el coeficiente principal.', 'Son candidatos, no raíces garantizadas. Probá cada uno con sustitución o división sintética.', 'Antes de buscar raíces, extraé un factor común. Un resto cero confirma un factor x − r.'], ['p\\mid a_0,\\quad q\\mid a_n', 'P(r)=0\\iff(x-r)\\text{ divide a }P(x)'],
     ['2x⁴ − 7x³ + 2x² + 3x tiene factor común x.', 'Para 2x³ − 7x² + 2x + 3, los candidatos son ±1, ±3, ±1/2, ±3/2.', 'Las raíces 1, −1/2 y 3 dan x(x − 1)(2x + 1)(x − 3).'], [
@@ -163,14 +191,15 @@ const preferredOrder=['Introducción y razonamiento lógico','Proposiciones y co
 const priority=(l:Lesson)=>{const i=preferredOrder.indexOf(l.title);return i<0?100:i;};
 lessons.sort((a,b)=>a.course.localeCompare(b.course)||Number(a.unit.match(/\d+/)?.[0]||0)-Number(b.unit.match(/\d+/)?.[0]||0)||priority(a)-priority(b));
 export const courseInfo = {
-  discreta: { name:'Matemática Discreta', subtitle:'Semanas 1–4 · Pensá, conectá, demostrá', emoji:'🧩', color:'#7556ef' },
+  discreta: { name:'Matemática Discreta', subtitle:'Semanas 1–6 · Pensá, conectá, demostrá', emoji:'🧩', color:'#7556ef' },
   precalculo: { name:'Precálculo', subtitle:'Libro · páginas 1–63 · Desde las bases hasta ecuaciones', emoji:'🌱', color:'#168979' },
 };
 export const sourceNotes = [
-  'Cobertura temática ampliada: Precálculo páginas 1–63; Discreta desde el inicio hasta ejercicios de cardinalidad, página impresa 150 / PDF 152. Los bloques de Precálculo organizan temas del libro, no asignan semanas del docente. Las 47 lecciones tienen 10 ejercicios de práctica creados y corregibles cada una; las 59 actividades seleccionadas de incisos originales son aparte. Esta práctica no es una transcripción de cada inciso del libro.',
+  'Cobertura temática ampliada: Precálculo páginas 1–63; Discreta desde el inicio hasta ejercicios de cardinalidad, página impresa 150 / PDF 152, más el material de clase S5 (Venn y leyes) y S6 (potencia, producto y cardinalidad). Las lecciones de cada nivel tienen 10 ejercicios de práctica creados y corregibles; los incisos de clase con clave se comprueban, el resto guarda los pasos. Esta práctica no es una transcripción de cada inciso del libro.',
   'Discreta S1: una equivalencia propuesta no es válida; la lección de contraejemplos muestra una fila que la refuta.',
   'Discreta S2: la convención abierto/cerrado está invertida respecto de la física habitual. Se usa 1 = conduce. Algunas demostraciones requieren revisar premisas; no se inventaron premisas faltantes.',
   'Discreta S4: las leyes de complemento deben ser A ∪ Aᶜ = Ω y A ∩ Aᶜ = ∅. Hay ejercicios con C sin definir y expresiones ambiguas que no se autocorrigen aquí.',
+  'Discreta S5–S6: el material de clase de Bryan Ramírez entra al recorrido, con los ejemplos y el trabajo en clase. S6 confirma el capítulo 2.5 del libro. ℕ incluye 0, y se declara en los ejercicios que lo usan. Si un inciso no da un par, n2 es ilegible o pide una lista enorme, no hay clave automática.',
   'Precálculo S4: los incisos del folio de problemas se pueden consultar ahora en el libro, práctica 3.3.5, páginas PDF 52–53. Los incisos 1g, 2f, 2l y 3k están asignados expresamente. Aún no todos tienen corrección automática. Las respuestas de álgebra se comparan por equivalencia; los nuevos incisos de factorización exigen además una forma de producto, sin certificar cada ley que se usó.',
   'Los PDF originales no se publican en este repositorio. Las páginas indicadas corresponden al orden del documento, no necesariamente a la numeración impresa.',
 ];

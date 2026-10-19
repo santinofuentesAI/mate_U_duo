@@ -18,7 +18,11 @@ export function BookExam({course,items,progress,onStart,initialProblem}:Props) {
   const [message,setMessage]=useState('');
   const [,refreshChecks]=useState(0);
   const [done,setDone]=useState<string[]>(()=>{try{const v=JSON.parse(localStorage.getItem(`mate-book-exam-done-${course}`)||'[]');return Array.isArray(v)?v.filter(id=>typeof id==='string'):[];}catch{return [];}});
-  const weeks=[...new Set(all.map(p=>p.week))];
+  const weeks=[...new Set(all.map(p=>p.week))].sort((a,b)=>{
+    const rank=(w:string)=>{const n=w.match(/^S(\d+)/);if(n)return Number(n[1]);if(w.startsWith('B'))return 100+Number(w.slice(1)||0);return w==='Apoyo'?200:300;};
+    return rank(a)-rank(b)||a.localeCompare(b);
+  });
+  const listing=(p:typeof all[number])=>p.id.includes('-clase-')?`${p.sectionCode} · ${p.number>=100?`ejemplo ${p.number-100}`:`ejercicio ${p.number}`}${p.part} · folio ${p.printedPage}`:`${p.sectionCode} · ${p.number}${p.part} · PDF ${p.page}`;
   const inWeek=all.filter(p=>week==='all'||p.week===week);
   const sections=[...new Map(inWeek.map(p=>[p.sectionCode,p.section])).entries()];
   const catalog=inWeek.filter(p=>section==='all'||p.sectionCode===section);
@@ -50,9 +54,9 @@ export function BookExam({course,items,progress,onStart,initialProblem}:Props) {
       <header className="book-journey-intro"><span className="book-journey-icon"><BookOpenCheck size={26}/></span><h2>Ejercicios del libro</h2><p>Un ejercicio a la vez. Si hay clave, ves «Resultado correcto». Si no hay clave, queda «Guardado · sin corregir» y tus pasos se conservan.</p></header>
       <div className="book-journey-start"><label>Elegí la semana<select aria-label="Semana de Book Exam" value={week} onChange={e=>changeWeek(e.target.value)}><option value="all">Todo el alcance</option>{weeks.map(w=><option key={w} value={w}>{assignmentLabel(w)}</option>)}</select></label>
         <button className="primary wide" disabled={!start} onClick={()=>start&&choose(start.id)}>{position&&status(position)!=='validated'?'Continuar mi ejercicio':'Empezar a practicar'}<ArrowRight size={19}/></button>
-        {start&&<small>{start.sectionCode} · ejercicio {start.number}{start.part} · PDF {start.page}{status(start)==='submitted'?' · borrador guardado':''}</small>}
+        {start&&<small>{listing(start)}{status(start)==='submitted'?' · borrador guardado':''}</small>}
       </div>
-      <details className="book-journey-picker"><summary>Elegir otro ejercicio</summary><div><label>Sección<select aria-label="Sección de Book Exam" value={section} onChange={e=>changeSection(e.target.value)}><option value="all">Todas las secciones</option>{sections.map(([code,name])=><option key={code} value={code}>{code} · {name}</option>)}</select></label><label>Inciso<select aria-label="Problema de Book Exam" value="" onChange={e=>e.target.value&&choose(e.target.value)}><option value="">Elegí un inciso</option>{catalog.map(p=><option key={p.id} value={p.id}>{p.sectionCode} · {p.number}{p.part} · PDF {p.page}{status(p)==='validated'?' ✓':status(p)==='submitted'?' · guardado':''}</option>)}</select></label></div></details>
+      <details className="book-journey-picker"><summary>Elegir otro ejercicio</summary><div><label>Sección<select aria-label="Sección de Book Exam" value={section} onChange={e=>changeSection(e.target.value)}><option value="all">Todas las secciones</option>{sections.map(([code,name])=><option key={code} value={code}>{code} · {name}</option>)}</select></label><label>Inciso<select aria-label="Problema de Book Exam" value="" onChange={e=>e.target.value&&choose(e.target.value)}><option value="">Elegí un inciso</option>{catalog.map(p=><option key={p.id} value={p.id}>{listing(p)}{status(p)==='validated'?' ✓':status(p)==='submitted'?' · guardado':''}</option>)}</select></label></div></details>
       <p className="book-journey-fineprint">Solo los ejercicios con solución revisada se comprueban automáticamente. En los demás podés guardar tus pasos. {missingCourseWeeks(course).length?`Las semanas ${missingCourseWeeks(course).join(' y ')} aparecen aquí cuando llegue ese material.` :''}</p>
     </>:<>
       <div className="book-journey-top"><button className="text-button" onClick={()=>{setSelected(null);setMessage('');}}><ArrowLeft size={18}/> Elegir ejercicio</button><span>{index>=0?`${index+1} de ${catalog.length}`:'Ejercicio del libro'}</span></div>

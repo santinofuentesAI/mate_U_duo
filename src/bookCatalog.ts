@@ -3,6 +3,7 @@ import inventory from './bookInventory.json';
 import type { BookSource, Course, Progress } from './types';
 import type { PracticeItem } from './learning';
 import { hasCheckedFinal, hasWrittenFinal } from './bookVerification';
+import { classCatalog } from './classMaterial';
 export interface OpenBookProblem {
   id:string;course:Course;week:string;section:string;sectionCode:string;page:number;printedPage:number;number:number;part:string;
   text:string;instruction?:string;math?:string|null;contextMath?:string;mathLines?:string[];
@@ -10,7 +11,14 @@ export interface OpenBookProblem {
   visuals:{page:number;crop:BookSource['crop']}[];sourcePages:number[];
   table?:{headers:string[];rows:string[][]};
 }
-export const bookCatalog=rawCatalog as Record<Course,OpenBookProblem[]>;
+const textbook=rawCatalog as Record<Course,OpenBookProblem[]>;
+export const bookCatalog:Record<Course,OpenBookProblem[]>={
+  precalculo:textbook.precalculo,
+  discreta:[
+    ...textbook.discreta.map(problem=>problem.sectionCode==='2.5'?{...problem,week:'S6',assignment:'confirmed' as const}:problem),
+    ...classCatalog,
+  ],
+};
 export const pageInventory=inventory;
 export function reviewedActivities(problem:OpenBookProblem,items:PracticeItem[]) {
   return items.filter(({question})=>{

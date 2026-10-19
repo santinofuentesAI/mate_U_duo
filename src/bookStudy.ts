@@ -40,6 +40,7 @@ export function nextStudyProblem(problems: OpenBookProblem[], status: (problem: 
 }
 
 export function missingCourseWeeks(course: Course) {
+  if (course !== 'discreta') return [];
   const present = new Set(bookCatalog[course].map(problem => problem.week));
   return ['S5', 'S6'].filter(week => !present.has(week));
 }

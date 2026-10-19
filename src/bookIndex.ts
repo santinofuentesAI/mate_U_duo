@@ -13,7 +13,9 @@ export const bookRoutes:Record<Course,{week:string;title:string;page:number;end:
     {week:'Apoyo',title:'Conjuntos numéricos · ejercicios 2.2',page:133,end:134,printed:'131–132'},
     {week:'S4',title:'Venn · ejercicios 2.3',page:137,end:138,printed:'135–136'},
     {week:'S4',title:'Leyes de conjuntos · ejercicios 2.4',page:142,end:142,printed:'140'},
-    {week:'Por confirmar',title:'Cardinalidad · ejercicios 2.5',page:148,end:152,printed:'146–150'},
+    {week:'S5',title:'Venn y leyes · material de clase S5',page:505,end:510,printed:'S5 5–10'},
+    {week:'S6',title:'Cardinalidad · ejercicios 2.5',page:148,end:152,printed:'146–150'},
+    {week:'S6',title:'Potencia, producto y cardinalidad · material de clase S6',page:607,end:616,printed:'S6 7–16'},
   ],
   precalculo:[
     {week:'B1',title:'Números reales · práctica 1.4',page:18,end:19,printed:'18–19'},
