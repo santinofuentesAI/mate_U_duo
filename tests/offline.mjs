@@ -11,7 +11,7 @@ await page.goto('http://127.0.0.1:5174/');await page.getByRole('heading',{name:'
 await page.evaluate(async()=>{await navigator.serviceWorker.ready;});await page.reload();
 assert.equal(await page.evaluate(()=>!!navigator.serviceWorker.controller),true);
 await context.setOffline(true);await page.reload();await page.getByRole('heading',{name:'Aprender'}).waitFor();
-await nav('Mi libro');await page.getByRole('heading',{name:'Mi libro'}).waitFor({timeout:10000});
+await nav('Mi libro');await page.getByRole('heading',{name:'El libro'}).waitFor({timeout:10000});
 if(process.env.TEST_BOOK){await page.locator('input[type=file]').setInputFiles(process.env.TEST_BOOK);await page.getByText(/PDF guardado/).waitFor({timeout:30000});await page.waitForFunction(()=>{const c=document.querySelector('canvas');return c&&c.width>0;});}
 await nav('Biblioteca');await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('conectores');await page.getByRole('button',{name:'Proposiciones y conectores'}).click();await page.getByRole('heading',{name:'Ejemplo paso a paso',exact:true}).waitFor();assert.equal(await page.locator('.katex-error').count(),0);
 await nav('Practicar');await button('Empezar').waitFor();
