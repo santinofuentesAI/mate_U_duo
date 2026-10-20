@@ -11,7 +11,7 @@ const sectionByTitle: Record<string, string> = {
   'Operar fracciones algebraicas': '3.3.5',
   'Radicales y racionalización': '3.3.5',
 };
-const weekAlias: Record<string, string> = { B4: 'S4' };
+const weekAlias: Record<string, string> = { B4: 'S4', B5: 'S5' };
 
 export function studyTour(course: Course): OpenBookProblem[] {
   return [...bookCatalog[course]].sort((a, b) => a.page - b.page || a.number - b.number || a.part.localeCompare(b.part, 'es', { numeric: true }));
@@ -44,7 +44,6 @@ export function classWeekTour(course: Course, week: string): OpenBookProblem[] {
 }
 
 export function missingCourseWeeks(course: Course) {
-  if (course !== 'discreta') return [];
   const present = new Set(bookCatalog[course].map(problem => problem.week));
   return ['S5', 'S6'].filter(week => !present.has(week));
 }

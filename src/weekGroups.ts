@@ -29,9 +29,8 @@ export function weekCode(lesson: Lesson): string {
 }
 
 function rank(code: string): number {
-  const week = code.match(/^S(\d+)/);
+  const week = code.match(/^[SB](\d+)/);
   if (week) return Number(week[1]);
-  if (code.startsWith('B')) return 100 + Number(code.slice(1) || 0);
   return 200;
 }
 

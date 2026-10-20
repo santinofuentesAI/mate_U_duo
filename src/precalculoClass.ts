@@ -1,0 +1,117 @@
+import type { Course, Question } from './types';
+import type { OpenBookProblem } from './bookCatalog';
+
+interface ClassExercise { course: Course; lessonTitle: string; question: Question; }
+
+const crop = { x: 0, y: 0, width: 1, height: 1 };
+
+interface Key {
+  lesson: string;
+  type: Question['type'];
+  prompt: string;
+  answer: string | string[];
+  explanation: string;
+  hint: string;
+  options?: string[];
+  universe?: string[];
+}
+
+interface Spec {
+  week: 'S5' | 'S6';
+  packet: number;
+  number: number;
+  part: string;
+  section: string;
+  code: string;
+  instruction: string;
+  text: string;
+  math?: string;
+  key?: Key;
+}
+
+const specs: Spec[] = [
+  { week: 'S5', packet: 4, number: 101, part: '', section: 'Ecuaciones', code: 'S5.0', instruction: 'Ejemplo del folio S5. −2 y −3 se sustituyen en x² + 6 = −5x y ambos cumplen.', text: 'Determiná el conjunto solución de x² + 6 = −5x.', math: 'x^2+6=-5x', key: { lesson: 'Ecuaciones cuadráticas', type: 'set', prompt: 'Seleccioná las soluciones reales de x² + 6 = −5x.', answer: ['-2', '-3'], explanation: 'x² + 5x + 6 = 0 se factoriza (x + 2)(x + 3) = 0. El folio da S = {−2, −3}.', hint: 'Pasá todo a un lado y factorizá.', universe: ['-6', '-3', '-2', '0', '2', '3'] } },
+  { week: 'S5', packet: 4, number: 102, part: '', section: 'Ecuaciones lineales', code: 'S5.1', instruction: 'Ejemplo del folio S5. Llevá la lineal a ax + b = 0.', text: 'Determiná el conjunto solución de 7x + 15 = 3(3x − 7).', math: '7x+15=3(3x-7)', key: { lesson: 'Ecuaciones lineales y equivalencia', type: 'text', prompt: 'Resolvé 7x + 15 = 3(3x − 7). Escribí x.', answer: '18', explanation: '7x + 15 = 9x − 21 → 36 = 2x → x = 18.', hint: 'Distribuí el 3 y agrupá las x.' } },
+  { week: 'S5', packet: 4, number: 103, part: '', section: 'Ecuaciones lineales', code: 'S5.1', instruction: 'Ejemplo resuelto del folio S5. Si la variable se cancela y queda una identidad, S = ℝ; si queda una falsedad, S = ∅.', text: 'Determiná el conjunto solución de (w − 2)(w − 3) − (w − 1)² = 5 − 3w.', math: '(w-2)(w-3)-(w-1)^2=5-3w', key: { lesson: 'Ecuaciones lineales y equivalencia', type: 'choice', prompt: '¿Qué conjunto solución tiene (w − 2)(w − 3) − (w − 1)² = 5 − 3w en ℝ?', answer: 'Todos los reales', explanation: 'Al expandir queda 0 = 0. El folio concluye S = ℝ.', hint: 'Expandí y simplificá; mirá si queda una identidad.', options: ['Todos los reales', 'Ninguna', 'Solo w = 1'] } },
+  { week: 'S5', packet: 5, number: 104, part: '', section: 'Ecuaciones cuadráticas', code: 'S5.2', instruction: 'Ejemplo del folio S5. Δ < 0 implica que no hay soluciones reales.', text: 'Determiná el conjunto solución de x² + 81 = 0.', math: 'x^2+81=0', key: { lesson: 'Ecuaciones cuadráticas', type: 'choice', prompt: '¿Cuántas soluciones reales tiene x² + 81 = 0?', answer: 'Ninguna', explanation: 'x² = −81 no tiene raíz real. Δ = −324 < 0.', hint: 'Un cuadrado real no es negativo.', options: ['Ninguna', 'Una', 'Dos'] } },
+  { week: 'S5', packet: 5, number: 105, part: '', section: 'Ecuaciones cuadráticas', code: 'S5.2', instruction: 'Nota del folio S5: con Δ < 0 no hay soluciones reales; las complejas se mencionan y no se piden acá.', text: 'Determiná el conjunto solución real de x² + x + 1 = 0.', math: 'x^2+x+1=0', key: { lesson: 'Ecuaciones cuadráticas', type: 'choice', prompt: 'En ℝ, ¿qué conjunto solución tiene x² + x + 1 = 0?', answer: 'Ninguna real', explanation: 'Δ = 1 − 4 = −3. El folio da las raíces complejas; acá S = ∅ en ℝ.', hint: 'Calculá el discriminante.', options: ['Ninguna real', '{−1}', '{0, −1}'] } },
+  { week: 'S5', packet: 6, number: 106, part: '', section: 'Ecuaciones polinomiales', code: 'S5.3', instruction: 'Ejemplo del folio S5. Pasá todo a un lado y factorizá. −2 es raíz doble.', text: 'Determiná el conjunto solución de x⁵ − 5x³ + 4x = −2x⁴ + 10x² − 8.', math: 'x^5-5x^3+4x=-2x^4+10x^2-8', key: { lesson: 'Ecuaciones de grado superior', type: 'set', prompt: 'Seleccioná las soluciones reales distintas de x⁵ − 5x³ + 4x = −2x⁴ + 10x² − 8.', answer: ['-2', '-1', '1', '2'], explanation: 'Queda x⁵ + 2x⁴ − 5x³ − 10x² + 4x + 8 = 0 = (x + 2)²(x + 1)(x − 1)(x − 2). Las raíces distintas son −2, −1, 1 y 2.', hint: 'Probá ±1 y ±2; −2 anula dos veces.', universe: ['-4', '-2', '-1', '0', '1', '2', '4'] } },
+  { week: 'S5', packet: 7, number: 107, part: '', section: 'Ecuaciones racionales', code: 'S5.4', instruction: 'Ejemplo del folio S5. Excluí primero el cero del denominador original.', text: 'Determiná el conjunto solución de (x² + 2x − 3)/(x − 1) = 1.', math: '\\frac{x^2+2x-3}{x-1}=1', key: { lesson: 'Ecuaciones racionales', type: 'set', prompt: 'Seleccioná las soluciones reales válidas de (x² + 2x − 3)/(x − 1) = 1.', answer: ['-2'], explanation: 'x ≠ 1. Multiplicá: x² + 2x − 3 = x − 1 → x² + x − 2 = 0 → (x + 2)(x − 1) = 0. x = 1 está excluido; queda x = −2.', hint: 'El 1 no puede ser solución aunque anule un factor.', universe: ['-3', '-2', '-1', '0', '1', '3'] } },
+  { week: 'S5', packet: 7, number: 108, part: '', section: 'Ecuaciones racionales', code: 'S5.4', instruction: 'El segundo ejemplo de la página 7 del folio S5 quedó ilegible en el PDF (mezcla de términos). Sin una lectura fiel el inciso queda abierto; no se inventa la ecuación.', text: 'El segundo ejemplo racional del folio S5 no se autocorrige: el texto extraído no reconstruye la ecuación.' },
+  { week: 'S5', packet: 8, number: 109, part: '', section: 'Ecuaciones radicales', code: 'S5.5', instruction: 'Ejemplo del folio S5. Aislá la raíz, imponé el dominio y descartá extrañas.', text: 'Determiná el conjunto solución de √(2x + 3) + x = 6.', math: '\\sqrt{2x+3}+x=6', key: { lesson: 'Ecuaciones con radicales', type: 'set', prompt: 'Seleccioná las soluciones reales de √(2x + 3) + x = 6.', answer: ['3'], explanation: 'Dominio x ≥ −3/2 y 6 − x ≥ 0. Al cuadrar: 2x + 3 = (6 − x)² → x² − 14x + 33 = 0 → x = 3 o 11. Solo x = 3 cumple.', hint: 'x = 11 hace negativo el lado aislado.', universe: ['-3/2', '0', '3', '6', '11'] } },
+  { week: 'S5', packet: 8, number: 110, part: '', section: 'Ecuaciones radicales', code: 'S5.5', instruction: 'Ejemplo del folio S5. Las dos raíces principales son no negativas.', text: 'Determiná el conjunto solución de 2 = √(1 − 5x) + √(1 − x).', math: '2=\\sqrt{1-5x}+\\sqrt{1-x}', key: { lesson: 'Ecuaciones con radicales', type: 'set', prompt: 'Seleccioná las soluciones reales de 2 = √(1 − 5x) + √(1 − x).', answer: ['0'], explanation: 'Dominio x ≤ 1/5. Aislá y cuadrá dos veces: queda x(x + 3) = 0. x = −3 no cumple; x = 0 sí: 1 + 1 = 2.', hint: 'Comprobá cada candidata en la original.', universe: ['-3', '-1', '0', '1/5', '1'] } },
+  { week: 'S5', packet: 8, number: 111, part: '', section: 'Ecuaciones radicales', code: 'S5.5', instruction: 'Ejemplo del folio S5. Se lee como raíz cúbica: ∛(x² + 4x − 4) = 2.', text: 'Determiná el conjunto solución de ∛(x² + 4x − 4) = 2.', math: '\\sqrt[3]{x^2+4x-4}=2', key: { lesson: 'Ecuaciones con radicales', type: 'set', prompt: 'Seleccioná las soluciones reales de ∛(x² + 4x − 4) = 2.', answer: ['-6', '2'], explanation: 'Cubo: x² + 4x − 4 = 8 → x² + 4x − 12 = 0 → (x + 6)(x − 2) = 0. La raíz cúbica es inyectiva; ambas valen.', hint: 'Elevar al cubo no introduce extrañas.', universe: ['-6', '-2', '0', '2', '4'] } },
+
+  { week: 'S6', packet: 3, number: 101, part: '', section: 'Inecuaciones', code: 'S6.0', instruction: 'Ejemplo del folio S6. Un número es solución si al sustituir queda una desigualdad verdadera.', text: '¿Es 2 solución de x² + 6 > −5x?', math: 'x^2+6>-5x', key: { lesson: 'Inecuaciones polinomiales', type: 'choice', prompt: '¿Es 2 solución de x² + 6 > −5x?', answer: 'Sí', explanation: '4 + 6 > −10 → 10 > −10, verdadera. El folio usa este testigo.', hint: 'Sustituí x = 2 sin resolver la inecuación.', options: ['Sí', 'No'] } },
+  { week: 'S6', packet: 3, number: 102, part: '', section: 'Inecuaciones', code: 'S6.0', instruction: 'Ejemplo dado en el folio S6. El conjunto solución se publica; no se rederive otra lista.', text: 'El conjunto solución de x³ + x ≤ 4x² − 6.', math: 'x^3+x\\le 4x^2-6', key: { lesson: 'Inecuaciones polinomiales', type: 'choice', prompt: 'El folio da S para x³ + x ≤ 4x² − 6. ¿Cuál es?', answer: ']−∞, 1] ∪ [2, 3]', explanation: 'El material de clase afirma S = ]−∞, 1] ∪ [2, 3].', hint: 'Es el ejemplo resuelto de la definición de conjunto solución.', options: [']−∞, 1] ∪ [2, 3]', '[1, 2] ∪ [3, ∞)', 'ℝ', '∅'] } },
+  { week: 'S6', packet: 3, number: 103, part: '', section: 'Inecuaciones lineales', code: 'S6.1', instruction: 'Nota del folio S6: si la variable se cancela y la desigualdad es verdadera, S = ℝ; si es falsa, S = ∅.', text: 'Determiná el conjunto solución de 2x + 1 ≤ 3 + 2x.', math: '2x+1\\le 3+2x', key: { lesson: 'Inecuaciones lineales', type: 'choice', prompt: '¿Qué conjunto solución tiene 2x + 1 ≤ 3 + 2x?', answer: 'ℝ', explanation: '2x − 2x ≤ 3 − 1 → 0 ≤ 2, verdadera. El folio concluye S = ℝ.', hint: 'Cancelá 2x y mirá si queda una desigualdad verdadera.', options: ['ℝ', '∅', '{0}', '[0, ∞)'] } },
+  { week: 'S6', packet: 4, number: 104, part: '', section: 'Inecuaciones lineales', code: 'S6.1', instruction: 'Ejemplo del folio S6. Al multiplicar o dividir por un negativo se invierte la desigualdad.', text: 'Determiná el conjunto solución de −2x + 3 ≥ 4.', math: '-2x+3\\ge 4', key: { lesson: 'Inecuaciones lineales', type: 'choice', prompt: '¿Cuál es S para −2x + 3 ≥ 4?', answer: ']−∞, −1/2]', explanation: '−2x ≥ 1. Dividir por −2 invierte: x ≤ −1/2. S = ]−∞, −1/2].', hint: 'El coeficiente de x es negativo.', options: [']−∞, −1/2]', '[−1/2, ∞)', '{−1/2}', 'ℝ'] } },
+  { week: 'S6', packet: 4, number: 105, part: '', section: 'Inecuaciones lineales', code: 'S6.1', instruction: 'Ejemplo del folio S6. Distribuí y agrupá.', text: 'Determiná el conjunto solución de 3(x − 2) > 1 − 2(x + 2).', math: '3(x-2)>1-2(x+2)', key: { lesson: 'Inecuaciones lineales', type: 'choice', prompt: '¿Cuál es S para 3(x − 2) > 1 − 2(x + 2)?', answer: ']3/5, ∞)', explanation: '3x − 6 > 1 − 2x − 4 → 5x > 3 → x > 3/5.', hint: 'Distribuí los dos lados antes de despejar.', options: [']3/5, ∞)', ']−∞, 3/5]', '{3/5}', '∅'] } },
+  { week: 'S6', packet: 4, number: 106, part: '', section: 'Inecuaciones lineales', code: 'S6.1', instruction: 'Ejemplo del folio S6. Una desigualdad doble se parte en dos, o se opera el trío a la vez.', text: 'Determiná el conjunto solución de −4 < x − 13 ≤ 3.', math: '-4<x-13\\le 3', key: { lesson: 'Inecuaciones lineales', type: 'choice', prompt: '¿Cuál es S para −4 < x − 13 ≤ 3?', answer: ']9, 16]', explanation: 'Sumá 13: 9 < x ≤ 16. S = ]9, 16].', hint: 'Sumá 13 a los tres lados.', options: [']9, 16]', '[9, 16]', ']−4, 3]', 'ℝ'] } },
+  { week: 'S6', packet: 5, number: 107, part: '', section: 'Inecuaciones polinomiales', code: 'S6.2', instruction: 'Ejemplo del folio S6. Factorizá y leé el signo en cada intervalo.', text: 'Determiná el conjunto solución de x² − 2x − 3 > 0.', math: 'x^2-2x-3>0', key: { lesson: 'Inecuaciones polinomiales', type: 'choice', prompt: '¿Cuál es S para x² − 2x − 3 > 0?', answer: ']−∞, −1[ ∪ ]3, ∞)', explanation: '(x − 3)(x + 1) > 0 fuera de las raíces: x < −1 o x > 3. Los ceros no entran porque la desigualdad es estricta.', hint: 'Las raíces son −1 y 3.', options: [']−∞, −1[ ∪ ]3, ∞)', '[−1, 3]', ']−1, 3[', 'ℝ'] } },
+  { week: 'S6', packet: 5, number: 108, part: '', section: 'Inecuaciones polinomiales', code: 'S6.2', instruction: 'Ejemplo del folio S6. La factorización publicada es x(x + 1)²(x − 2)(−3x + 2). El signo se lee de ahí, sin inventar otro factor.', text: 'Determiná el conjunto solución de −3x⁵ + 2x⁴ − 9x³ − 4x ≤ 0.', math: '-3x^5+2x^4-9x^3-4x\\le 0', key: { lesson: 'Inecuaciones polinomiales', type: 'choice', prompt: 'Con la factorización x(x + 1)²(x − 2)(−3x + 2), ¿cuál es S para −3x⁵ + 2x⁴ − 9x³ − 4x ≤ 0?', answer: '{−1} ∪ [0, 2/3] ∪ [2, ∞)', explanation: 'Ceros en −1 (par), 0, 2/3 y 2. El signo es negativo en (0, 2/3) y (2, ∞). El toque en −1 vale 0, así que entra como punto.', hint: '(x + 1)² no cambia de signo; los demás sí.', options: ['{−1} ∪ [0, 2/3] ∪ [2, ∞)', '[−1, 0] ∪ [2/3, 2]', ']−∞, 0]', 'ℝ'] } },
+  { week: 'S6', packet: 5, number: 109, part: '', section: 'Inecuaciones racionales', code: 'S6.3', instruction: 'Ejemplo del folio S6, escrito como producto. −x² + x − 1 nunca se anula (Δ < 0) y es siempre negativo.', text: 'Determiná el conjunto solución de (x + 2)(−x² + x − 1)(x − 2)(x − 1) ≤ 0.', math: '(x+2)(-x^2+x-1)(x-2)(x-1)\\le 0', key: { lesson: 'Inecuaciones racionales', type: 'choice', prompt: '¿Cuál es S para (x + 2)(−x² + x − 1)(x − 2)(x − 1) ≤ 0?', answer: '[−2, 1] ∪ [2, ∞)', explanation: '−x² + x − 1 < 0 siempre, así que la desigualdad equivale a (x + 2)(x − 2)(x − 1) ≥ 0: [−2, 1] ∪ [2, ∞).', hint: 'El cuadrático sin raíces reales no aporta ceros; solo invierte el signo.', options: ['[−2, 1] ∪ [2, ∞)', ']−2, 1[ ∪ ]2, ∞)', '[−2, 2]', '∅'] } },
+  { week: 'S6', packet: 6, number: 2, part: '', section: 'Trabajo en clase', code: 'S6.4', instruction: 'Trabajo en clase S6: ejercicio 2 del folleto del curso, página 87. Esa página no está en el PDF del libro (1–63). Sin el enunciado no hay clave automática.', text: 'Ejercicio 2 del folio p.87. Guardá los pasos; no hay corrección inventada.' },
+  { week: 'S6', packet: 6, number: 3, part: '', section: 'Trabajo en clase', code: 'S6.4', instruction: 'Trabajo en clase S6: ejercicio 3 del folleto del curso, página 87. El enunciado no está en el material disponible.', text: 'Ejercicio 3 del folio p.87. Queda abierto hasta tener esa página.' },
+  { week: 'S6', packet: 6, number: 5, part: '', section: 'Trabajo en clase', code: 'S6.4', instruction: 'Trabajo en clase S6: ejercicio 5 del folleto del curso, página 87. Sin el folio no se inventa la inecuación.', text: 'Ejercicio 5 del folio p.87. Escribí el desarrollo; no se autocorrige.' },
+  { week: 'S6', packet: 6, number: 11, part: '', section: 'Trabajo en clase', code: 'S6.4', instruction: 'Trabajo en clase S6: ejercicio 11 del folleto del curso, página 87.', text: 'Ejercicio 11 del folio p.87. Abierto: falta el enunciado de esa página.' },
+  { week: 'S6', packet: 6, number: 14, part: '', section: 'Trabajo en clase', code: 'S6.4', instruction: 'Trabajo en clase S6: ejercicio 14 del folleto del curso, página 87.', text: 'Ejercicio 14 del folio p.87. Los pasos se guardan sin una nota inventada.' },
+  { week: 'S6', packet: 6, number: 17, part: '', section: 'Trabajo en clase', code: 'S6.4', instruction: 'Trabajo en clase S6: ejercicio 17 del folleto del curso, página 87.', text: 'Ejercicio 17 del folio p.87. Queda abierto.' },
+];
+
+function pageOf(spec: Spec) {
+  return spec.week === 'S5' ? 700 + spec.packet : 800 + spec.packet;
+}
+
+export const precalculoClassCatalog: OpenBookProblem[] = specs.map(spec => {
+  const page = pageOf(spec);
+  return {
+    id: `precalculo-clase-${spec.week.toLowerCase()}-${spec.number}${spec.part}`,
+    course: 'precalculo' as Course,
+    week: spec.week,
+    assignment: 'confirmed' as const,
+    section: spec.section,
+    sectionCode: spec.code,
+    page,
+    printedPage: spec.packet,
+    number: spec.number,
+    part: spec.part,
+    instruction: spec.instruction,
+    text: spec.text,
+    math: spec.math,
+    review: spec.key ? 'reviewed' as const : 'auxiliary' as const,
+    inventoryReviewed: false,
+    classAssigned: true,
+    visuals: [],
+    sourcePages: [page],
+  };
+});
+
+export const PRECALC_S5_HOMEWORK = new Set(['precalculo-63-1c', 'precalculo-63-1g', 'precalculo-63-1h', 'precalculo-63-2h']);
+
+export const precalculoClassBookExercises: ClassExercise[] = specs.flatMap(spec => {
+  if (!spec.key) return [];
+  const problem = precalculoClassCatalog.find(item => item.number === spec.number && item.part === spec.part && item.week === spec.week)!;
+  const exercise = `${problem.number}${problem.part}`;
+  const question: Question = {
+    id: `${problem.course}-clase-${problem.week.toLowerCase()}-${exercise}`,
+    type: spec.key.type,
+    prompt: spec.key.prompt,
+    answer: spec.key.answer,
+    explanation: spec.key.explanation,
+    hints: [spec.key.hint, spec.key.explanation],
+    tag: spec.key.lesson,
+    difficulty: spec.key.type === 'choice' ? 1 : 2,
+    options: spec.key.options,
+    universe: spec.key.universe,
+    bookSource: {
+      course: problem.course,
+      page: problem.page,
+      printedPage: problem.printedPage,
+      section: `${problem.sectionCode} · ${problem.section}`,
+      exercise,
+      crop,
+    },
+  };
+  return [{ course: problem.course, lessonTitle: spec.key.lesson, question }];
+});

@@ -4,6 +4,7 @@ import type { BookSource, Course, Progress } from './types';
 import type { PracticeItem } from './learning';
 import { hasCheckedFinal, hasWrittenFinal } from './bookVerification';
 import { classCatalog } from './classMaterial';
+import { PRECALC_S5_HOMEWORK, precalculoClassCatalog } from './precalculoClass';
 export interface OpenBookProblem {
   id:string;course:Course;week:string;section:string;sectionCode:string;page:number;printedPage:number;number:number;part:string;
   text:string;instruction?:string;math?:string|null;contextMath?:string;mathLines?:string[];
@@ -13,7 +14,15 @@ export interface OpenBookProblem {
 }
 const textbook=rawCatalog as Record<Course,OpenBookProblem[]>;
 export const bookCatalog:Record<Course,OpenBookProblem[]>={
-  precalculo:textbook.precalculo,
+  precalculo:[
+    ...textbook.precalculo.map(problem=>({
+      ...problem,
+      week:problem.week==='B5'?'S5':problem.week,
+      assignment:PRECALC_S5_HOMEWORK.has(problem.id)?'confirmed' as const:problem.assignment,
+      classAssigned:problem.classAssigned||PRECALC_S5_HOMEWORK.has(problem.id),
+    })),
+    ...precalculoClassCatalog,
+  ],
   discreta:[
     ...textbook.discreta.map(problem=>problem.sectionCode==='2.5'?{...problem,week:'S6',assignment:'confirmed' as const}:problem),
     ...classCatalog,

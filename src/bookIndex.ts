@@ -25,7 +25,9 @@ export const bookRoutes:Record<Course,{week:string;title:string;page:number;end:
     {week:'S4',title:'Fracciones algebraicas · ejemplos',page:45,end:49,printed:'45–49'},
     {week:'S4',title:'Racionalización · ejemplos',page:49,end:51,printed:'49–51'},
     {week:'S4',title:'Factorización y fracciones · práctica final 3.3.5',page:52,end:53,printed:'52–53'},
-    {week:'B5',title:'Ecuaciones · práctica 4.6 y método de aplicaciones',page:63,end:63,printed:'63'},
+    {week:'S5',title:'Ecuaciones · práctica 4.6 y material de clase S5',page:63,end:63,printed:'63'},
+    {week:'S5',title:'Ecuaciones · material de clase S5',page:704,end:711,printed:'S5 4–8'},
+    {week:'S6',title:'Inecuaciones · material de clase S6',page:803,end:806,printed:'S6 3–6'},
   ],
 };
 export const readerPages:Record<Course,{title:string;page:number;end:number}[]>={

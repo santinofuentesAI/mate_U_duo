@@ -18,6 +18,8 @@ try {
   await page.getByRole('heading',{name:'Practicar'}).waitFor();
   await page.getByRole('radio',{name:'Examen'}).waitFor();
   await button('Empezar').waitFor();
+  await page.getByRole('heading',{name:'Un tema, a fondo'}).waitFor();
+  await page.getByRole('radio',{name:'Tablas de verdad'}).waitFor();
   await nav('Biblioteca');
   await page.getByRole('button',{name:/Abrir explorador/}).click();
   await page.locator('.logic-output b').waitFor();
@@ -40,6 +42,12 @@ try {
   await page.getByRole('heading',{name:'Ejemplo paso a paso'}).waitFor();
   await page.getByText('LA IDEA',{exact:true}).waitFor();
   await nav('Practicar');
+  await page.getByRole('heading',{name:'Un tema, a fondo'}).waitFor();
+  await page.getByRole('radio',{name:'Inecuaciones'}).waitFor();
+  await page.getByRole('radio',{name:'Factorizar'}).click();
+  await page.getByRole('radio',{name:'15',exact:true}).click();
+  await page.getByRole('button',{name:'Empezar 15 de factorizar'}).waitFor();
+  await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');
   await page.getByRole('button',{name:/Estudios de caso/}).click();
   await page.getByRole('heading',{name:'Estudios de caso'}).waitFor();
   await page.getByRole('checkbox',{name:'S4'}).waitFor();

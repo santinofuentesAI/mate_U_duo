@@ -201,6 +201,34 @@ export const caseStudies: CaseStudy[] = [
     lessonTitle: 'Fracciones y dominio',
     question: ask('caso-p-s4-simplificar-q', 'algebra', 'Simplificá (x² − 1)/(x − 1). Indicá el valor excluido.', 'x+1', 'x² − 1 = (x − 1)(x + 1). x = 1 sigue fuera.', { exclusions: ['1'] }),
   },
+  {
+    id: 'caso-p-s5-lineal',
+    course: 'precalculo',
+    weeks: ['S5'],
+    title: 'La receta que se despeja',
+    setting: 'Cocina de un comedor',
+    story: [
+      'El comedor iguala dos formas de contar porciones: 7x + 15 de un lado y 3(3x − 7) del otro.',
+      'Eso es una ecuación lineal. Se distribuye, se agrupan las x y se despeja.',
+      'El folio de S5 pide exactamente ese conjunto solución.',
+    ],
+    lessonTitle: 'Ecuaciones lineales y equivalencia',
+    question: ask('caso-p-s5-lineal-q', 'text', 'Resolvé 7x + 15 = 3(3x − 7). Escribí x.', '18', '7x + 15 = 9x − 21 → 36 = 2x → x = 18.', { difficulty: 1 }),
+  },
+  {
+    id: 'caso-p-s6-cupo',
+    course: 'precalculo',
+    weeks: ['S6'],
+    title: 'El cupo que no se pasa',
+    setting: 'Taller de impresión',
+    story: [
+      'El taller no puede usar más de cierta tinta: −2x + 3 ≥ 4, con x la cantidad extra de ejemplares.',
+      'No es una ecuación: el conjunto solución es un rayo, no un punto.',
+      'Al dividir por un negativo se invierte la desigualdad. El folio de S6 trabaja este tipo.',
+    ],
+    lessonTitle: 'Inecuaciones lineales',
+    question: ask('caso-p-s6-cupo-q', 'choice', '¿Cuál es S para −2x + 3 ≥ 4?', ']−∞, −1/2]', '−2x ≥ 1; dividir por −2 invierte: x ≤ −1/2.', { options: [']−∞, −1/2]', '[−1/2, ∞)', '{−1/2}', 'ℝ'], difficulty: 1 }),
+  },
 ];
 
 export const caseExercises = caseStudies.map(item => ({

@@ -97,6 +97,6 @@ test('all 59 existing reviewed activities remain reachable; free response is nev
     assert.equal(responseStatus(p,items,progress,true),'submitted');
   }
   assert.equal(count,bookExercises.length);
-  assert.deepEqual(bookCatalog.precalculo.filter(p=>p.classAssigned).map(p=>`${p.number}${p.part}`),['1g','2f','2l','3k']);
+  assert.deepEqual(bookCatalog.precalculo.filter(p=>p.classAssigned&&!p.id.includes('-clase-')).map(p=>`${p.page}-${p.number}${p.part}`),['52-1g','52-2f','52-2l','53-3k','63-1c','63-1g','63-1h','63-2h']);
   assert.equal(bookCatalog.discreta.find(p=>p.sectionCode==='2.1'&&p.number===20&&p.part==='a')!.week,'S3');
 });

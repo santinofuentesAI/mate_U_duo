@@ -84,6 +84,13 @@ function precalc(unit:string,variant:number,id:string,pick:(a:number,b:number)=>
   if(unit.startsWith('B4')){
     const a=2+variant%7,b=2+Math.floor(variant/7)%7,middle=b-a,term=middle>=0?`+${middle}x`:`−${-middle}x`;return {topic:'Fracciones y dominio',q:question(id,'algebra',`Simplificá (x²${term}−${a*b})/(x−${a}) e indicá el valor excluido del dominio original.`,`x+${b}`,`Factorizá (x−${a})(x+${b}) y cancelá, pero x=${a} sigue excluido.`,{exclusions:[String(a)]})};
   }
+  if(unit.startsWith('S6')){
+    const slot=variant%4,p=1+variant,q=p+2;
+    if(slot===0){const a=2+variant%5;return {topic:'Inecuaciones lineales',q:question(id,'choice',`¿Cuál es S para ${a}x ≥ ${a*p}?`,`x ≥ ${p}`,`Dividí por ${a} > 0: x ≥ ${p}.`,{options:[`x ≥ ${p}`,`x ≤ ${p}`,`x > ${q}`,'ℝ']})};}
+    if(slot===1)return {topic:'Inecuaciones lineales',q:question(id,'choice',`¿Cuál es S para −x ≤ ${p}?`,`x ≥ ${-p}`,`Multiplicá por −1 e invertí: x ≥ ${-p}.`,{options:[`x ≥ ${-p}`,`x ≤ ${-p}`,`x ≥ ${p}`,'∅']})};
+    if(slot===2)return {topic:'Inecuaciones polinomiales',q:question(id,'choice',`¿Cuál es S para (x−${p})(x−${q})>0?`,`]−∞, ${p}[ ∪ ]${q}, ∞)`,`El producto es positivo fuera de las raíces ${p} y ${q}.`,{options:[`]−∞, ${p}[ ∪ ]${q}, ∞)`,`]${p}, ${q}[`,`[${p}, ${q}]`,'ℝ']})};
+    return {topic:'Inecuaciones racionales',q:question(id,'choice',`¿Cuál es S para (x−${q})/(x−${p})≥0?`,`x<${p} o x≥${q}`,`${p} anula el denominador y queda fuera; ${q} entra.`,{options:[`x<${p} o x≥${q}`,`x≤${p} o x≥${q}`,`${p}≤x≤${q}`,'∅']})};
+  }
   const a=2+variant%7,b=2+Math.floor(variant/7)%7,middle=b-a,term=middle>=0?`+${middle}x`:`−${-middle}x`;return {topic:'Ecuaciones cuadráticas',q:question(id,'set',`Seleccioná todas las soluciones reales de x²${term}−${a*b}=0.`,[String(a),String(-b)],`Factorizá (x−${a})(x+${b})=0: las dos raíces son ${a} y −${b}.`,{universe:[String(-b-1),String(-b),'0',String(a),String(a+1)]})};
 }
 export function generateExam(course:Course,selectedUnits:string[],seed:string,allLessons:Lesson[],count=35,version:1|2=2):PracticeItem[]{

@@ -20,7 +20,11 @@ test('selected book incisos have valid references, crop bounds and independently
   for(const e of bookExercises){
     const q=e.question,s=q.bookSource!,c=s.crop;
     assert.ok(lessons.some(l=>l.title===e.lessonTitle&&l.course===e.course));assert.equal(s.course,e.course);
-    assert.ok(!ids.has(q.id));ids.add(q.id);    assert.ok(s.page>=1&&(s.page<=(e.course==='precalculo'?63:152)||(e.course==='discreta'&&s.page>=500&&s.page<700)));
+    assert.ok(!ids.has(q.id));ids.add(q.id);
+    const classPage=s.page>=500;
+    assert.ok(s.page>=1&&(s.page<=(e.course==='precalculo'?63:152)||classPage),q.id);
+    if(e.course==='precalculo'&&classPage)assert.ok(s.page>=700&&s.page<900,q.id);
+    if(e.course==='discreta'&&classPage)assert.ok(s.page>=500&&s.page<700,q.id);
     assert.equal(s.printedPage,s.page>=500?s.page%100:s.page-(e.course==='discreta'?2:0));
     assert.ok(c.x>=0&&c.y>=0&&c.width>0&&c.height>0&&c.x+c.width<=1&&c.y+c.height<=1);
     assert.ok(grade(q,q.answer,q.exclusions).correct,q.id);
