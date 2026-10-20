@@ -52,6 +52,9 @@ test('mixed daily practice of 20 covers several weeks, exam mixes difficulties, 
   const easy=mixedPractice(items,p,'easy',20,now);
   assert.ok(easy.every(i=>i.question.difficulty===1)||easy.length===20);
   assert.equal(dailyTitle('exam'),'Práctica tipo examen · 20');
+  const unit=items[0].lesson.unit;
+  const focused=mixedPractice(items,p,'medium',8,now,unit);
+  assert.ok(focused.length>0&&focused.every(i=>i.lesson.unit===unit));
 });
 test('case studies attach honest keys that grade and stay off the lesson catalog count',()=>{
   const extras=caseExercises.filter(item=>lessons.some(l=>l.course===item.course&&l.title===item.lessonTitle));

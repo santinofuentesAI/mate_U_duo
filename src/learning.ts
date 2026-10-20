@@ -4,12 +4,12 @@ import { bookExercises } from './bookExercises';
 import { caseExercises } from './caseStudies';
 export interface PracticeItem { lesson: Lesson; question: Question; }
 export type PracticeIntensity = 'easy' | 'medium' | 'hard' | 'exam';
-export function dailyTitle(id: PracticeIntensity): string {
+export function dailyTitle(id: PracticeIntensity, count = 20): string {
   switch (id) {
-    case 'easy': return 'Práctica fácil · 20';
-    case 'medium': return 'Práctica media · 20';
-    case 'hard': return 'Práctica difícil · 20';
-    case 'exam': return 'Práctica tipo examen · 20';
+    case 'easy': return `Práctica fácil · ${count}`;
+    case 'medium': return `Práctica media · ${count}`;
+    case 'hard': return `Práctica difícil · ${count}`;
+    case 'exam': return `Práctica tipo examen · ${count}`;
     default: {
       const never: never = id;
       return never;
@@ -114,12 +114,13 @@ function takeMixed(pool: PracticeItem[], n: number, seed: string, used: Set<stri
   }
   return chosen;
 }
-/** Twenty mixed exercises for the study day: several weeks, easy to hard. */
-export function mixedPractice(items: PracticeItem[], progress: Progress, intensity: PracticeIntensity, count = 20, now = new Date()): PracticeItem[] {
+/** Mixed exercises for the study day: several weeks, easy to hard. */
+export function mixedPractice(items: PracticeItem[], progress: Progress, intensity: PracticeIntensity, count = 20, now = new Date(), unit = 'all'): PracticeItem[] {
   const last = latestAttempts(progress);
   const time = now.getTime();
-  const seed = `${dayKey(now)}-${intensity}-${count}`;
-  const usable = items.filter(item => dailySnappy(item.question));
+  const seed = `${dayKey(now)}-${intensity}-${count}-${unit}`;
+  const scoped = unit === 'all' ? items : items.filter(item => item.lesson.unit === unit);
+  const usable = scoped.filter(item => dailySnappy(item.question));
   const buckets: Record<1 | 2 | 3, PracticeItem[]> = { 1: [], 2: [], 3: [] };
   for (const item of usable) buckets[item.question.difficulty].push(item);
   const weighted = (pool: PracticeItem[]) => [...pool].sort((a, b) => {

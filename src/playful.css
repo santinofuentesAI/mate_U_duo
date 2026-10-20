@@ -1,27 +1,26 @@
-/* Rounded, dimensional controls and original illustrated topic icons. */
+/* Flat layout: borders, no Duolingo 3D bumps. */
 :root{--border:#ded9e8}
 [data-theme="dark"]{--border:#504860}
-button{border-width:2px;border-radius:16px;font-weight:700}
-.primary,.secondary,.choices button,.symbol-keys button,.practice-card,.session-lengths button{box-shadow:0 4px 0 var(--border)}
-.primary{border-color:var(--accent-deep);box-shadow:0 5px 0 var(--accent-deep);border-radius:17px;font-weight:850;letter-spacing:.015em}
+button{border-width:1.5px;border-radius:16px;font-weight:700}
+.primary,.secondary,.choices button,.symbol-keys button,.practice-card,.session-lengths button{box-shadow:none}
+.primary{border-color:var(--accent-deep);box-shadow:none;border-radius:17px;font-weight:850;letter-spacing:.015em}
 .primary:hover:not(:disabled){filter:brightness(1.05)}
-.primary:active:not(:disabled),.secondary:active:not(:disabled),.choices button:active:not(:disabled),.symbol-keys button:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 var(--border)}
-.primary:active:not(:disabled){box-shadow:0 1px 0 var(--accent-deep)}
-.card{border-width:2px;border-radius:23px}
-.topic-illustration{flex-shrink:0;overflow:visible;filter:drop-shadow(0 1px 0 #30354b12)}
+.primary:active:not(:disabled),.secondary:active:not(:disabled),.choices button:active:not(:disabled),.symbol-keys button:active:not(:disabled){transform:none;box-shadow:none}
+.card{border-width:1.5px;border-radius:20px}
+.topic-illustration{flex-shrink:0;display:grid;place-items:center;overflow:hidden}
 .nav-icon{display:inline-flex;align-items:center;justify-content:center;border-radius:13px;width:39px;height:36px;flex-shrink:0}
 .sidebar nav button{border-radius:17px;min-height:56px;font-weight:800;gap:10px}
-.sidebar nav button.active{border:2px solid var(--purple);box-shadow:0 3px 0 var(--border)}
+.sidebar nav button.active{border:1.5px solid var(--purple);box-shadow:none}
 .sidebar nav button.active .nav-icon{background:var(--surface)}
 .mobile-nav .nav-icon{height:29px;width:38px}
-.mobile-nav button.active .nav-icon{background:var(--soft);box-shadow:0 2px 0 var(--border)}
-.level-card{border:2px solid var(--border);border-radius:21px;box-shadow:0 5px 0 var(--border);overflow:hidden}
-.level-card.is-next{border-color:var(--purple);box-shadow:0 5px 0 var(--accent-deep)}
-.level-card.is-complete{border-color:#55a889;box-shadow:0 5px 0 #44896e}
-.level-orb{border:2px solid var(--border);box-shadow:0 4px 0 var(--border);border-radius:19px;width:54px;height:54px;min-width:54px;background:var(--soft)}
+.mobile-nav button.active .nav-icon{background:var(--soft);box-shadow:none}
+.level-card{border:1.5px solid var(--border);border-radius:21px;box-shadow:none;overflow:hidden}
+.level-card.is-next{border-color:var(--purple);box-shadow:none}
+.level-card.is-complete{border-color:#55a889;box-shadow:none}
+.level-orb{border:1.5px solid var(--border);box-shadow:none;border-radius:19px;width:54px;height:54px;min-width:54px;background:var(--soft)}
 .level-card.is-next .level-orb{background:var(--surface);border-color:var(--purple)}
 .level-card.is-complete .level-orb{background:#c7efce;color:#276f49;border-color:#55a889}
-.unit-number{border:2px solid var(--purple);box-shadow:0 3px 0 var(--border);font-weight:900}
+.unit-number{border:1.5px solid var(--purple);box-shadow:none;font-weight:900}
 .level-unit-header{border-radius:20px;border:2px solid var(--border)}
 .symbol-keys button{border-radius:16px;border-width:2px;min-height:51px}
 .choices button.selected,.set-options button.selected{border-color:var(--purple);background:var(--soft);box-shadow:0 4px 0 var(--purple)}

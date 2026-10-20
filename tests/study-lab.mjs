@@ -18,6 +18,7 @@ try {
   await page.getByRole('heading',{name:'Practicar'}).waitFor();
   await page.getByRole('radio',{name:'Examen'}).waitFor();
   await button('Empezar').waitFor();
+  await nav('Biblioteca');
   await page.getByRole('button',{name:/Abrir explorador/}).click();
   await page.locator('.logic-output b').waitFor();
   await button('Tablas a mano').click();
@@ -29,7 +30,7 @@ try {
   await button('División sintética').click();
   await page.getByRole('heading',{name:'División sintética de verdad.'}).waitFor();
   await page.getByRole('button',{name:'r = 1'}).first().click();
-  await nav('Biblioteca');
+  await page.getByRole('button',{name:'Volver a Biblioteca'}).click();
   await page.getByRole('button',{name:'HTML'}).first().waitFor();
   await page.getByRole('button',{name:/Símbolos del curso/}).click();
   await page.getByRole('heading',{name:'Símbolos',exact:true}).waitFor();

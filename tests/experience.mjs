@@ -26,7 +26,7 @@ try {
   await page.screenshot({path:'tmp/qa/resumed-answer.png',fullPage:true});
   await button('Continuar').click();
   await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();
-  await nav('Practicar');await page.getByRole('button',{name:/Abrir explorador/}).click();
+  await nav('Biblioteca');await page.getByRole('button',{name:/Abrir explorador/}).click();
   await page.locator('.logic-output b').waitFor();assert.equal(await page.locator('.logic-output b').textContent(),'F');
   await button('Cambiar Q').tap();assert.equal(await page.locator('.logic-output b').textContent(),'V');assert.equal(await page.locator('.current-truth-row').count(),1);
   await button('Explorar De Morgan').click();assert.equal(await page.locator('.logic-output b').textContent(),'F');
@@ -42,7 +42,7 @@ try {
   await page.screenshot({path:'tmp/qa/mobile-explorer.png',fullPage:true});
   for(const size of [{width:800,height:1280},{width:1024,height:768},{width:1280,height:800}]) {
     await page.setViewportSize(size);await nav('Ajustes');await page.getByLabel('Modo oscuro').check();await page.getByLabel('Tamaño de letra').fill('1.3');
-    await nav('Practicar');await page.getByRole('button',{name:/Abrir explorador/}).click();await page.locator('.equation-graph').waitFor();await noOverflow(`equation ${size.width}`);
+    await nav('Biblioteca');await page.getByRole('button',{name:/Abrir explorador/}).click();await page.locator('.equation-graph').waitFor();await noOverflow(`equation ${size.width}`);
     await page.screenshot({path:`tmp/qa/explorer-${size.width}.png`,fullPage:true});
     await nav('Aprender');assert.ok((await page.locator('.journey-level').count())>3);await noOverflow(`levels ${size.width}`);
   }
