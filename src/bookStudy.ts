@@ -39,6 +39,10 @@ export function nextStudyProblem(problems: OpenBookProblem[], status: (problem: 
     || problems[0];
 }
 
+export function classWeekTour(course: Course, week: string): OpenBookProblem[] {
+  return studyTour(course).filter(problem => problem.id.includes('-clase-') && problem.week === week);
+}
+
 export function missingCourseWeeks(course: Course) {
   if (course !== 'discreta') return [];
   const present = new Set(bookCatalog[course].map(problem => problem.week));

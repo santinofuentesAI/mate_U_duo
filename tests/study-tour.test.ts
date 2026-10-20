@@ -6,7 +6,7 @@ import { extraBookExercises, solutionOrigins } from '../src/extraBookExercises';
 import { equivalentAlgebra, grade, isFactored, isLinearFactorization } from '../src/engine';
 import { lessonPassed } from '../src/learning';
 import { bookCatalog } from '../src/bookCatalog';
-import { bookProblemsForLesson, missingCourseWeeks, nextStudyProblem, studyTour } from '../src/bookStudy';
+import { bookProblemsForLesson, classWeekTour, missingCourseWeeks, nextStudyProblem, studyTour } from '../src/bookStudy';
 
 test('a sum written with explicit products is not treated as a factorization', () => {
   assert.equal(isFactored('-5*x^2-2*x-5'), false);
@@ -50,6 +50,13 @@ test('every catalog exercise is in the study tour once, and discrete weeks 5 and
   assert.ok(bookCatalog.discreta.some(problem => problem.week === 'S5'));
   assert.ok(bookCatalog.discreta.some(problem => problem.week === 'S6' && problem.sectionCode === '2.5'));
   assert.ok(bookCatalog.discreta.some(problem => problem.week === 'S6' && problem.id.includes('-clase-')));
+  const classS5 = classWeekTour('discreta', 'S5');
+  const classS6 = classWeekTour('discreta', 'S6');
+  assert.ok(classS5.length >= 20);
+  assert.ok(classS6.length >= 20);
+  assert.ok(classS5.every(problem => problem.id.includes('-clase-') && problem.week === 'S5'));
+  assert.notEqual(classS5[0]?.id, studyTour('discreta')[0]?.id);
+  assert.equal(classWeekTour('precalculo', 'S5').length, 0);
   for (const lesson of lessons) {
     const problems = bookProblemsForLesson(lesson);
     assert.ok(problems.length > 0, lesson.title);

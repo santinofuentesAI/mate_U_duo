@@ -1,6 +1,7 @@
 import type { PracticeItem } from './learning';
 import type { Question } from './types';
 import { equivalentAlgebra, grade, hasVariableDenominator, normalize } from './engine';
+import { numericParts, usesNumberPad } from './answerKind';
 
 export type FinalAnswers = Record<string, string>;
 export type CheckResult = { correct: boolean; error?: string };
@@ -69,8 +70,14 @@ export function checkFinal(question: Question, input: string): CheckResult {
   if (!input.trim()) return { correct: false, error: 'Escribí la respuesta final antes de comprobar.' };
   try {
     if (question.type === 'choice') return choiceAnswer(input, String(question.answer));
-    if (question.type === 'text' && /^-?\d+(?:\/\d+)?$/.test(String(question.answer))) {
+    if (question.type === 'text' && usesNumberPad(question.answer)) {
       if (!/^[\d\s()+\-−*/^.,÷×]+$/.test(input)) return { correct: false, error: 'Escribí un resultado numérico, sin variables ni unidades.' };
+      const expected = numericParts(String(question.answer));
+      if (expected.length > 1) {
+        const got = numericParts(input);
+        if (got.length !== expected.length) return { correct: false, error: `Escribí ${expected.length} números separados por coma.` };
+        return { correct: got.every((value, index) => equivalentAlgebra(value, expected[index])) };
+      }
       return { correct: equivalentAlgebra(input, String(question.answer)) };
     }
     if (question.type === 'set' || question.type === 'venn') return grade(question, splitTopLevel(input));

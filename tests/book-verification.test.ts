@@ -6,6 +6,7 @@ import { lessons } from '../src/content';
 import { bookCatalog, responseStatus, reviewedActivities } from '../src/bookCatalog';
 import { freshProgress } from '../src/progress';
 import { canCheckFinal, checkBookFinal, checkFinal, splitTopLevel } from '../src/bookVerification';
+import { usesNumberPad } from '../src/answerKind';
 
 const question = (id: string) => bookExercises.find(e => e.question.id === id)!.question;
 
@@ -24,6 +25,12 @@ test('book final verifier accepts equivalent mathematical answers and rejects wr
   assert.equal(checkFinal(question('precalculo-libro-33-2a'), '(-5x^2-2x-5)*(x-1)/(x-1)').correct, false);
   assert.ok(checkFinal(question('discreta-libro-63-4'), '1').correct);
   assert.equal(checkFinal(question('discreta-libro-63-4'), '0').correct, false);
+  assert.equal(usesNumberPad('33'), true);
+  assert.equal(usesNumberPad('256,16,2'), true);
+  assert.equal(usesNumberPad('P∨Q'), false);
+  assert.ok(checkFinal(question('discreta-clase-s5-102a'), '33').correct);
+  assert.ok(checkFinal(question('discreta-clase-s6-111'), '256, 16, 2').correct);
+  assert.equal(checkFinal(question('discreta-clase-s6-111'), '256,16').correct, false);
 });
 
 test('sets retain ordered pairs and nested subsets; tables require all rows', () => {

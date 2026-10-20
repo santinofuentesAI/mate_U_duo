@@ -4,6 +4,8 @@ import type { Question, AnswerDetails, Course } from './types';
 import { loadAnswerDraft } from './exerciseDraft';
 import { grade, shuffle, truthRows } from './engine';
 import { SymbolInput } from './Keyboard';
+import { usesNumberPad } from './answerKind';
+import { VennScratch } from './VennScratch';
 import { Laws } from './Workbench';
 import { AnswerFeedback } from './AnswerFeedback';
 import { GuidedProofExercise } from './GuidedProofExercise';
@@ -31,7 +33,8 @@ export function Exercise({question:q,course,coins,onSpend,onAttempt,onNext,draft
     {q.math&&<div className="math exercise-formula" dangerouslySetInnerHTML={{__html:katex.renderToString(q.math,{throwOnError:false,strict:false,displayMode:true})}}/>}
     {q.type==='choice'&&<div className="choices">{options.map((o,i)=><button key={o} className={value===o?'selected':''} disabled={!!feedback?.correct} onClick={()=>update(o)}><span>{i+1}</span>{o}{value===o&&<Check size={18}/>}</button>)}</div>}
     {['logic','algebra'].includes(q.type)&&<StepWorkspace lines={steps} onChange={lines=>{setSteps(lines);update(lines.at(-1)||'');}} mode={q.type==='logic'?'logic':'algebra'} disabled={!!feedback?.correct}/>}
-    {q.type==='text'&&<SymbolInput value={String(value)} onChange={update} mode="algebra" disabled={!!feedback?.correct}/>}
+    {q.type==='text'&&<SymbolInput value={String(value)} onChange={update} mode={usesNumberPad(q.answer)?'number':'algebra'} disabled={!!feedback?.correct}/>}
+    {(q.type==='venn'||q.tag==='Regiones de Venn')&&<VennScratch/>}
     {q.type==='algebra'&&q.exclusions&&<label>Restricciones del dominio<input value={exclusions} onChange={e=>{setExclusions(e.target.value);setFeedback(null);}} placeholder="Ej.: 0, 3 · o x=0, y=0 si se indica" disabled={!!feedback?.correct}/><small>Valores excluidos, separados por coma. Conservá los del problema original.</small></label>}
     {q.type==='set'&&<div className="set-options">{q.universe?.map(s=><button aria-pressed={selected.includes(s)} className={selected.includes(s)?'selected':''} key={s} onClick={()=>toggle(s)} disabled={!!feedback?.correct}>{s}</button>)}<p>Tu conjunto: {selected.length?<>{'{'}{selected.join(', ')}{'}'}</>:'∅'}</p></div>}
     {q.type==='venn'&&<><svg viewBox="0 0 310 260" className="venn" role="group" aria-label="Regiones del diagrama de Venn"><rect x="2" y="2" width="306" height="256" rx="14" fill="var(--bg)" stroke="var(--border)"/><circle cx="112" cy="103" r="77" fill="#7556ef15" stroke="#7556ef"/><circle cx="198" cy="103" r="77" fill="#16897915" stroke="#168979"/><circle cx="155" cy="174" r="77" fill="#e5a51915" stroke="#bd8412"/><text x="33" y="24">A</text><text x="273" y="24">B</text><text x="155" y="253">C</text>{vennRegions.map(r=><g role="button" tabIndex={0} aria-label={`Región ${r.code}`} aria-pressed={selected.includes(r.code)} key={r.code} onClick={()=>!feedback?.correct&&toggle(r.code)} onKeyDown={e=>{if(['Enter',' '].includes(e.key)){e.preventDefault();if(!feedback?.correct)toggle(r.code);}}}><rect x={r.x-23} y={r.y-18} width="46" height="36" rx="9" fill={selected.includes(r.code)?'#7556ef':'var(--surface)'} stroke="var(--border)"/><text x={r.x} y={r.y+5} textAnchor="middle" fill={selected.includes(r.code)?'#fff':'var(--text)'}>{r.code}</text></g>)}</svg><p className="notice">Tocá las etiquetas para seleccionar regiones. El código ABC indica si estás dentro (1) o fuera (0) de cada conjunto.</p></>}
