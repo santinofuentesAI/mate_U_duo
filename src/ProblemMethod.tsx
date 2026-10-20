@@ -1,3 +1,4 @@
+import katex from 'katex';
 import type { Course } from './types';
 
 const discrete = [
@@ -16,8 +17,29 @@ const precalc = [
   ['Volvé a multiplicar o a sustituir.', 'Si (x − r) divide, P(r) = 0. Si factorizaste, el producto reconstruye el original.'],
 ];
 
+const discreteWorked = [
+  ['Dato', 'Política del kiosco: si pagó, recibe el café. P = pagó. Q = recibe.'],
+  ['Traducción', 'P → Q. No es causalidad: es implicación material.'],
+  ['Herramienta', 'La fila falsa de la implicación: VF.'],
+  ['Paso', 'Cobró y no entregó: F. No pagó: la regla no se rompe, V.'],
+  ['Comprobar', 'P = F, Q = F da V. Coincide con la tabla de P → Q.'],
+];
+
+const precalcWorked = [
+  ['Forma', 'Polinomio para dividir: x³ − 6x² + 11x − 6.'],
+  ['Orden', 'Coeficientes 1, −6, 11, −6. No falta ninguna potencia.'],
+  ['Prueba', 'Candidatos ±1, ±2, ±3, ±6. Probá r = 1.'],
+  ['Paso', 'Fila final 1, −5, 6, 0. Resto 0: (x − 1) es factor.'],
+  ['Comprobar', 'P(1) = 0 y (x − 1)(x² − 5x + 6) = (x − 1)(x − 2)(x − 3).'],
+];
+
+function Formula({ value }: { value: string }) {
+  return <div className="math" dangerouslySetInnerHTML={{ __html: katex.renderToString(value, { throwOnError: false, strict: false, displayMode: true }) }} />;
+}
+
 export function ProblemMethod({ course }: { course: Course }) {
   const steps = course === 'discreta' ? discrete : precalc;
+  const worked = course === 'discreta' ? discreteWorked : precalcWorked;
   return (
     <div className="problem-method">
       <span className="eyebrow">ANTES DE TOCAR EL TECLADO</span>
@@ -28,6 +50,15 @@ export function ProblemMethod({ course }: { course: Course }) {
           <li key={title}><b>{title}</b><p>{body}</p></li>
         ))}
       </ol>
+      <section className="worked-method">
+        <h2>Un problema hecho con ese orden</h2>
+        <Formula value={course === 'discreta' ? 'P\\to Q' : 'x^{3}-6x^{2}+11x-6=(x-1)(x-2)(x-3)'} />
+        <ol className="method-steps">
+          {worked.map(([title, body]) => (
+            <li key={title}><b>{title}</b><p>{body}</p></li>
+          ))}
+        </ol>
+      </section>
       <p className="notice">{course === 'precalculo' ? 'Para división sintética usá el laboratorio: cambiá r hasta que el resto sea 0.' : 'Para tablas usá el laboratorio: llená vos la columna y recién después comprobá.'}</p>
     </div>
   );

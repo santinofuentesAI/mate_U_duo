@@ -50,5 +50,20 @@
 .week-topic-chips{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
 .week-topic-chips button{min-height:40px;font-size:.75rem}
 .week-pdf .upload{display:inline-flex;align-items:center;gap:8px;min-height:48px;margin:8px 0 16px}
-@media(max-width:700px){.intensity-row{grid-template-columns:repeat(2,minmax(0,1fr))}.week-shelf{grid-template-columns:1fr}.synthetic-row{grid-template-columns:52px repeat(4,minmax(52px,1fr))}.case-story{padding:16px;font-size:.95rem}}
+.idea-card{padding:16px 18px;margin:12px 0;border-radius:16px;background:var(--soft);border:1px solid var(--border)}
+.idea-card small{display:block;font-size:.62rem;letter-spacing:.1em;font-weight:900;color:var(--purple);margin-bottom:6px}
+.idea-card p{margin:0;font-size:1.05rem;line-height:1.55}
+.formula-tiles{display:grid;gap:8px}
+.formula-tiles .math{padding:8px;border-radius:12px;background:var(--surface)}
+.idea-points{display:grid;gap:8px;margin:14px 0;padding:0;list-style:none}
+.idea-points li{padding:12px 14px;border-left:3px solid var(--purple);background:var(--surface);border-radius:0 12px 12px 0;font-size:.88rem;line-height:1.5}
+.symbol-group{margin:22px 0}
+.symbol-group h2{font-size:1rem;margin:0 0 10px}
+.symbol-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.symbol-tile{padding:14px;border:1px solid var(--border);border-radius:16px;background:var(--surface);display:grid;gap:6px;min-width:0}
+.symbol-tile small{font-weight:900;color:var(--purple);font-size:.68rem;letter-spacing:.04em}
+.symbol-tile p{margin:0;font-size:.78rem;line-height:1.45}
+.worked-method{margin:22px 0;padding:18px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+.worked-method h2{font-size:1.05rem;margin:0 0 10px}
+@media(max-width:700px){.intensity-row{grid-template-columns:repeat(2,minmax(0,1fr))}.week-shelf{grid-template-columns:1fr}.synthetic-row{grid-template-columns:52px repeat(4,minmax(52px,1fr))}.case-story{padding:16px;font-size:.95rem}.symbol-grid{grid-template-columns:1fr}.idea-card p{font-size:.97rem}}
 @media(max-width:700px){.journey-route{max-width:430px}.journey-heading>span{font-size:.68rem}.journey-unit-banner{padding:12px 16px;margin-bottom:15px}.journey-unit-banner h2{font-size:1rem}.journey-unit-banner small{top:12px;right:15px}.journey-levels{gap:9px}.journey-levels:before{left:35px}.journey-level{min-height:70px;padding:7px 11px;gap:10px}.journey-orb{width:48px;height:48px;border-radius:15px}.journey-level-copy b{font-size:.78rem}.journey-level-copy small{font-size:.57rem}.resume-mini{margin-bottom:14px}.resume-mini span{display:none}.resume-mini b{font-size:.75rem}}

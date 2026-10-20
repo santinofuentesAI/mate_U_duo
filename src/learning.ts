@@ -4,6 +4,18 @@ import { bookExercises } from './bookExercises';
 import { caseExercises } from './caseStudies';
 export interface PracticeItem { lesson: Lesson; question: Question; }
 export type PracticeIntensity = 'easy' | 'medium' | 'hard' | 'exam';
+export function dailyTitle(id: PracticeIntensity): string {
+  switch (id) {
+    case 'easy': return 'Práctica fácil · 20';
+    case 'medium': return 'Práctica media · 20';
+    case 'hard': return 'Práctica difícil · 20';
+    case 'exam': return 'Práctica tipo examen · 20';
+    default: {
+      const never: never = id;
+      return never;
+    }
+  }
+}
 function attachExtras(path: Lesson[], extras: { course: Course; lessonTitle: string; question: Question }[], course: Course): PracticeItem[] {
   return extras.filter(e => e.course === course).flatMap(e => {
     const lesson = path.find(l => l.title === e.lessonTitle);

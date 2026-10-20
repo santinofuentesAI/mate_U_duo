@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, BookOpen, FlaskConical, NotebookPen, ScrollText 
 import { Explorers } from './Explorers';
 import { lessons } from './content';
 import type { Lesson, Progress } from './types';
-import { bank, latestAttempts, mixedPractice, practicePlan, type PracticeIntensity, type PracticeItem } from './learning';
+import { bank, dailyTitle, latestAttempts, mixedPractice, practicePlan, type PracticeIntensity, type PracticeItem } from './learning';
 import { bookCatalog, responseStatus } from './bookCatalog';
 import { classWeekTour, missingCourseWeeks, nextStudyProblem, readWorkedIds, studyTour } from './bookStudy';
 import { BookPractice } from './BookPractice';
@@ -21,18 +21,6 @@ const intensities: { id: PracticeIntensity; label: string; hint: string }[] = [
   { id: 'hard', label: 'Difícil', hint: 'Lo que suele trabar' },
   { id: 'exam', label: 'Examen', hint: 'Sencillo, medio y duro, mezclado' },
 ];
-function intensityTitle(id: PracticeIntensity): string {
-  switch (id) {
-    case 'easy': return 'Práctica fácil · 20';
-    case 'medium': return 'Práctica media · 20';
-    case 'hard': return 'Práctica difícil · 20';
-    case 'exam': return 'Práctica tipo examen · 20';
-    default: {
-      const never: never = id;
-      return never;
-    }
-  }
-}
 export function PracticeHub({progress:p,pending,onResume,onStart,onExam,onRead,initialBookProblem}:Props) {
   const [screen,setScreen]=useState<Screen>(initialBookProblem?'book':'home');
   const [focus,setFocus]=useState(initialBookProblem);
@@ -65,7 +53,7 @@ export function PracticeHub({progress:p,pending,onResume,onStart,onExam,onRead,i
     {pending&&<section className="simple-feature"><div><b>Tu sesión está pausada</b><p>{pending.session.title} · {pending.session.items[0].lesson.course==='precalculo'?'Precálculo':'Discreta'} · {Math.max(1,pending.index+1)} de {pending.session.items.length}</p></div><button className="primary" onClick={onResume}>Continuar <ArrowRight size={18}/></button></section>}
     <section className="simple-feature motion-in"><div><h2>20 ejercicios de hoy</h2><p>Varias semanas, ordenados de más fácil a más difícil. Elegí el modo. El examen es el más realista: simplificar, factorizar, tablas o sintética, según el curso.</p></div>
       <div className="intensity-row" role="radiogroup" aria-label="Dificultad de la práctica">{intensities.map(option=><button key={option.id} type="button" role="radio" aria-checked={intensity===option.id} className={intensity===option.id?'selected':''} onClick={()=>setIntensity(option.id)}><b>{option.label}</b><small>{option.hint}</small></button>)}</div>
-      <button className="primary" disabled={!daily.length} onClick={()=>onStart(daily,intensityTitle(intensity),`daily-${intensity}`)}>Empezar <ArrowRight size={18}/></button>
+      <button className="primary" disabled={!daily.length} onClick={()=>onStart(daily,dailyTitle(intensity),`daily-${intensity}`)}>Empezar <ArrowRight size={18}/></button>
     </section>
     <section className="simple-feature motion-in"><div><h2>Todos los ejercicios del libro</h2><p>{touched} de {bookCatalog[p.course].length} con trabajo guardado o corrección. Solo se califica si hay clave revisada. El resto conserva tus pasos.{pendingWeeks.length?` Semanas ${pendingWeeks.join(' y ')}: se suman cuando pases el material.` :''}</p></div><button className="primary" disabled={!nextBook} onClick={()=>{if(!nextBook)return;setFocus(nextBook.id);open('book');}}>{bookStatus(nextBook)==='identified'?'Siguiente del libro':'Continuar el guardado'} <ArrowRight size={18}/></button></section>
     {p.course==='discreta'&&(classS5.length>0||classS6.length>0)&&<section className="simple-feature motion-in class-week-jump"><div><h2>Material de clase S5 y S6</h2><p>Saltá al paquete de Venn/leyes o al de potencia y cardinalidad, sin pasar por la página 37 del libro.</p></div><div className="class-week-actions">{classS5.length>0&&<button className="primary" onClick={()=>openClass(classS5)}>Clase S5</button>}{classS6.length>0&&<button className="secondary" onClick={()=>openClass(classS6)}>Clase S6</button>}</div></section>}

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { bank, dailyChallenge, mistakeJournal, mixedPractice, practicePlan, practiceTargets, sessionSummary } from '../src/learning';
+import { bank, dailyChallenge, dailyTitle, mistakeJournal, mixedPractice, practicePlan, practiceTargets, sessionSummary } from '../src/learning';
 import { caseExercises, caseStudies } from '../src/caseStudies';
 import { grade } from '../src/engine';
 import { lessons } from '../src/content';
@@ -51,6 +51,7 @@ test('mixed daily practice of 20 covers several weeks, exam mixes difficulties, 
   assert.deepEqual(practiceTargets('easy',20),{1:20,2:0,3:0});
   const easy=mixedPractice(items,p,'easy',20,now);
   assert.ok(easy.every(i=>i.question.difficulty===1)||easy.length===20);
+  assert.equal(dailyTitle('exam'),'Práctica tipo examen · 20');
 });
 test('case studies attach honest keys that grade and stay off the lesson catalog count',()=>{
   const extras=caseExercises.filter(item=>lessons.some(l=>l.course===item.course&&l.title===item.lessonTitle));

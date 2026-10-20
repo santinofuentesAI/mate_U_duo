@@ -31,9 +31,13 @@ try {
   await page.getByRole('button',{name:'r = 1'}).first().click();
   await nav('Biblioteca');
   await page.getByRole('button',{name:'HTML'}).first().waitFor();
+  await page.getByRole('button',{name:/Símbolos del curso/}).click();
+  await page.getByRole('heading',{name:'Símbolos',exact:true}).waitFor();
+  await page.getByRole('button',{name:'Volver',exact:true}).click();
   await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('cubos');
   await page.getByRole('button',{name:'Suma y diferencia de cubos'}).click();
   await page.getByRole('heading',{name:'Ejemplo paso a paso'}).waitFor();
+  await page.getByText('LA IDEA',{exact:true}).waitFor();
   await nav('Practicar');
   await page.getByRole('button',{name:/Estudios de caso/}).click();
   await page.getByRole('heading',{name:'Estudios de caso'}).waitFor();
