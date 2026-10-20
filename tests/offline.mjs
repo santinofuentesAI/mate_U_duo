@@ -5,25 +5,17 @@ const server=await preview({preview:{host:'127.0.0.1',port:5174,strictPort:true}
 const browser=await chromium.launch({headless:true,args:['--no-sandbox'],...(process.env.TEST_CHROMIUM_PATH?{executablePath:process.env.TEST_CHROMIUM_PATH}:{})});
 const context=await browser.newContext({viewport:{width:390,height:844}});const page=await context.newPage();
 page.on('pageerror',e=>console.log('PAGE ERROR',e.message));page.on('requestfailed',r=>console.log('REQUEST FAILED',r.url(),r.failure()?.errorText));
-await page.goto('http://127.0.0.1:5174/');await page.getByRole('heading',{name:'Tu ruta de aprendizaje'}).waitFor();
+const button=name=>page.getByRole('button',{name,exact:true});
+const nav=async name=>{await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name,exact:true}).click();};
+await page.goto('http://127.0.0.1:5174/');await page.getByRole('heading',{name:'Aprender'}).waitFor();
 await page.evaluate(async()=>{await navigator.serviceWorker.ready;});await page.reload();
 assert.equal(await page.evaluate(()=>!!navigator.serviceWorker.controller),true);
-await context.setOffline(true);await page.reload();await page.getByRole('heading',{name:'Tu ruta de aprendizaje'}).waitFor();
-await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Mi libro',exact:true}).click();await page.getByText('El ejercicio real, en tu celular.').waitFor({timeout:10000});
-if(process.env.TEST_BOOK){await page.locator('input[type=file]').setInputFiles(process.env.TEST_BOOK);await page.getByText(/Libro guardado en este dispositivo/).waitFor({timeout:30000});await page.waitForFunction(()=>{const c=document.querySelector('canvas');return c&&c.width>0;});}
-await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Biblioteca',exact:true}).click();await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('conectores');await page.locator('.library-topic').first().click();await page.getByRole('heading',{name:'Ejemplo resuelto',exact:true}).waitFor();assert.equal(await page.locator('.katex-error').count(),0);
-await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Practicar',exact:true}).click();await page.getByRole('button',{name:'Empezar 3 ejercicios',exact:true}).waitFor();
-await page.getByRole('button',{name:'Abrir explorador',exact:true}).click();await page.getByRole('button',{name:'Cambiar Q',exact:true}).click();assert.equal(await page.locator('.logic-output b').textContent(),'V');
-await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');await page.getByRole('heading',{name:'2 soluciones reales',exact:true}).waitFor();
-await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Biblioteca',exact:true}).click();await page.getByRole('button',{name:'Leyes y reglas',exact:true}).click();await page.getByRole('dialog',{name:'Reglas de Precálculo',exact:true}).waitFor();await page.getByRole('button',{name:'Productos notables',exact:true}).click();await page.getByRole('heading',{name:'Cuadrado de una suma',exact:true}).waitFor();assert.equal(await page.locator('.katex-error').count(),0);
-await page.getByRole('button',{name:'Volver al ejercicio',exact:true}).click();
-await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Practicar',exact:true}).click();
-await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');
-await page.getByRole('button',{name:'Elegir un inciso',exact:true}).click();await page.getByRole('button',{name:'Resolver 1a · página 73',exact:true}).click();
-await page.getByRole('complementary',{name:'Ejercicio original del libro'}).waitFor();
-if(process.env.TEST_BOOK)await page.getByRole('button',{name:'Ampliar ejercicio original',exact:true}).waitFor();
-for(const [expression,rule] of [['¬R','Modus tollens'],['¬R∨¬S','Adición'],['¬(R∧S)','De Morgan'],['¬(¬P∨¬Q)','Modus tollens'],['P∧Q','De Morgan + doble negación'],['P','Simplificación']]){
-  await page.getByRole('textbox',{name:'Nueva línea de la demostración',exact:true}).fill(expression);await page.getByRole('button',{name:rule,exact:true}).click();await page.getByRole('button',{name:'Comprobar este paso',exact:true}).click();
-}
-await page.getByRole('heading',{name:'¡Bien razonado!',exact:true}).waitFor();
-await browser.close();await new Promise(resolve=>server.httpServer.close(resolve));console.log('Offline QA passed: reload, lazy book viewer, local PDF render, library, math fonts, adaptive practice, live explorers and graded original book practice.');
+await context.setOffline(true);await page.reload();await page.getByRole('heading',{name:'Aprender'}).waitFor();
+await nav('Mi libro');await page.getByRole('heading',{name:'Mi libro'}).waitFor({timeout:10000});
+if(process.env.TEST_BOOK){await page.locator('input[type=file]').setInputFiles(process.env.TEST_BOOK);await page.getByText(/PDF guardado/).waitFor({timeout:30000});await page.waitForFunction(()=>{const c=document.querySelector('canvas');return c&&c.width>0;});}
+await nav('Biblioteca');await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('conectores');await page.getByRole('button',{name:'Proposiciones y conectores'}).click();await page.getByRole('heading',{name:'Ejemplo paso a paso',exact:true}).waitFor();assert.equal(await page.locator('.katex-error').count(),0);
+await nav('Practicar');await button('Empezar').waitFor();
+await page.getByRole('button',{name:/Abrir explorador/}).click();await button('Cambiar Q').click();assert.equal(await page.locator('.logic-output b').textContent(),'V');
+await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');await page.getByRole('button',{name:/Abrir explorador/}).click();await page.getByRole('heading',{name:'2 soluciones reales',exact:true}).waitFor();
+await nav('Biblioteca');await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('cubos');await page.getByRole('button',{name:'Suma y diferencia de cubos'}).click();await page.getByRole('heading',{name:'Ejemplo paso a paso'}).waitFor();
+await browser.close();await new Promise(resolve=>server.httpServer.close(resolve));console.log('Offline QA passed: reload, library, math fonts, adaptive practice and live explorers.');

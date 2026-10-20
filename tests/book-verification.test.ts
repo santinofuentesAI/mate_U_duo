@@ -27,6 +27,7 @@ test('book final verifier accepts equivalent mathematical answers and rejects wr
   assert.equal(checkFinal(question('discreta-libro-63-4'), '0').correct, false);
   assert.equal(usesNumberPad('33'), true);
   assert.equal(usesNumberPad('256,16,2'), true);
+  assert.equal(usesNumberPad('2/120'), false);
   assert.equal(usesNumberPad('P∨Q'), false);
   assert.ok(checkFinal(question('discreta-clase-s5-102a'), '33').correct);
   assert.ok(checkFinal(question('discreta-clase-s6-111'), '256, 16, 2').correct);

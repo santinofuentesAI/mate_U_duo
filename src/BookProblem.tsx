@@ -5,37 +5,25 @@ import type { PracticeItem } from './learning';
 import type { OpenBookProblem } from './bookCatalog';
 import { statusLabels } from './bookCatalog';
 import { canCheckFinal, checkBookFinal, clearFinalCheck, finalExample, finalLabel, hasCheckedFinal, readFinalAnswers, saveFinalAnswers, saveFinalCheck, type FinalAnswers } from './bookVerification';
-import { usesNumberPad } from './answerKind';
+import { inputModeFor } from './answerKind';
+import { SymbolInput } from './Keyboard';
 import { VennScratch } from './VennScratch';
 import { BookFormula } from './BookFormula';
+import type { Question } from './types';
 
 const BookOriginal=lazy(()=>import('./BookOriginal').then(m=>({default:m.BookOriginal})));
 export type { OpenBookProblem } from './bookCatalog';
 const symbols:Record<Course,string[]>={precalculo:['x','y','√()','^2','^3','^()','()/()','(',')','+','−','×','=','≠','±','≤','≥','∈','ℝ'],discreta:['P','Q','R','¬','∧','∨','→','↔','∀','∃','∄','∈','∉','⊆','∪','∩','−','×','△','∅','(',')','{','}','∴']};
-type QuickKind = 'bool' | 'table' | 'set' | 'choice' | 'number' | 'algebra' | 'logic';
-function finalQuickKind(checkable: PracticeItem[], course: Course): QuickKind {
-  if (checkable.some(x => x.question.answer === 'Verdadero' || x.question.answer === 'Falso')) return 'bool';
-  if (checkable.some(x => x.question.type === 'table')) return 'table';
-  if (checkable.some(x => x.question.type === 'set' || x.question.type === 'venn')) return 'set';
-  if (checkable.every(x => x.question.type === 'choice')) return 'choice';
-  if (checkable.every(x => usesNumberPad(x.question.answer))) return 'number';
-  return course === 'precalculo' ? 'algebra' : 'logic';
+function isBoolQuestion(question: Question) {
+  return question.answer === 'Verdadero' || question.answer === 'Falso';
 }
-function finalQuickKeys(checkable: PracticeItem[], course: Course): string[] {
-  const kind = finalQuickKind(checkable, course);
-  switch (kind) {
-    case 'bool': return ['V', 'F'];
-    case 'table': return ['V', 'F', ','];
-    case 'set': return ['{', '}', ',', '∅'];
-    case 'choice': return [];
-    case 'number': return ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', ',', '−'];
-    case 'algebra': return ['^2', '^3', '/', '(', ')', '−'];
-    case 'logic': return ['¬', '∧', '∨', '→', '↔'];
-    default: {
-      const never: never = kind;
-      return never;
-    }
-  }
+function usesTypedKeyboard(question: Question) {
+  return !isBoolQuestion(question) && question.type !== 'choice' && question.type !== 'table';
+}
+function chipKeys(question: Question): string[] {
+  if (isBoolQuestion(question)) return ['V', 'F'];
+  if (question.type === 'table') return ['V', 'F', ','];
+  return [];
 }
 
 export function BookProblem({problem,verified,responseState,onVerified,onDone,onEdited,onChecked,onNext,onPrevious}:{problem:OpenBookProblem;verified:PracticeItem[];responseState:'identified'|'submitted'|'validated';onVerified:(item:PracticeItem)=>void;onDone:()=>boolean;onEdited:()=>void;onChecked:()=>void;onNext:()=>void;onPrevious:()=>void}) {
@@ -48,8 +36,6 @@ export function BookProblem({problem,verified,responseState,onVerified,onDone,on
   const finalInput=useRef<HTMLInputElement|null>(null),finalId=useRef('');
   const checkable=verified.filter(x=>canCheckFinal(x.question));
   const guided=verified.filter(x=>!canCheckFinal(x.question));
-  const kind=finalQuickKind(checkable, problem.course);
-  const quick=finalQuickKeys(checkable, problem.course);
 
   function save(value:string){try{localStorage.setItem(key,value);setSaveState('Guardado en este dispositivo');setError('');return true;}catch{setSaveState('');setError('No se pudo guardar. Copiá tus pasos antes de salir.');return false;}}
   function edit(value:string){setHistory(h=>[...h.slice(-49),answer]);setFuture([]);setAnswer(value);save(value);onEdited();}
@@ -74,8 +60,7 @@ export function BookProblem({problem,verified,responseState,onVerified,onDone,on
       {(problem.sectionCode==='S5.1'||problem.section==='Diagramas de Venn')&&<VennScratch/>}
       {problem.visuals.length>0&&<details className="book-problem-original" onToggle={e=>setOriginalOpen(e.currentTarget.open)}><summary><BookOpen size={18}/> Ver página original</summary><small>PDF {problem.page} · impresa {problem.printedPage}{problem.sourcePages.length>1?` · continúa en PDF ${problem.sourcePages.join(', ')}`:''}</small>{originalOpen&&problem.visuals.map((visual,i)=><Suspense key={`${visual.page}-${i}`} fallback={<p role="status">Preparando la página…</p>}><BookOriginal source={makeSource(visual)}/></Suspense>)}</details>}
     </div><div className="book-thinking">
-      {checkable.length>0&&<section className="book-final-check" aria-label="Comprobar resultado"><h4>Tu respuesta</h4>{checkable.map(({question})=>{const result=checks?.find(x=>x.item.question.id===question.id)?.result;return <div className="book-final-item" key={question.id}><label htmlFor={`final-${question.id}`}>{checkable.length>1?finalLabel(question):'Resultado final'}<input id={`final-${question.id}`} value={finalAnswers[question.id]||''} onFocus={e=>{finalInput.current=e.currentTarget;finalId.current=question.id;}} onChange={e=>updateFinal(question.id,e.target.value)} placeholder={finalExample(question)} inputMode={usesNumberPad(question.answer)?'numeric':'text'} autoCapitalize="off" autoComplete="off" spellCheck={false}/></label>{result&&<p className={`book-check-feedback ${result.correct?'right':'wrong'}`} role="status"><b>{result.correct?'¡Correcto!':'Revisá tu respuesta'}</b><span>{result.correct?question.explanation:result.error||question.hints[0]||'Intentá de nuevo.'}</span></p>}</div>;})}
-        {quick.length>0&&<div className={`book-final-keys${kind==='number'?' number-keys':''}`} role="group" aria-label={kind==='number'?'Teclado numérico':'Símbolos para la respuesta'}>{quick.map((token,i)=><button type="button" key={`${token}-${i}`} onPointerDown={e=>e.preventDefault()} onClick={()=>insertFinal(token)}>{token}</button>)}</div>}
+      {checkable.length>0&&<section className="book-final-check" aria-label="Comprobar resultado"><h4>Tu respuesta</h4>{checkable.map(({question})=>{const result=checks?.find(x=>x.item.question.id===question.id)?.result;const label=checkable.length>1?finalLabel(question):'Resultado final';const chips=chipKeys(question);return <div className="book-final-item" key={question.id}>{usesTypedKeyboard(question)?<SymbolInput value={finalAnswers[question.id]||''} onChange={value=>updateFinal(question.id,value)} mode={inputModeFor(question,problem.course)} label={label} compact={checkable.length>1}/>:<label htmlFor={`final-${question.id}`}>{label}<input id={`final-${question.id}`} value={finalAnswers[question.id]||''} onFocus={e=>{finalInput.current=e.currentTarget;finalId.current=question.id;}} onChange={e=>updateFinal(question.id,e.target.value)} placeholder={finalExample(question)} inputMode="text" autoCapitalize="off" autoComplete="off" spellCheck={false}/></label>}{chips.length>0&&<div className="book-final-keys" role="group" aria-label="Atajos de respuesta">{chips.map((token,i)=><button type="button" key={`${token}-${i}`} onPointerDown={e=>e.preventDefault()} onClick={()=>{if(isBoolQuestion(question))updateFinal(question.id,token);else{finalId.current=question.id;insertFinal(token);}}}>{token}</button>)}</div>}{result&&<p className={`book-check-feedback ${result.correct?'right':'wrong'}`} role="status"><b>{result.correct?'¡Correcto!':'Revisá tu respuesta'}</b><span>{result.correct?question.explanation:result.error||question.hints[0]||'Intentá de nuevo.'}</span></p>}</div>;})}
         <button className="primary wide" onClick={checkFinalAnswer} disabled={checkable.some(x=>!finalAnswers[x.question.id]?.trim())}><CheckCircle2 size={18}/>Comprobar</button><small>Se comprueba el resultado. Tus pasos son tuyos para revisar.</small>
       </section>}
       {guided.length>0&&<div className="book-guided-check"><p>Esta demostración se revisa paso a paso.</p>{guided.map(item=><button className="primary wide" key={item.question.id} onClick={()=>onVerified(item)}>Resolver con corrección<ArrowRight size={18}/></button>)}</div>}

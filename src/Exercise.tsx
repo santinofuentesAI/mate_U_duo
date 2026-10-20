@@ -4,7 +4,7 @@ import type { Question, AnswerDetails, Course } from './types';
 import { loadAnswerDraft } from './exerciseDraft';
 import { grade, shuffle, truthRows } from './engine';
 import { SymbolInput } from './Keyboard';
-import { usesNumberPad } from './answerKind';
+import { inputModeFor } from './answerKind';
 import { VennScratch } from './VennScratch';
 import { Laws } from './Workbench';
 import { AnswerFeedback } from './AnswerFeedback';
@@ -33,7 +33,7 @@ export function Exercise({question:q,course,coins,onSpend,onAttempt,onNext,draft
     {q.math&&<div className="math exercise-formula" dangerouslySetInnerHTML={{__html:katex.renderToString(q.math,{throwOnError:false,strict:false,displayMode:true})}}/>}
     {q.type==='choice'&&<div className="choices">{options.map((o,i)=><button key={o} className={value===o?'selected':''} disabled={!!feedback?.correct} onClick={()=>update(o)}><span>{i+1}</span>{o}{value===o&&<Check size={18}/>}</button>)}</div>}
     {['logic','algebra'].includes(q.type)&&<StepWorkspace lines={steps} onChange={lines=>{setSteps(lines);update(lines.at(-1)||'');}} mode={q.type==='logic'?'logic':'algebra'} disabled={!!feedback?.correct}/>}
-    {q.type==='text'&&<SymbolInput value={String(value)} onChange={update} mode={usesNumberPad(q.answer)?'number':'algebra'} disabled={!!feedback?.correct}/>}
+    {q.type==='text'&&<SymbolInput value={String(value)} onChange={update} mode={inputModeFor(q,course)} disabled={!!feedback?.correct}/>}
     {(q.type==='venn'||q.tag==='Regiones de Venn')&&<VennScratch/>}
     {q.type==='algebra'&&q.exclusions&&<label>Restricciones del dominio<input value={exclusions} onChange={e=>{setExclusions(e.target.value);setFeedback(null);}} placeholder="Ej.: 0, 3 · o x=0, y=0 si se indica" disabled={!!feedback?.correct}/><small>Valores excluidos, separados por coma. Conservá los del problema original.</small></label>}
     {q.type==='set'&&<div className="set-options">{q.universe?.map(s=><button aria-pressed={selected.includes(s)} className={selected.includes(s)?'selected':''} key={s} onClick={()=>toggle(s)} disabled={!!feedback?.correct}>{s}</button>)}<p>Tu conjunto: {selected.length?<>{'{'}{selected.join(', ')}{'}'}</>:'∅'}</p></div>}

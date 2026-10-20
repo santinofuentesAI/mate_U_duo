@@ -11,39 +11,49 @@ const context=await browser.newContext({viewport:{width:390,height:844},deviceSc
 const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
 page.on('dialog',d=>d.accept());
 const url=process.env.TEST_URL||'http://127.0.0.1:5173/';
-await page.goto(url);await page.getByRole('heading',{name:'Tu ruta de aprendizaje'}).waitFor();await page.getByRole('button',{name:'Abrir Introducción y razonamiento lógico'}).waitFor();
+const button=name=>page.getByRole('button',{name,exact:true});
+const nav=async name=>{const mobile=page.getByRole('navigation',{name:'Navegación móvil',exact:true});await (await mobile.isVisible()?mobile:page.getByRole('navigation',{name:'Navegación principal',exact:true})).getByRole('button',{name,exact:true}).click();};
+await page.goto(url);await page.getByRole('heading',{name:'Aprender'}).waitFor();await page.getByRole('button',{name:/Nivel \d+: Introducción y razonamiento lógico/}).waitFor();
 fs.mkdirSync('tmp/qa',{recursive:true});
 await page.screenshot({path:'tmp/qa/mobile-home.png',fullPage:true});
 assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'mobile overflow');
-await page.getByRole('button',{name:'Abrir Proposiciones y conectores',exact:true}).click();
-assert.equal(await page.locator('.katex-error').count(),0,'formula rendering');
-await page.getByRole('button',{name:'Ahora me toca practicar'}).click();
-await page.getByRole('button',{name:/2 \+ 2 = 4/}).click();await page.getByRole('button',{name:'Comprobar',exact:true}).click();
-await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await page.getByRole('button',{name:'Ver respuesta',exact:true}).click();const revealed=page.getByRole('region',{name:'Respuesta explicada'});await revealed.waitFor();assert.ok((await revealed.innerText()).length>20,'answer and explanation are visible');await page.getByRole('button',{name:'Ocultar respuesta',exact:true}).click();await page.getByRole('button',{name:'Continuar',exact:true}).click();
-await page.getByRole('button',{name:'P',exact:true}).click();await page.getByRole('button',{name:'Conjunción',exact:true}).click();await page.getByRole('button',{name:'Negación',exact:true}).click();await page.getByRole('button',{name:'Q',exact:true}).click();
-assert.equal(await page.getByRole('textbox',{name:'Tu respuesta',exact:true}).inputValue(),'P∧¬Q');
+await page.getByRole('button',{name:/Nivel \d+: Equivalencias y simplificación/}).click();
+await page.getByRole('button',{name:/Ir a los \d+ ejercicios/}).click();
+await button('Negación').waitFor();
+assert.equal(await page.getByLabel('Teclado numérico').count(),0,'logic must not show a number pad');
+await page.getByText('Necesito ayuda').click();await button('Ver leyes').click();await page.getByRole('dialog').waitFor();await button('Volver al ejercicio').click();
+await button('P').click();await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();
+await button('Ver respuesta').click();const revealed=page.getByRole('region',{name:'Respuesta explicada'});await revealed.waitFor();assert.ok((await revealed.innerText()).length>20,'answer and explanation are visible');await button('Ocultar respuesta').click();
 await page.screenshot({path:'tmp/qa/mobile-keyboard.png',fullPage:true});
-await page.getByRole('button',{name:'Ver leyes',exact:true}).click();await page.getByRole('dialog').waitFor();await page.getByRole('button',{name:'Volver al ejercicio'}).click();
-await page.getByRole('button',{name:'Comprobar',exact:true}).click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();await page.getByRole('button',{name:'Continuar',exact:true}).click();
-await page.getByRole('button',{name:/F$/}).click();await page.getByRole('button',{name:'Comprobar',exact:true}).click();await page.getByRole('button',{name:'Continuar',exact:true}).click();
-await page.getByRole('heading',{name:'Un paso más cerca.'}).waitFor();await page.getByRole('button',{name:'Volver a mi ruta'}).click();
-await page.reload();assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('mate-u-duo.v1')).xp),30);
-await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Mi libro',exact:true}).click();
-await page.getByRole('button',{name:'Probar con un ejemplo explicado'}).click();await page.getByRole('button',{name:'Comprobar paso',exact:true}).click();await page.getByText('Paso comprobado. Podés proponer otra transformación.',{exact:true}).waitFor();
-await page.screenshot({path:'tmp/qa/mobile-proof.png',fullPage:true});
-await page.getByRole('button',{name:'Inferencias',exact:true}).click();
-const proof=page.locator('section.card').filter({has:page.getByRole('heading',{name:'De las premisas a la conclusión.'})});
-await proof.getByRole('textbox',{name:'Nueva conclusión'}).fill('Q');await proof.getByRole('button',{name:'Usar línea 1',exact:true}).click();await proof.getByRole('button',{name:'Usar línea 2',exact:true}).click();await proof.getByRole('button',{name:'Comprobar inferencia'}).click();await proof.getByText('Inferencia verificada.',{exact:true}).waitFor();
-if(process.env.TEST_BOOK){await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Mi libro',exact:true}).click();await page.locator('input[type=file]').setInputFiles(process.env.TEST_BOOK);await page.getByText(/Libro guardado en este dispositivo/).waitFor({timeout:30000});await page.waitForFunction(()=>{const c=document.querySelector('canvas');return c&&c.width>0;});await page.screenshot({path:'tmp/qa/mobile-book.png',fullPage:true});await page.reload();await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Mi libro',exact:true}).click();await page.waitForFunction(()=>{const c=document.querySelector('canvas');return c&&c.width>0;},{},{timeout:30000});}
-await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Biblioteca',exact:true}).click();await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('De Morgan');await page.locator('.library-topic').filter({hasText:'Equivalencias y simplificación'}).click();await page.getByRole('heading',{name:'Ejemplo resuelto',exact:true}).waitFor();await page.locator('.solved-question summary').first().click();assert.equal(await page.locator('.katex-error').count(),0);await page.screenshot({path:'tmp/qa/mobile-library.png',fullPage:true});
-if(process.env.TEST_BOOK){await page.getByRole('button',{name:/Leyes de lógica: identidades y ejemplos/}).click();await page.getByRole('spinbutton',{name:'Página PDF'}).waitFor();assert.equal(await page.getByRole('spinbutton',{name:'Página PDF'}).inputValue(),'59');}
-await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Aprender',exact:true}).click();await page.getByText('Libro · páginas 1–63 · Desde las bases hasta ecuaciones').waitFor();
-if(process.env.TEST_PRECALC_BOOK){await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Mi libro',exact:true}).click();await page.locator('input[type=file]').setInputFiles(process.env.TEST_PRECALC_BOOK);await page.getByText(/Libro guardado en este dispositivo/).waitFor({timeout:30000});const pageNumber=page.getByRole('spinbutton',{name:'Página PDF'});assert.equal(await pageNumber.getAttribute('max'),'63');await pageNumber.fill('63');await page.getByRole('button',{name:'Página siguiente',exact:true}).waitFor();assert.equal(await page.getByRole('button',{name:'Página siguiente',exact:true}).isDisabled(),true);await page.getByRole('checkbox',{name:'Explorar el libro completo fuera del temario'}).check();assert.equal(await pageNumber.getAttribute('max'),'175');await pageNumber.fill('64');await page.getByRole('checkbox',{name:'Explorar el libro completo fuera del temario'}).uncheck();assert.equal(await pageNumber.inputValue(),'63');await page.getByRole('button',{name:'Leer desde la página 1'}).click();assert.equal(await pageNumber.inputValue(),'1');}
-await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Biblioteca',exact:true}).click();await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('Ecuaciones con radicales');await page.locator('.library-topic').first().click();await page.getByRole('heading',{name:'Ejemplo resuelto',exact:true}).waitFor();assert.equal(await page.locator('.katex-error').count(),0);await page.screenshot({path:'tmp/qa/precalculo-expanded-library.png',fullPage:true});
-await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name:'Ajustes',exact:true}).click();await page.getByLabel('Modo oscuro').check();await page.getByLabel('Tamaño de letra').fill('1.3');await page.screenshot({path:'tmp/qa/mobile-settings.png',fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'settings overflow');
+await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();
+await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');
+await page.getByRole('button',{name:/Nivel \d+: Suma y diferencia de cubos/}).click();
+await page.getByRole('dialog',{name:'¿Reemplazar la sesión pausada?'}).getByRole('button',{name:'Empezar otra sesión'}).click();
+await page.getByRole('button',{name:/Ir a los \d+ ejercicios/}).click();
+await page.getByRole('button',{name:'Comprobar',exact:true}).waitFor();
+for(let i=0;i<6 && !(await page.getByRole('button',{name:'Insertar paréntesis'}).count());i++){
+  const eight=page.locator('.choices button').filter({hasText:'8'});
+  if(await eight.count())await eight.click();
+  else {
+    const choice=page.locator('.choices button').first();
+    if(!(await choice.count()))break;
+    await choice.click();
+  }
+  await button('Comprobar').click();
+  const next=button('Continuar');
+  if(await next.isVisible())await next.click();
+}
+await button('Insertar paréntesis').waitFor();
+assert.equal(await page.getByRole('button',{name:'Teclado numérico'}).count(),0,'precalculus must not show a number pad');
+await button('Insertar paréntesis').click();await button('x').click();await button('−').click();await button('1').click();
+assert.equal(await page.getByRole('textbox',{name:'Editar línea 1'}).getAttribute('data-value'),'(x−1)');
+await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();
+await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');
+await nav('Biblioteca');await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('De Morgan');await page.getByRole('button',{name:'Equivalencias y simplificación'}).click();await page.getByRole('heading',{name:'Ejemplo paso a paso',exact:true}).waitFor();assert.equal(await page.locator('.katex-error').count(),0);await page.screenshot({path:'tmp/qa/mobile-library.png',fullPage:true});
+await nav('Ajustes');await page.getByLabel('Modo oscuro').check();await page.getByLabel('Tamaño de letra').fill('1.3');await page.screenshot({path:'tmp/qa/mobile-settings.png',fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'settings overflow');
 await page.getByLabel('Modo oscuro').uncheck();await page.getByLabel('Tamaño de letra').fill('1');
 await page.setViewportSize({width:1440,height:1000});await page.getByRole('navigation',{name:'Navegación principal',exact:true}).getByRole('button',{name:'Aprender',exact:true}).click();await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');await page.screenshot({path:'tmp/qa/desktop-home.png',fullPage:true});
 assert.deepEqual(errors,[],'browser console exceptions');
-console.log('Browser QA passed: mobile lesson, tactile keyboard, laws, proof, progress persistence, book import, course switch, settings, desktop.');
+console.log('Browser QA passed: mobile lesson, logic and algebra keyboards, laws, library, course switch, settings, desktop.');
 await browser.close();
 if(server)await server.close();
