@@ -28,6 +28,14 @@ export async function saveBook(course: Course, data: ArrayBuffer) {
   await write('books', course, data);
   window.dispatchEvent(new CustomEvent('mate-book-changed', { detail: course }));
 }
+export function weekBookKey(course: Course, week: string) {
+  return `${course}-week-${week}`;
+}
+export const storedWeekBook = (course: Course, week: string) => read<ArrayBuffer | undefined>('books', weekBookKey(course, week));
+export async function saveWeekBook(course: Course, week: string, data: ArrayBuffer) {
+  await write('books', weekBookKey(course, week), data);
+  window.dispatchEvent(new CustomEvent('mate-week-book-changed', { detail: { course, week } }));
+}
 export async function storedClips(course: Course) { return (await read<BookClip[]>('clips')).filter(c => c.course === course).sort((a,b) => b.created-a.created); }
 export const saveClip = (clip: BookClip) => write('clips', clip.id, clip);
 export const deleteClip = (id: string) => write('clips', id);

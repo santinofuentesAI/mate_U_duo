@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { classify, equivalentLogic, equivalentAlgebra, grade, synthetic, truthRows } from '../src/engine';
+import { classify, equivalentLogic, equivalentAlgebra, grade, rationalCandidates, synthetic, syntheticMiddle, truthRows } from '../src/engine';
 import { lessons } from '../src/content';
 import { checkLaw, checkInference } from '../src/laws';
 import { dayKey, freshProgress, lessonMastery, recordAttempt, streak, validateProgress } from '../src/progress';
@@ -34,6 +34,14 @@ test('algebra: symbolic identities, domain restrictions, negative powers rejecte
   const q=lessons.flatMap(l=>l.questions).find(q=>q.exclusions?.length===2)!;
   assert.equal(grade(q,String(q.answer),[]).correct,false);
   assert.equal(grade(q,String(q.answer),q.exclusions).correct,true);
+});
+test('synthetic division exposes middle products and rational-root candidates',()=>{
+  assert.deepEqual(synthetic([2,-7,2,3],1),[2,-5,-3,0]);
+  assert.deepEqual(syntheticMiddle([2,-7,2,3],1),[null,2,-5,-3]);
+  assert.ok(rationalCandidates([2,-7,2,3]).includes(1));
+  assert.ok(rationalCandidates([1,-6,11,-6]).includes(1));
+  assert.ok(rationalCandidates([1,-6,11,-6]).includes(2));
+  assert.ok(rationalCandidates([1,-6,11,-6]).includes(3));
 });
 test('named law validation distinguishes correct rule and verifies subexpressions',()=>{
   assert.equal(checkLaw('¬(P∧Q)','¬P∨¬Q','De Morgan'),true);

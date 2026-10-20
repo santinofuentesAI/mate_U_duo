@@ -3,6 +3,8 @@ import { Check, ChevronRight, FlaskConical, Lightbulb, RotateCcw } from 'lucide-
 import type { Course } from './types';
 import { classify, evaluateLogic, parseLogic, truthRows } from './engine';
 import { SymbolInput } from './Keyboard';
+import { SyntheticLab } from './SyntheticPad';
+import { TruthTableLab } from './TruthTablePad';
 export function realRoots(a:number,b:number,c:number):number[]|'all' {
   if(a===0)return b===0?(c===0?'all':[]):[-c/b];
   const delta=b*b-4*a*c;if(delta<0)return [];
@@ -10,9 +12,39 @@ export function realRoots(a:number,b:number,c:number):number[]|'all' {
   return [(-b-Math.sqrt(delta))/(2*a),(-b+Math.sqrt(delta))/(2*a)].sort((x,y)=>x-y);
 }
 const fmt=(n:number)=>Number(n.toFixed(3)).toString();
+type DiscreteTab = 'logic' | 'sets' | 'tables';
+type PrecalcTab = 'equations' | 'synthetic';
+function discretePanel(tab: DiscreteTab) {
+  switch (tab) {
+    case 'logic': return <LogicExplorer/>;
+    case 'sets': return <SetExplorer/>;
+    case 'tables': return <TruthTableLab/>;
+    default: {
+      const never: never = tab;
+      return never;
+    }
+  }
+}
+function precalcPanel(tab: PrecalcTab) {
+  switch (tab) {
+    case 'equations': return <EquationExplorer/>;
+    case 'synthetic': return <SyntheticLab/>;
+    default: {
+      const never: never = tab;
+      return never;
+    }
+  }
+}
+function DiscreteExplorers() {
+  const [tab,setTab]=useState<DiscreteTab>('logic');
+  return <><div className="hub-tabs" role="group" aria-label="Explorador de discreta"><button className={tab==='logic'?'active':''} aria-pressed={tab==='logic'} onClick={()=>setTab('logic')}>Lógica en vivo</button><button className={tab==='sets'?'active':''} aria-pressed={tab==='sets'} onClick={()=>setTab('sets')}>Conjuntos en vivo</button><button className={tab==='tables'?'active':''} aria-pressed={tab==='tables'} onClick={()=>setTab('tables')}>Tablas a mano</button></div>{discretePanel(tab)}</>;
+}
+function PrecalcExplorers() {
+  const [tab,setTab]=useState<PrecalcTab>('equations');
+  return <><div className="hub-tabs" role="group" aria-label="Explorador de precálculo"><button className={tab==='equations'?'active':''} aria-pressed={tab==='equations'} onClick={()=>setTab('equations')}>Ecuaciones</button><button className={tab==='synthetic'?'active':''} aria-pressed={tab==='synthetic'} onClick={()=>setTab('synthetic')}>División sintética</button></div>{precalcPanel(tab)}</>;
+}
 export function Explorers({course}:{course:Course}) {
-  const [tab,setTab]=useState('logic');
-  return <section className="explore-suite"><div className="explore-heading"><span className="eyebrow">LABORATORIO DE IDEAS</span><h2>Tocá. Cambiá. Entendé.</h2><p>Explorá una idea antes de memorizarla. Cada cambio muestra qué pasa y por qué.</p></div>{course==='discreta'?<><div className="hub-tabs" role="group" aria-label="Explorador de discreta"><button className={tab==='logic'?'active':''} aria-pressed={tab==='logic'} onClick={()=>setTab('logic')}>Lógica en vivo</button><button className={tab==='sets'?'active':''} aria-pressed={tab==='sets'} onClick={()=>setTab('sets')}>Conjuntos en vivo</button></div>{tab==='logic'?<LogicExplorer/>:<SetExplorer/>}</>:<EquationExplorer/>}</section>;
+  return <section className="explore-suite"><div className="explore-heading"><span className="eyebrow">LABORATORIO DE IDEAS</span><h2>Tocá. Cambiá. Entendé.</h2><p>Explorá una idea antes de memorizarla. Cada cambio muestra qué pasa y por qué.</p></div>{course==='discreta'?<DiscreteExplorers/>:<PrecalcExplorers/>}</section>;
 }
 function LogicExplorer() {
   const [expression,setExpression]=useState('P→Q'),[values,setValues]=useState<Record<string,boolean>>({P:true,Q:false,R:true,S:false});

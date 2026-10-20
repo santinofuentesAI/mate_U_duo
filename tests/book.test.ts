@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import katex from 'katex';
 import { bookExercises } from '../src/bookExercises';
+import { caseExercises } from '../src/caseStudies';
 import { lessons } from '../src/content';
 import { bank, mistakeJournal } from '../src/learning';
 import { grade, equivalentLogic, truthRows } from '../src/engine';
@@ -12,8 +13,9 @@ import { matchesBook } from '../src/bookEditions';
 const question=(id:string)=>bookExercises.find(e=>e.question.id===id)!.question;
 test('selected book incisos have valid references, crop bounds and independently checked logical answers',()=>{
   assert.ok(bookExercises.length>=59);
-  assert.equal(bank(lessons,'precalculo').length,lessons.filter(l=>l.course==='precalculo').reduce((n,l)=>n+l.questions.length,0)+bookExercises.filter(e=>e.course==='precalculo').length);
-  assert.equal(bank(lessons,'discreta').length,lessons.filter(l=>l.course==='discreta').reduce((n,l)=>n+l.questions.length,0)+bookExercises.filter(e=>e.course==='discreta').length);
+  const extras=(course:typeof bookExercises[number]['course'])=>[...bookExercises,...caseExercises].filter(e=>e.course===course).length;
+  assert.equal(bank(lessons,'precalculo').length,lessons.filter(l=>l.course==='precalculo').reduce((n,l)=>n+l.questions.length,0)+extras('precalculo'));
+  assert.equal(bank(lessons,'discreta').length,lessons.filter(l=>l.course==='discreta').reduce((n,l)=>n+l.questions.length,0)+extras('discreta'));
   const ids=new Set(lessons.flatMap(l=>l.questions.map(q=>q.id)));
   for(const e of bookExercises){
     const q=e.question,s=q.bookSource!,c=s.crop;

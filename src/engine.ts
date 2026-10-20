@@ -133,6 +133,29 @@ function isIrreducibleFraction(input:string){
   return a===1;
 }
 export function synthetic(coefficients: number[], root: number) { const result = [coefficients[0]]; for (let i = 1; i < coefficients.length; i++) result.push(coefficients[i] + root * result[i - 1]); return result; }
+/** Products written under each coefficient after the first: r times the previous bottom entry. */
+export function syntheticMiddle(coefficients: number[], root: number): Array<number | null> {
+  const bottom = synthetic(coefficients, root);
+  return [null, ...bottom.slice(0, -1).map(value => root * value)];
+}
+function integerFactors(n: number): number[] {
+  const magnitude = Math.max(1, Math.abs(Math.round(n)));
+  const values: number[] = [];
+  for (let i = 1; i <= magnitude; i++) if (magnitude % i === 0) values.push(i, -i);
+  return values;
+}
+/** Possible rational roots p/q from the rational-root theorem, including fractions. */
+export function rationalCandidates(coefficients: number[]): number[] {
+  if (coefficients.length < 2) return [];
+  const leading = coefficients[0];
+  const constant = coefficients[coefficients.length - 1];
+  if (!leading) return [];
+  const dens = [...new Set(integerFactors(leading).filter(d => d > 0))];
+  const nums = constant === 0 ? [0, ...integerFactors(1)] : integerFactors(constant);
+  const found = new Set<number>();
+  for (const p of nums) for (const q of dens) found.add(p / q);
+  return [...found].sort((a, b) => a - b).slice(0, 18);
+}
 export function normalize(s: string) { return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase().replace(/\s+/g, ' ').replace(/[−–]/g, '-'); }
 function elements(s: string | string[]) { return [...new Set((Array.isArray(s) ? s : s.replace(/[{}]/g, '').split(/[;,]/)).map(x => normalize(x)).filter(Boolean))].sort(); }
 export function sameSet(a: string | string[], b: string | string[]) { return JSON.stringify(elements(a)) === JSON.stringify(elements(b)); }
