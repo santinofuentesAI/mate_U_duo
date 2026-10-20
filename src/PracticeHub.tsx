@@ -7,6 +7,7 @@ import { BookPractice } from './BookPractice';
 import { BookExam } from './BookExam';
 import { ExamLobby } from './ExamLobby';
 import { CaseStudio } from './CaseStudy';
+import { weekHeading } from './weekGroups';
 
 interface Props { progress: Progress; onStart: (items: PracticeItem[], title: string, mode: string) => void; onExam: (units: string[]) => void; onRead: (page: number) => void; initialBookProblem?: string; }
 type Screen = 'home' | 'book' | 'reviewed' | 'errors' | 'cases';
@@ -36,7 +37,7 @@ export function PracticeHub({ progress: p, onStart, onExam, onRead, initialBookP
   return <div className="simple-flow practice-simple"><h1>Practicar</h1><p>Misma rutina: modo, tema, cantidad, empezar. Los casos van después. El libro, al final.</p>
     <section className="simple-feature motion-in"><div><h2>20 de hoy</h2><p>Fácil a difícil, o examen mezclado. La tira corta son 8 del mismo plan.</p></div>
       <div className="intensity-row" role="radiogroup" aria-label="Dificultad de la práctica">{intensities.map(option => <button key={option.id} type="button" role="radio" aria-checked={intensity === option.id} className={intensity === option.id ? 'selected' : ''} onClick={() => setIntensity(option.id)}><b>{option.label}</b><small>{option.hint}</small></button>)}</div>
-      <label className="practice-topic"><span>Qué repasar</span><select aria-label="Tema a repasar" value={topic} onChange={e => setTopic(e.target.value)}><option value="all">Todos los temas</option>{units.map(unit => <option key={unit} value={unit}>{unit.split(' · ')[1] || unit}</option>)}</select></label>
+      <label className="practice-topic"><span>Qué repasar</span><select aria-label="Tema a repasar" value={topic} onChange={e => setTopic(e.target.value)}><option value="all">Todos los temas</option>{units.map((unit, index) => <option key={unit} value={unit}>{weekHeading(unit, index)}</option>)}</select></label>
       <div className="week-topic-chips" role="group" aria-label="Cuántos ejercicios">
         <button type="button" className={length === 20 ? 'selected' : ''} onClick={() => setLength(20)}>20</button>
         <button type="button" className={length === 8 ? 'selected' : ''} onClick={() => setLength(8)}>8 · corta</button>

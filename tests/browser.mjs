@@ -25,10 +25,10 @@ await page.getByText('Necesito ayuda').click();await button('Ver leyes').click()
 await button('P').click();await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();
 await button('Ver respuesta').click();const revealed=page.getByRole('region',{name:'Respuesta explicada'});await revealed.waitFor();assert.ok((await revealed.innerText()).length>20,'answer and explanation are visible');await button('Ocultar respuesta').click();
 await page.screenshot({path:'tmp/qa/mobile-keyboard.png',fullPage:true});
-await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();
+await button('Salir de la lección').click();
+await page.getByRole('heading',{name:'Aprender'}).waitFor();
 await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');
 await page.getByRole('button',{name:/Nivel \d+: Suma y diferencia de cubos/}).click();
-await page.getByRole('dialog',{name:'¿Reemplazar la sesión pausada?'}).getByRole('button',{name:'Empezar otra sesión'}).click();
 await page.getByRole('button',{name:/Ir a los \d+ ejercicios/}).click();
 await page.getByRole('button',{name:'Comprobar',exact:true}).waitFor();
 for(let i=0;i<6 && !(await page.getByRole('button',{name:'Insertar paréntesis'}).count());i++){
@@ -47,7 +47,8 @@ await button('Insertar paréntesis').waitFor();
 assert.equal(await page.getByRole('button',{name:'Teclado numérico'}).count(),0,'precalculus must not show a number pad');
 await button('Insertar paréntesis').click();await button('x').click();await button('−').click();await button('1').click();
 assert.equal(await page.getByRole('textbox',{name:'Editar línea 1'}).getAttribute('data-value'),'(x−1)');
-await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();
+await button('Salir de la lección').click();
+await page.getByRole('heading',{name:'Aprender'}).waitFor();
 await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');
 await nav('Biblioteca');await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('De Morgan');await page.getByRole('button',{name:'Equivalencias y simplificación'}).click();await page.getByRole('heading',{name:'Ejemplo paso a paso',exact:true}).waitFor();assert.equal(await page.locator('.katex-error').count(),0);await page.screenshot({path:'tmp/qa/mobile-library.png',fullPage:true});
 await nav('Ajustes');await page.getByLabel('Modo oscuro').check();await page.getByLabel('Tamaño de letra').fill('1.3');await page.screenshot({path:'tmp/qa/mobile-settings.png',fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'settings overflow');

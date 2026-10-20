@@ -31,7 +31,7 @@ try {
   await page.getByRole('heading',{name:'División sintética de verdad.'}).waitFor();
   await page.getByRole('button',{name:'r = 1'}).first().click();
   await page.getByRole('button',{name:'Volver a Biblioteca'}).click();
-  await page.getByRole('button',{name:'HTML'}).first().waitFor();
+  await page.getByRole('button',{name:'Leer'}).first().waitFor();
   await page.getByRole('button',{name:/Símbolos del curso/}).click();
   await page.getByRole('heading',{name:'Símbolos',exact:true}).waitFor();
   await page.getByRole('button',{name:'Volver',exact:true}).click();

@@ -133,10 +133,10 @@ export function WeekPdf({ course, week, label }: { course: Course; week: string;
 
   return (
     <section className="week-pdf">
-      <p>El folio de {label}. Se guarda acá, no se sube al repositorio.</p>
+      <p>Folio de {label}. Cargalo una vez: se lee aquí, en este dispositivo.</p>
       <label className="upload">
         <Upload size={18}/>
-        {loading ? 'Cargando…' : pdf ? 'Cambiar PDF de la semana' : 'Cargar PDF de la semana'}
+        {loading ? 'Cargando…' : pdf ? 'Cambiar folio' : 'Cargar folio de la semana'}
         <input disabled={loading} type="file" accept="application/pdf,.pdf" aria-label={`Importar PDF de ${week}`} onChange={event => {
           const file = event.target.files?.[0];
           if (file) void upload(file);
@@ -159,7 +159,7 @@ export function WeekPdf({ course, week, label }: { course: Course; week: string;
           <div className="pdf-canvas" ref={viewer}><div className="pdf-sheet"><canvas ref={canvas} aria-label={`Página ${page} de ${week}`}/></div></div>
         </section>
       ) : (
-        <section className="card empty"><BookOpen size={36}/><p>Cuando cargues el PDF de {week}, se lee aquí.</p></section>
+        <section className="card empty"><BookOpen size={36}/><p>Cuando cargues el folio de esta semana, se lee aquí.</p></section>
       )}
     </section>
   );

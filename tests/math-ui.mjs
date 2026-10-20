@@ -16,8 +16,6 @@ const tokens=async input=>{for(const k of input)await button(k==='^'?'Potencia':
 async function openCubes(){
   await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');
   await page.getByRole('button',{name:/Nivel \d+: Suma y diferencia de cubos/}).click();
-  const replace=page.getByRole('dialog',{name:'¿Reemplazar la sesión pausada?'});
-  if(await replace.isVisible())await replace.getByRole('button',{name:'Empezar otra sesión'}).click();
   await page.getByRole('button',{name:/Ir a los \d+ ejercicios/}).click();
   await page.getByRole('button',{name:'Comprobar',exact:true}).waitFor();
   for(let i=0;i<6 && !(await page.getByRole('button',{name:'Insertar paréntesis'}).count());i++){
@@ -48,15 +46,16 @@ try {
   await button('Limpiar').tap();await button('Insertar fracción').tap();await tokens('x');assert.equal(await value(),'(x)/()');await button('Limpiar').tap();
   await button('Teclado del teléfono').click();const native=field();await native.fill('(x-1)*(x^2+x+1)');await native.evaluate(el=>{el.focus();el.setSelectionRange(9,10);});await button('3').tap();assert.equal(await native.inputValue(),'(x-1)*(x^3+x+1)');await button('Deshacer edición').tap();assert.equal(await native.inputValue(),'(x-1)*(x^2+x+1)');await button('Volver a símbolos').tap();
   await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!',exact:true}).waitFor();await page.getByText('+10 XP',{exact:true}).waitFor();assert.equal(await page.locator('.symbol-keys').count(),0,'hide keys to make room for explanation');assert.equal(await page.locator('.answer-sparks i').count(),12);await page.screenshot({path:'tmp/qa/correct-answer-mobile.png',fullPage:true,animations:'disabled'});
-  await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();
+  await button('Salir de la lección').click();
+  await page.getByRole('heading',{name:'Aprender'}).waitFor();
   await nav('Biblioteca');await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('cubos');await page.getByRole('button',{name:'Suma y diferencia de cubos'}).click();await page.getByRole('heading',{name:'Ejemplo paso a paso'}).waitFor();
   await nav('Mi libro');await page.locator('input[type=file]').setInputFiles(pdfFixture());await page.getByText(/PDF guardado/).waitFor();
   await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');
   await nav('Aprender');await page.getByRole('button',{name:/Nivel \d+: Equivalencias y simplificación/}).click();
-  await page.getByRole('dialog',{name:'¿Reemplazar la sesión pausada?'}).getByRole('button',{name:'Empezar otra sesión'}).click();
   await page.getByRole('button',{name:/Ir a los \d+ ejercicios/}).click();
   await page.getByText('Necesito ayuda').click();await button('Ver leyes').click();await page.getByRole('dialog',{name:'Leyes y reglas',exact:true}).waitFor();await page.getByRole('heading',{name:'Leyes lógicas'}).waitFor();await button('Volver al ejercicio').click();
-  await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();
+  await button('Salir de la lección').click();
+  await page.getByRole('heading',{name:'Aprender'}).waitFor();
   await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');
   for(const size of [{width:390,height:844},{width:800,height:1280},{width:1280,height:800}]){
     await page.setViewportSize(size);await nav('Ajustes');await page.getByLabel('Modo oscuro').check();await page.getByLabel('Tamaño de letra').fill('1.3');await page.getByLabel('Reducir movimiento').check();await nav('Mi libro');await noOverflow(`algebra ${size.width}`);

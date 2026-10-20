@@ -40,11 +40,20 @@
 .method-steps{display:grid;gap:12px;padding-left:22px}
 .method-steps li b{display:block;margin-bottom:4px}
 .method-steps p{margin:0;font-size:.88rem}
-.week-shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}
+.library-section{margin:20px 0 8px;font-size:.68rem;letter-spacing:.12em;font-weight:900;color:var(--muted)}
+.library-book{width:100%;display:flex;align-items:center;gap:14px;text-align:left;padding:18px;margin:0 0 8px;border:1.5px solid var(--purple);border-radius:18px;background:var(--soft)}
+.library-book>svg:first-child{flex:none;color:var(--purple)}
+.library-book>span{flex:1;min-width:0}
+.library-book b,.library-book small{display:block}
+.library-book b{font-size:1rem}
+.library-book small{margin-top:4px;font-weight:500;line-height:1.4}
+.library-lab{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.library-lab .simple-link{margin:0}
+.week-shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:8px 0 18px}
 .week-card{padding:16px;border:1px solid var(--border);border-radius:18px;background:var(--surface);display:grid;gap:6px}
 .week-card small{font-weight:900;color:var(--purple);letter-spacing:.08em}
 .week-card h2{font-size:1.05rem;margin:0}
-.week-card p{font-size:.74rem;margin:0;line-height:1.45}
+.week-card p,.week-card .week-topics{font-size:.74rem;margin:0;line-height:1.45;color:var(--muted)}
 .week-card-actions{display:flex;gap:8px;margin-top:8px}
 .week-card-actions button{flex:1;justify-content:center;min-height:44px}
 .guide-axis{margin:18px 0;padding:16px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}.guide-axis>small,.axis-head small{display:block;font-size:.62rem;letter-spacing:.1em;font-weight:900;color:var(--purple);margin:0}.axis-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}.axis-num{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--purple);color:#fff;font-size:.78rem;font-weight:900}.axis-2 .axis-num{background:#168979}.axis-3 .axis-num{background:#d97706}.library-axes{display:grid;gap:8px;margin:14px 0 18px}.case-feature h2{display:flex;align-items:center;gap:8px}.week-topic-chips{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.practice-topic{display:grid;gap:6px;margin:12px 0;font-size:.78rem;font-weight:800;color:var(--muted)}.practice-topic select{font-size:.9rem;font-weight:700;color:var(--text)}
@@ -65,5 +74,5 @@
 .symbol-tile p{margin:0;font-size:.78rem;line-height:1.45}
 .worked-method{margin:22px 0;padding:18px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
 .worked-method h2{font-size:1.05rem;margin:0 0 10px}
-@media(max-width:700px){.intensity-row{grid-template-columns:repeat(2,minmax(0,1fr))}.week-shelf{grid-template-columns:1fr}.synthetic-row{grid-template-columns:52px repeat(4,minmax(52px,1fr))}.case-story{padding:16px;font-size:.95rem}.symbol-grid{grid-template-columns:1fr}.idea-card p{font-size:.97rem}}
+@media(max-width:700px){.intensity-row{grid-template-columns:repeat(2,minmax(0,1fr))}.week-shelf,.library-lab{grid-template-columns:1fr}.synthetic-row{grid-template-columns:52px repeat(4,minmax(52px,1fr))}.case-story{padding:16px;font-size:.95rem}.symbol-grid{grid-template-columns:1fr}.idea-card p{font-size:.97rem}}
 @media(max-width:700px){.journey-route{max-width:430px}.journey-heading>span{font-size:.68rem}.journey-unit-banner{padding:12px 16px;margin-bottom:15px}.journey-unit-banner h2{font-size:1rem}.journey-unit-banner small{top:12px;right:15px}.journey-levels{gap:9px}.journey-levels:before{left:35px}.journey-level{min-height:70px;padding:7px 11px;gap:10px}.journey-orb{width:48px;height:48px;border-radius:15px}.journey-level-copy b{font-size:.78rem}.journey-level-copy small{font-size:.57rem}.resume-mini{margin-bottom:14px}.resume-mini span{display:none}.resume-mini b{font-size:.75rem}}

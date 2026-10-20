@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { ArrowRight, Check, Play } from 'lucide-react';
 import type { Lesson, Progress } from './types';
 import { TopicIcon } from './TopicIcon';
+import { weekHeading, weekNumber } from './weekGroups';
 
 const unitTints = ['#5b4bdb', '#168979', '#d97706', '#0f766e', '#7c3aed', '#c2410c'];
 
@@ -17,32 +18,34 @@ export function LearningPath({ path, progress: p, onStart }: { path: Lesson[]; p
         <div><span className="eyebrow">TU RUTA</span><h1>Aprender</h1></div>
         <span>{done} / {path.length} niveles</span>
       </header>
-      <p className="journey-how">Empezá por la primera unidad. Tocá el nivel, leé la idea y resolvé sin pista.</p>
-      <nav className="journey-jumps" aria-label="Saltar a una unidad">{units.map((unit, i) => <button key={unit} onClick={() => document.getElementById(`journey-unit-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>Unidad {i + 1}</button>)}</nav>
-      {units.map((unit, unitIndex) => (
-        <section className="journey-unit" id={`journey-unit-${unitIndex}`} key={unit} aria-label={`Unidad ${unitIndex + 1}: ${unit}`} style={{ '--unit-accent': unitTints[unitIndex % unitTints.length] } as CSSProperties}>
-          <div className="journey-unit-banner">
-            <span>UNIDAD {unitIndex + 1}</span>
-            <h2>{unit.split(' · ')[1] || unit}</h2>
-            <small>{unit.split(' · ')[0]}</small>
-          </div>
-          <div className="journey-levels">{path.filter(lesson => lesson.unit === unit).map(lesson => {
-            const level = path.indexOf(lesson) + 1, completed = p.completed.includes(lesson.id), current = lesson.id === next.id;
-            const mark = Math.ceil(lesson.questions.length * 0.7);
-            return (
-              <button key={lesson.id} className={`journey-level ${current ? 'is-current' : ''} ${completed ? 'is-done' : ''}`} onClick={() => onStart(lesson)} aria-label={`Nivel ${level}: ${lesson.title}. ${lesson.questions.length} ejercicios. Se marca con ${mark} al primer intento, sin pista.${completed ? ' Completado.' : current ? ' Siguiente.' : ''}`}>
-                <span className="journey-orb">{completed ? <Check size={27} strokeWidth={3}/> : <TopicIcon name={lesson.icon} topic={lesson.title} size={40}/>}</span>
-                <span className="journey-level-copy">
-                  <small>{current ? <><Play size={12} fill="currentColor"/> SIGUIENTE</> : completed ? 'COMPLETADO' : `NIVEL ${level}`}</small>
-                  <b>{lesson.title}</b>
-                  <span className="journey-level-count">{lesson.questions.length} ejercicios · {mark} al primer intento</span>
-                </span>
-                <ArrowRight className="journey-level-arrow" size={17}/>
-              </button>
-            );
-          })}</div>
-        </section>
-      ))}
+      <p className="journey-how">Una unidad es una semana. Empezá por la Semana 1, leé la idea y resolvé sin pista.</p>
+      <nav className="journey-jumps" aria-label="Saltar a una semana">{units.map((unit, i) => <button key={unit} onClick={() => document.getElementById(`journey-unit-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>Semana {weekNumber(unit, i)}</button>)}</nav>
+      {units.map((unit, unitIndex) => {
+        const n = weekNumber(unit, unitIndex);
+        return (
+          <section className="journey-unit" id={`journey-unit-${unitIndex}`} key={unit} aria-label={weekHeading(unit, unitIndex)} style={{ '--unit-accent': unitTints[unitIndex % unitTints.length] } as CSSProperties}>
+            <div className="journey-unit-banner">
+              <span>SEMANA {n}</span>
+              <h2>{unit.split(' · ')[1] || unit}</h2>
+            </div>
+            <div className="journey-levels">{path.filter(lesson => lesson.unit === unit).map(lesson => {
+              const level = path.indexOf(lesson) + 1, completed = p.completed.includes(lesson.id), current = lesson.id === next.id;
+              const mark = Math.ceil(lesson.questions.length * 0.7);
+              return (
+                <button key={lesson.id} className={`journey-level ${current ? 'is-current' : ''} ${completed ? 'is-done' : ''}`} onClick={() => onStart(lesson)} aria-label={`Nivel ${level}: ${lesson.title}. ${lesson.questions.length} ejercicios. Se marca con ${mark} al primer intento, sin pista.${completed ? ' Completado.' : current ? ' Siguiente.' : ''}`}>
+                  <span className="journey-orb">{completed ? <Check size={27} strokeWidth={3}/> : <TopicIcon name={lesson.icon} topic={lesson.title} size={40}/>}</span>
+                  <span className="journey-level-copy">
+                    <small>{current ? <><Play size={12} fill="currentColor"/> SIGUIENTE</> : completed ? 'COMPLETADO' : `NIVEL ${level}`}</small>
+                    <b>{lesson.title}</b>
+                    <span className="journey-level-count">{lesson.questions.length} ejercicios · {mark} al primer intento</span>
+                  </span>
+                  <ArrowRight className="journey-level-arrow" size={17}/>
+                </button>
+              );
+            })}</div>
+          </section>
+        );
+      })}
     </section>
   );
 }

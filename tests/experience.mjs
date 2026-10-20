@@ -21,11 +21,10 @@ try {
   await page.getByText('Necesito ayuda').click();await button('Ver leyes').click();await page.getByRole('dialog').waitFor();
   await page.keyboard.press('Escape');assert.equal(await page.getByRole('dialog').count(),0);
   await button('P').click();await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();
-  await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();await button('Retomar sesión').waitFor();await page.reload();await button('Retomar sesión').click();
-  await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();
   await page.screenshot({path:'tmp/qa/resumed-answer.png',fullPage:true});
   await button('Continuar').click();
-  await button('Salir de la lección').click();await page.getByRole('dialog',{name:'¿Pausar esta sesión?'}).getByRole('button',{name:'Pausar y volver'}).click();
+  await button('Salir de la lección').click();
+  await page.getByRole('heading',{name:'Aprender'}).waitFor();
   await nav('Biblioteca');await page.getByRole('button',{name:/Abrir explorador/}).click();
   await page.locator('.logic-output b').waitFor();assert.equal(await page.locator('.logic-output b').textContent(),'F');
   await button('Cambiar Q').tap();assert.equal(await page.locator('.logic-output b').textContent(),'V');assert.equal(await page.locator('.current-truth-row').count(),1);
@@ -47,5 +46,5 @@ try {
     await nav('Aprender');assert.ok((await page.locator('.journey-level').count())>3);await noOverflow(`levels ${size.width}`);
   }
   assert.deepEqual(errors,[],'uncaught browser exceptions');
-  console.log('Experience QA passed: lesson path, tactile logic, session recovery, live logic/sets/equations, responsive tablet and large type.');
+  console.log('Experience QA passed: lesson path, tactile logic, leave without pause, live logic/sets/equations, responsive tablet and large type.');
 } catch(e) {await page.screenshot({path:'tmp/qa/experience-failure.png',fullPage:true});throw e;} finally {await browser.close();await server.close();}
