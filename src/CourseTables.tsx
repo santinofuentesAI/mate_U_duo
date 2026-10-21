@@ -3,7 +3,7 @@ import katex from 'katex';
 import type { Course } from './types';
 import { algebraRules } from './algebraRules';
 import { truthRows } from './engine';
-import { logicTables, tableFamilies } from './courseTables';
+import { logicTables, type LogicTableSpec } from './courseTables';
 
 function Formula({ value }: { value: string }) {
   return <span className="math" dangerouslySetInnerHTML={{ __html: katex.renderToString(value, { throwOnError: false, strict: false }) }} />;
@@ -13,73 +13,86 @@ function mark(value: boolean) {
   return value ? 'V' : 'F';
 }
 
+function LogicTable({ table }: { table: LogicTableSpec }) {
+  const rows = truthRows(table.expr, table.variables);
+  return (
+    <section className="table-block">
+      <h3>{table.title}</h3>
+      <div className="course-table-wrap">
+        <table>
+          <caption>{table.expr}</caption>
+          <thead>
+            <tr>{table.variables.map(variable => <th key={variable}>{variable}</th>)}<th>{table.expr}</th></tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={index}>
+                {table.variables.map(variable => <td key={variable} className={row.values[variable] ? 'truth-v' : 'truth-f'}>{mark(!!row.values[variable])}</td>)}
+                <td key="resultado" className={row.result ? 'truth-v' : 'truth-f'}>{mark(row.result)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function CourseSheet({ course }: { course: Course }) {
+  switch (course) {
+    case 'discreta':
+      return <>{logicTables.map(table => <LogicTable key={table.id} table={table}/>)}</>;
+    case 'precalculo':
+      return <>{algebraRules.map(group => (
+        <section className="table-block" key={group.id}>
+          <h3>{group.title}</h3>
+          <div className="course-table-wrap">
+            <table className="formula-table">
+              <thead><tr><th>Nombre</th><th>Fórmula</th><th>Para qué sirve</th></tr></thead>
+              <tbody>
+                {group.rules.map(rule => (
+                  <tr key={rule.name}>
+                    <td>{rule.name}</td>
+                    <td><Formula value={rule.formula}/>{rule.condition && <small>{rule.condition}</small>}</td>
+                    <td>{rule.why}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ))}</>;
+    default: {
+      const never: never = course;
+      return never;
+    }
+  }
+}
+
 export function CourseTables({ course }: { course: Course }) {
-  const families = tableFamilies(course);
-  const [open, setOpen] = useState<string | null>(null);
-  const chosen = families.find(item => item.id === open);
-  const logic = course === 'discreta' && chosen ? logicTables.find(table => table.id === chosen.id) : undefined;
-  const algebra = course === 'precalculo' && chosen ? algebraRules.find(group => group.id === chosen.id) : undefined;
-  const rows = logic ? truthRows(logic.expr, logic.variables) : [];
+  const [open, setOpen] = useState(false);
+  const label = course === 'discreta' ? 'Tablas de Discreta' : 'Tablas de Precálculo';
   useEffect(() => {
     if (!open) return;
-    const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setOpen(null); };
+    const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setOpen(false); };
     document.addEventListener('keydown', close);
     return () => document.removeEventListener('keydown', close);
   }, [open]);
   return (
-    <aside className="table-rail" aria-label={course === 'discreta' ? 'Tablas de Discreta' : 'Tablas de Precálculo'}>
-      <span className="table-rail-label">Tablas</span>
-      {families.map(item => (
-        <button key={item.id} type="button" className={item.id === open ? 'selected' : ''} aria-label={`Tabla ${item.title}`} aria-expanded={item.id === open} onClick={() => setOpen(item.id === open ? null : item.id)}>
-          <b>{item.title}</b>
-          <small>{item.id === open ? 'Abierta' : 'Ver grande'}</small>
-        </button>
-      ))}
-      {chosen && (
+    <>
+      <button type="button" className="table-opener" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>Tablas</button>
+      {open && (
         <>
-          <button type="button" className="table-stage-backdrop" aria-label="Achicar tabla" onClick={() => setOpen(null)}/>
-          <div className="table-stage" role="region" aria-label={`Tabla ampliada: ${chosen.title}`}>
+          <button type="button" className="table-stage-backdrop" aria-label="Cerrar tablas" onClick={() => setOpen(false)}/>
+          <div className="table-stage" role="dialog" aria-modal="true" aria-label={label}>
             <div className="table-stage-bar">
-              <b>{chosen.title}</b>
-              <button type="button" onClick={() => setOpen(null)}>Achicar</button>
+              <b>Tablas</b>
+              <button type="button" onClick={() => setOpen(false)}>Cerrar</button>
             </div>
-            {logic && (
-              <div className="course-table-wrap">
-                <table>
-                  <caption>{logic.expr}</caption>
-                  <thead>
-                    <tr>{logic.variables.map(variable => <th key={variable}>{variable}</th>)}<th>{logic.expr}</th></tr>
-                  </thead>
-                  <tbody>
-                    {rows.map((row, index) => (
-                      <tr key={index}>
-                        {logic.variables.map(variable => <td key={variable} className={row.values[variable] ? 'truth-v' : 'truth-f'}>{mark(!!row.values[variable])}</td>)}
-                        <td key="resultado" className={row.result ? 'truth-v' : 'truth-f'}>{mark(row.result)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-            {algebra && (
-              <div className="course-table-wrap">
-                <table className="formula-table">
-                  <thead><tr><th>Nombre</th><th>Fórmula</th><th>Para qué sirve</th></tr></thead>
-                  <tbody>
-                    {algebra.rules.map(rule => (
-                      <tr key={rule.name}>
-                        <td>{rule.name}</td>
-                        <td><Formula value={rule.formula}/>{rule.condition && <small>{rule.condition}</small>}</td>
-                        <td>{rule.why}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+            <CourseSheet course={course}/>
           </div>
         </>
       )}
-    </aside>
+    </>
   );
 }
