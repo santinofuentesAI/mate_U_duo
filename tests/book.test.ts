@@ -66,6 +66,25 @@ test('book factorization requires a product and equation tasks reject extraneous
   assert.equal(question('precalculo-clase-s6-5').answer,']−∞, −7[ ∪ ]0, 2/5[');
   assert.equal(question('precalculo-clase-s6-17').answer,'{−2} ∪ [2, ∞)');
   assert.equal(grade(question('precalculo-clase-s6-17'),'[−2, 2]').correct,false);
+  assert.equal(grade(question('precalculo-libro-extra-63-1c'),['17/12','5/2']).correct,true);
+  assert.equal(grade(question('precalculo-libro-extra-63-1c'),['5/2']).correct,false);
+  assert.equal(grade(question('precalculo-libro-extra-63-1g'),['1','-5']).correct,true);
+  assert.equal(grade(question('precalculo-libro-extra-63-2h'),['1/2','-3']).correct,true);
+  assert.equal(grade(question('precalculo-libro-extra-63-2h'),['-3','2']).correct,false);
+  assert.equal(question('precalculo-libro-extra-52-2f').answer,'(x−2)/(x(x−1)(x+1))');
+  assert.equal(question('discreta-libro-extra-55-1b').answer,'Verdadero');
+  assert.equal(grade(question('precalculo-libro-extra-63-1a'),['2','-2','1/3']).correct,true);
+  assert.equal(grade(question('precalculo-libro-extra-63-1b'),['-1','0','1']).correct,true);
+  assert.equal(grade(question('precalculo-libro-extra-63-1i'),['0']).correct,true);
+  assert.equal(grade(question('precalculo-libro-extra-63-1k'),['1']).correct,false);
+  assert.equal(grade(question('precalculo-libro-extra-63-1n'),['-31/3']).correct,true);
+  assert.equal(grade(question('precalculo-libro-extra-63-2f'),['3']).correct,true);
+  assert.equal(grade(question('precalculo-libro-extra-63-2f'),['3','11']).correct,false);
+  assert.equal(grade(question('precalculo-libro-extra-63-2g'),['11']).correct,true);
+  assert.equal(grade(question('precalculo-libro-extra-63-2i'),['0','3']).correct,true);
+  assert.equal(grade(question('precalculo-libro-extra-63-2k'),['169/49']).correct,true);
+  assert.equal(question('precalculo-libro-extra-63-1f').answer,'Ninguna real');
+  assert.equal(question('precalculo-libro-extra-63-1m').answer,'Ninguna real');
   assert.ok(grade(question('precalculo-libro-19-6p'),'2/120').correct);
 });
 test('original cardinality problems distinguish intersections from exactly-one or exactly-two regions',()=>{
