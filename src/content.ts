@@ -78,7 +78,7 @@ export const lessons: Lesson[] = [
       choice('Negá “existe un número par en A”.', ['Ningún elemento de A es par','Todos son pares','Existe un impar en A'], 'Ningún elemento de A es par', '¬∃ se transforma en ∀¬.'),
       choice('¿Cuál distribución es válida?', ['∃x(P(x) ∨ Q(x)) ≡ (∃x P(x)) ∨ (∃x Q(x))','∀x(P(x) ∨ Q(x)) ≡ (∀x P(x)) ∨ (∀x Q(x))'], '∃x(P(x) ∨ Q(x)) ≡ (∃x P(x)) ∨ (∃x Q(x))', 'Un testigo para alguna alternativa basta; el universal no exige una alternativa común.')]),
   D('S3 · Predicados y cuantificadores', 'Cuantificadores anidados', '🪆', '7–8',
-    ['El orden importa: ∀x ∃y permite elegir y según x; ∃y ∀x exige un y fijo.', 'Para demostrar un existencial exhibí un testigo; para refutar un universal exhibí un contraejemplo.', 'Al negar varios cuantificadores, cambiá cada uno sin alterar el orden.'], ['\\forall x\\in\\mathbb R\\ \\exists y\\in\\mathbb R:x+y=0', '\\neg\\forall x\\exists y P(x,y)\\equiv\\exists x\\forall y\\neg P(x,y)'],
+    ['Se lee de izquierda a derecha. “Para cada x hay un y” deja que el y cambie.', '“Hay un y para todos los x” pide el mismo y. No es la misma frase.', 'En el ejercicio se toca V o F. Un solo caso que falla alcanza para decir que un “para todos” es falso.'], ['\\forall x\\in\\mathbb R\\ \\exists y\\in\\mathbb R:x+y=0', '\\neg\\forall x\\exists y P(x,y)\\equiv\\exists x\\forall y\\neg P(x,y)'],
     ['∀x ∃y: x + y = 0 es verdadero en ℝ.', 'Para cada x elegí y = −x.', '∃y ∀x: x + y = 0 es falso: un y fijo no anula todos los x.'], [
       choice('En ℝ, ¿es verdadero ∀x ∃y: x + y = 0?', ['V','F'], 'V', 'Elegí y = −x para cada x.'),
       choice('En ℝ, ¿es verdadero ∃y ∀x: x + y = 0?', ['V','F'], 'F', 'Para x = 0 se exige y = 0; para x = 1 se exige y = −1.'),
@@ -120,33 +120,33 @@ export const lessons: Lesson[] = [
       input('text', 'De 30 personas, 25 usan al menos una herramienta. ¿Cuántas ninguna?', '5', 'El exterior de la unión tiene 30 − 25 = 5.'),
       input('text', '|A|=10, |B|=9, |C|=8; intersecciones por pares 4,3,2; triple 1. Hallá la unión.', '19', '10 + 9 + 8 − 4 − 3 − 2 + 1 = 19.')]),
   D('S5 · Venn y leyes de clase', 'Regiones de Venn', '◉', '1–10',
-    ['Un diagrama de Venn marca regiones según pertenencia. Con dos conjuntos hay cuatro regiones, incluida la de afuera; con tres hay ocho.', 'Los números de un enunciado suelen ser |A|, |A ∩ B| o “solo A”. No son la misma cantidad: |A| incluye las lunas y el centro.', 'Si falta un par, algunas regiones no se pueden calcular. En este curso no se inventa ese dato.'],
+    ['El dibujo separa solo un grupo, los dos grupos y los que no están en ninguno.', 'El número grande de un grupo incluye a quienes también están en otro. “Solo ese grupo” es menos.', 'Si falta un dato, esa zona no se calcula.'],
     ['|A\\cup B|=|A|+|B|-|A\\cap B|', '|A-B|=|A|-|A\\cap B|'],
-    ['156 niños: balón 52, carritos 63, videojuegos 87.', 'Pares: 26, 37 y 23; los tres juguetes 7. Solo videojuegos = 87 − (23−7) − (37−7) − 7 = 34.', 'La unión es 123. Los que eligieron otro juguete: 156 − 123 = 33.'], [
+    ['156 niños: balón 52, carritos 63, videojuegos 87.', 'Pares: 26, 37 y 23; los tres juguetes 7. Solo videojuegos = 87 − (23−7) − (37−7) − 7 = 34.', 'La unión es 123. Otro juguete: 156 − 123 = 33. En la casilla se escribe 33, solo ese número.'], [
       input('text', '80 en Biología, 60 en Química, 30 en ambas. ¿Cuántos están en al menos una?', '110', '80 + 60 − 30 = 110.'),
       input('text', 'De 100 personas, 50 hipertensión, 40 diabetes, 25 ambas. ¿Cuántas no tienen ninguna?', '35', 'La unión es 65. 100 − 65 = 35.'),
       input('text', 'A=40, B=35, C=30; pares 10, 8 y 5; triple 3. ¿Cuántas recibieron al menos una vacuna?', '85', '40+35+30 − 10 − 8 − 5 + 3 = 85.')]),
   D('S5 · Venn y leyes de clase', 'Leyes de conjuntos de clase', '⚖️', '6–10',
-    ['Las leyes de conjuntos son las mismas que las proposicionales: ∪ se comporta como ∨, ∩ como ∧, el complemento como ¬.', 'El material de clase perdió algunas barras de complemento en el PDF. Acá se usan las identidades correctas: (A ∪ B)ᶜ = Aᶜ ∩ Bᶜ y A ∪ Aᶜ = U.', '∩ se resuelve antes que ∪, salvo que el folio traiga corchetes. Si un dato falta, el inciso queda abierto.'],
+    ['Unir A con una parte de A no agrega nada: sigue siendo A.', '∅ no tiene elementos. U es todo lo que se está mirando. Fuera de “A o B” es lo mismo que fuera de A y fuera de B.', 'Si el ejercicio muestra opciones, se toca el conjunto que quedó, por ejemplo A, B, ∅ o U. No se escribe una explicación.'],
     ['(A\\cup B)^{c}=A^{c}\\cap B^{c}', 'A\\cup(A\\cap B)=A', 'X\\cap(X^{c}\\cup B)=X\\cap B'],
     ['Queremos (A ∪ B) ∩ ((A ∪ B)ᶜ ∪ B).', 'Con X = A ∪ B: X ∩ (Xᶜ ∪ B) = (X ∩ Xᶜ) ∪ (X ∩ B) = X ∩ B.', 'B ⊆ A ∪ B, así que el resultado es B.'], [
       choice('¿A qué equivale (A ∪ B) ∩ ((A ∪ B)ᶜ ∪ B)?', ['B', 'A ∪ B', '∅', 'U'], 'B', 'Distribuí y usá X ∩ Xᶜ = ∅. Queda B porque B ⊆ A ∪ B.'),
       choice('¿A qué equivale A ∪ (A ∩ B)?', ['A', 'B', 'A ∩ B', 'A ∪ B'], 'A', 'Es absorción: A ∩ B no agrega elementos fuera de A.'),
       choice('¿Cuál es (A ∪ B)ᶜ?', ['Aᶜ ∩ Bᶜ', 'Aᶜ ∪ Bᶜ', 'A ∩ B', 'U'], 'Aᶜ ∩ Bᶜ', 'De Morgan: estar fuera de la unión es estar fuera de ambos.')]),
   D('S6 · Potencia, producto y cardinalidad', 'Conjunto potencia y producto', '⧉', '1–6',
-    ['P(A) es el conjunto de todos los subconjuntos de A, incluido ∅ y el propio A. |P(A)| = 2^|A|.', 'A × B es el conjunto de pares ordenados (a, b) con a ∈ A y b ∈ B. (a, b) ≠ (b, a) si a ≠ b.', 'Un elemento y el conjunto que lo contiene no son el mismo objeto: 1 ≠ {1}.'],
+    ['P(A) junta todos los subconjuntos de A, incluido el vacío y el propio A.', 'Con n elementos hay 2 elevado a n subconjuntos. La respuesta de |P(A)| es ese número.', 'A × B son pares. Se cuentan multiplicando |A| por |B|. 1 y {1} no son lo mismo.'],
     ['P(A)=\\{S\\mid S\\subseteq A\\}', '|P(A)|=2^{|A|}', '|A\\times B|=|A|\\cdot|B|'],
-    ['A = {a, c}, B = {a, b, c}.', 'P(A) = {∅, {a}, {c}, {a,c}}. Tiene 4 elementos.', 'A × B tiene 2 · 3 = 6 pares, entre ellos (a, b) y (c, a).'], [
-      input('text', 'A = {1,3,5,7,9}. Calculá |P(A)|.', '32', '2⁵ = 32.'),
-      input('text', 'A={a,b}, B={1,2,3}. Calculá |A × B|.', '6', '2 · 3 = 6 pares ordenados.'),
+    ['A = {a, c}, B = {a, b, c}.', 'Los subconjuntos de A son ∅, {a}, {c} y {a, c}. Son 4.', 'A × B tiene 2 · 3 = 6 pares. Si piden cuántos, en la casilla se escribe 6.'], [
+      input('text', 'A = {1,3,5,7,9}. ¿Cuántos subconjuntos tiene? Escribí solo el número.', '32', 'Son 5 elementos. 2⁵ = 32. No escribas la lista.'),
+      input('text', 'A={a,b}, B={1,2,3}. ¿Cuántos pares hay en A × B? Escribí solo el número.', '6', '2 · 3 = 6. No escribas los pares.'),
       choice('En A = {∅, {1}, 1}, ¿cuántos elementos hay?', ['3', '2', '4'], '3', '∅, {1} y 1 son objetos distintos.')]),
   D('S6 · Potencia, producto y cardinalidad', 'Cardinalidad y conteo', '#️⃣', '6–16',
-    ['|A| cuenta elementos distintos. ∅ y { } son el mismo objeto; {5} y {√25, 5} también, porque √25 = 5.', '|A ∪ B ∪ C| = |A|+|B|+|C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|.', 'Si el enunciado no da un par, no se completa la región que depende de ese par.'],
+    ['|A| pregunta cuántos elementos distintos hay. El vacío tiene 0.', 'Para una unión se suma y se resta lo que se contó dos veces.', 'La casilla lleva el número. Si falta un dato, no se inventa.'],
     ['|A-B|=|A|-|A\\cap B|', '|A\\times B|=|A|\\cdot|B|', '|P(A)|=2^{|A|}'],
     ['|A|=8, |B|=6, |C|=5; pares 3, 2 y 1; triple 1.', 'Unión: 8+6+5 − 3 − 2 − 1 + 1 = 14.', 'Ese 14 ya no se puede “completar” inventando otra intersección.'], [
-      input('text', '|A|=8, |B|=6, |C|=5; pares 3, 2 y 1; triple 1. Calculá |A ∪ B ∪ C|.', '14', '8+6+5 − 3 − 2 − 1 + 1 = 14.'),
-      input('text', 'A = {1,2,…,8}. Calculá |P(A)|.', '256', '2⁸ = 256.'),
-      input('text', '|U|=10, |A|=6, |B|=5, |C|=4; pares 3, 2 y 1; triple 1. ¿Cuántos no están en ningún grupo?', '0', 'La unión da 10: nadie queda fuera.')]),
+      input('text', '|A|=8, |B|=6, |C|=5; pares 3, 2 y 1; triple 1. ¿Cuántos hay en la unión? Escribí solo el número.', '14', '8+6+5 − 3 − 2 − 1 + 1 = 14.'),
+      input('text', 'A = {1,2,…,8}. ¿Cuántos subconjuntos tiene? Escribí solo el número.', '256', '2⁸ = 256.'),
+      input('text', '|U|=10, |A|=6, |B|=5, |C|=4; pares 3, 2 y 1; triple 1. ¿Cuántos no están en ningún grupo? Escribí solo el número.', '0', 'La unión da 10: nadie queda fuera. Se escribe 0.')]),
   P('Raíces racionales y factores', '🌱', '1–2',
     ['Si p/q es raíz racional en forma irreducible, p divide el término independiente y q el coeficiente principal.', 'Son candidatos, no raíces garantizadas. Probá cada uno con sustitución o división sintética.', 'Antes de buscar raíces, extraé un factor común. Un resto cero confirma un factor x − r.'], ['p\\mid a_0,\\quad q\\mid a_n', 'P(r)=0\\iff(x-r)\\text{ divide a }P(x)'],
     ['2x⁴ − 7x³ + 2x² + 3x tiene factor común x.', 'Para 2x³ − 7x² + 2x + 3, los candidatos son ±1, ±3, ±1/2, ±3/2.', 'Las raíces 1, −1/2 y 3 dan x(x − 1)(2x + 1)(x − 3).'], [

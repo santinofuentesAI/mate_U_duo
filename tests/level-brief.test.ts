@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { lessons } from '../src/content.ts';
 import { levelBrief } from '../src/levelBrief.ts';
 import { referenceFor } from '../src/courseTables.ts';
+import { workedExample } from '../src/workedExamples.ts';
+import { answerCue } from '../src/answerKind.ts';
 
 test('every level explains what it is before the procedure', () => {
   for (const lesson of lessons) {
@@ -32,4 +34,27 @@ test('the side reference follows the level, not the whole course', () => {
   assert.deepEqual(inequalities.algebraIds, ['equations']);
   assert.ok(inequalities.notes.some(note => note.name === 'Abierto'));
   assert.ok(!inequalities.algebraIds.includes('powers'));
+});
+
+test('every level shows a worked answer before the exercises', () => {
+  for (const lesson of lessons) {
+    const sample = workedExample(lesson.title);
+    assert.ok(sample.length > 40, lesson.title);
+    assert.match(sample, /escrib|toc[aá]/iu, lesson.title);
+  }
+  const power = lessons.find(lesson => lesson.title === 'Conjunto potencia y producto');
+  const cardinal = lessons.find(lesson => lesson.title === 'Cardinalidad y conteo');
+  const linear = lessons.find(lesson => lesson.title === 'Inecuaciones lineales');
+  assert.ok(power && cardinal && linear);
+  for (const lesson of [power, cardinal]) {
+    const challenges = lesson.questions.slice(-2);
+    for (const question of challenges) {
+      assert.match(question.prompt, /solo el número/i, question.prompt);
+      assert.match(answerCue(question), /solo el número/i);
+    }
+  }
+  const endpoint = linear.questions.find(question => question.answer === '-1/2');
+  assert.ok(endpoint);
+  assert.match(endpoint.prompt, /solo ese número/i);
+  assert.match(answerCue(endpoint), /fracción/i);
 });

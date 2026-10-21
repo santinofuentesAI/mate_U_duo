@@ -45,8 +45,8 @@ const briefs: Record<string, [string, string]> = {
     'Distribuir es pasar ∧ o ∨ a través de un cuantificador solo cuando la ley lo permite. ∀x (P(x) ∧ Q(x)) sí se separa en dos universales. ∀x (P(x) ∨ Q(x)) no se separa en “todo cumple P o todo cumple Q”.',
   ],
   'Cuantificadores anidados': [
-    'Dos cuantificadores seguidos se leen de izquierda a derecha, y el orden importa. ∀x ∃y P(x, y) dice que para cada x hay un y, que puede depender de x. ∃y ∀x P(x, y) dice que un mismo y le sirve a todos los x.',
-    'Esas dos lecturas no son equivalentes. “Cada persona tiene una madre” no dice lo mismo que “hay una madre de todas las personas”.',
+    'Cuando hay dos “para todo” o “existe” seguidos, se leen de izquierda a derecha. “Para cada persona hay una madre” deja que la madre cambie.',
+    '“Hay una sola madre de todas las personas” pide la misma para todas. No es la misma frase. En el ejercicio se toca V o F.',
   ],
   'Matrices y patrones': [
     'Cuando el universo es finito y chico, un predicado de dos variables se puede ver como una tabla: filas un objeto, columnas el otro, y cada celda dice si la relación se cumple.',
@@ -73,28 +73,28 @@ const briefs: Record<string, [string, string]> = {
     '“Solo A” no es |A|. |A| incluye lo que A comparte con otros. Solo A es |A| menos esas intersecciones. Si el enunciado no da un dato, la región que depende de ese dato no se puede calcular.',
   ],
   'Regiones de Venn': [
-    'Cada número de un enunciado nombra una región o un total, y no son lo mismo. “Balón” puede ser |A|, que incluye las lunas y el centro. “Solo balón” es la región que está en A y fuera de los otros.',
-    'Con tres conjuntos, el centro está dentro de cada par. Para obtener la luna de un par se resta el triple a ese par. El exterior es el universo menos la unión. Si falta un par, algunas regiones quedan sin determinar.',
+    'Un diagrama parte a la gente en zonas: solo el primer grupo, solo el segundo, los dos, o ninguno. El número grande de un grupo incluye a los que también están en otro.',
+    '“Solo hipertensión” es el total de hipertensión menos los que además tienen diabetes. La respuesta de estos ejercicios es un número. Si faltara un dato, esa zona no se inventa.',
   ],
   'Leyes de conjuntos de clase': [
-    'Una ley de conjuntos es una igualdad que vale para cualquier A y B del universo, no para un dibujo particular. Absorción dice A ∪ (A ∩ B) = A: agregar la intersección no mete nada nuevo.',
-    'El complemento se escribe ᶜ. (A ∪ B)ᶜ es el complemento de toda la unión, que no es Aᶜ ∪ Bᶜ. Si el PDF de clase perdió una barra, la identidad que se usa acá es la correcta, no la que quedó ilegible.',
+    'Una ley dice que dos escrituras son el mismo conjunto, para cualquier A y B. A unido con una parte de A sigue siendo A.',
+    '∅ es el conjunto vacío: no tiene elementos. U es el universo, todo lo que se está mirando. El complemento de “A o B” es “ni A ni B”.',
   ],
   'Conjunto potencia y producto': [
-    'El conjunto potencia P(A) es el conjunto de todos los subconjuntos de A. Siempre están ∅ y el propio A. Si A tiene n elementos, hay 2ⁿ subconjuntos, porque cada elemento entra o no entra.',
-    'El producto cartesiano A × B es el conjunto de pares ordenados (a, b) con a en A y b en B. (a, b) y (b, a) son distintos cuando a ≠ b. |A × B| = |A| · |B|. Un elemento y el conjunto que lo contiene no se cuentan como el mismo objeto: 1 ≠ {1}.',
+    'P(A) es la lista de todos los subconjuntos de A. Siempre entran el vacío y el propio A. Con n elementos hay 2 elevado a n subconjuntos, porque cada uno entra o no entra.',
+    'A × B son los pares (a, b), uno de A y uno de B. Se cuentan multiplicando. 1 y {1} no son el mismo objeto: uno es un número y el otro es un conjunto.',
   ],
   'Cardinalidad y conteo': [
-    'El cardinal |A| es la cantidad de elementos distintos de A. {5} y {√25, 5} son el mismo conjunto, porque √25 = 5, y su cardinal es 1. ∅ y { } son el mismo objeto y su cardinal es 0.',
-    'Las cuentas de unión, diferencia, potencia y producto se arman con los cardinales que el enunciado sí da. |P(A)| = 2^|A| y |A × B| = |A| · |B|. Si falta una intersección, no se inventa para completar la región que depende de ella.',
+    '|A| pregunta cuántos elementos distintos hay. El vacío tiene 0. {5} y {√25} son el mismo conjunto, porque √25 es 5, así que ahí hay un solo elemento.',
+    'Unión, potencia y producto se cuentan con los datos que sí están. |P(A)| = 2 elevado a |A|. |A × B| = |A| por |B|. La respuesta es el número, no la lista.',
   ],
   'Introducción y razonamiento lógico': [
     'Razonar, en este curso, es justificar una conclusión a partir de premisas. Un ejemplo a favor ilustra; no demuestra una afirmación sobre todos los casos. Un contraejemplo sí alcanza para rechazar un “todos”.',
     'Una oración que dice “esta oración es falsa” no se puede clasificar como verdadera ni como falsa sin contradecirse. Por eso no toda cadena de palabras es una proposición clásica.',
   ],
   'Formas normales': [
-    'Una forma normal es una manera acordada de escribir una fórmula. En la forma normal disyuntiva se juntan conjunciones con ∨; en la conjuntiva se juntan disyunciones con ∧. La fórmula de partida y la forma normal son equivalentes.',
-    'Pasar a forma normal no cambia el significado. Sirve para comparar dos fórmulas o para leer en qué filas la expresión es verdadera.',
+    'Es una manera fija de escribir una fórmula, sin flechas. Una forma conjuntiva es un “y” de varios “o”. Una disyuntiva es un “o” de varios “y”.',
+    'Decir lo mismo con otra forma no cambia cuándo es verdadera. En el ejercicio se toca la escritura que ya está armada así, o se escribe la fórmula sin la flecha.',
   ],
   'Inferencias cuantificadas': [
     'Una inferencia cuantificada aplica una regla a un ∀ o un ∃. De ∀x P(x) se puede afirmar P(c) para un elemento c del universo. De P(c) se puede afirmar ∃x P(x). Al revés no vale: un caso no demuestra el “para todo”.',
@@ -205,16 +205,16 @@ const briefs: Record<string, [string, string]> = {
     'La ecuación sale de la relación del enunciado, no del número que parece el resultado. Al final se comprueba en el texto: edades no negativas, cantidades que tengan sentido y unidades que cierren. Un valor que cumple la ecuación y contradice el enunciado no es solución del problema.',
   ],
   'Inecuaciones lineales': [
-    'Una inecuación pide el conjunto de números que hacen verdadera una desigualdad, no un solo valor. En la lineal, ax + b comparado con 0, la solución es un intervalo: una semirrecta.',
-    'Sumar o restar lo mismo de los dos lados no cambia el sentido. Multiplicar o dividir por un negativo sí lo invierte: > pasa a < y ≤ pasa a ≥. Si la variable se cancela y queda una verdad, la solución es ℝ; si queda una falsedad, es ∅.',
+    'Acá no se busca un solo x. Se busca un tramo de la recta, por ejemplo “todos los x menores o iguales que −1/2”.',
+    'Sumar no cambia el sentido. Multiplicar por un negativo sí: > pasa a <. Si la x desaparece y queda algo cierto, la solución es todos los reales. Si queda algo falso, es el vacío, ∅. Cuando pidan el corte, se escribe solo ese número.',
   ],
   'Inecuaciones polinomiales': [
-    'Se lleva todo a un lado y se factoriza, para leer el signo de un producto. Las raíces parten la recta en intervalos. Dentro de cada intervalo el signo no cambia; se prueba un valor y se copia el signo a todo ese tramo.',
-    'Una raíz de multiplicidad impar cambia el signo al cruzarla. Una de multiplicidad par lo toca y no lo cambia. La desigualdad estricta deja las raíces afuera; la no estricta las incluye, salvo que el factor no pueda ser cero.',
+    'Se pasa todo a un lado y se factoriza. Cada raíz parte la recta. Entre dos raíces el signo no cambia: se prueba un número de ese tramo.',
+    'Un factor al cuadrado toca la recta y no cambia el signo. > y < dejan las raíces afuera. ≥ y ≤ las incluyen. La respuesta se toca entre las opciones, con el intervalo ya escrito.',
   ],
   'Inecuaciones racionales': [
-    'Es el signo de un cociente. Los ceros del numerador pueden ser solución si la desigualdad no es estricta. Los ceros del denominador nunca lo son: no están en el dominio, aunque el signo cambie al cruzarlos.',
-    'Se marcan en la recta todas esas raíces, se excluyen los ceros del denominador y se lee el signo en cada intervalo. Un factor que no se anula, como un cuadrático con discriminante negativo, no aporta raíz y puede invertir el signo en toda la recta.',
+    'Es una fracción comparada con cero. El número que anula el denominador nunca es solución.',
+    'El que anula el numerador sí puede entrar si la desigualdad dice ≤ o ≥. En la opción, ese corte del denominador queda con el corchete abierto.',
   ],
 };
 

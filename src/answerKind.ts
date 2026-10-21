@@ -48,6 +48,46 @@ export function usesNumberPad(answer: string | string[]): boolean {
   return /^[\d\s,.\-−]+$/.test(value) && /\d/.test(value);
 }
 
+function isPlainNumber(answer: string | string[]): boolean {
+  if (Array.isArray(answer)) return false;
+  return /^-?\d+(?:\/\d+)?$/.test(answer.trim().replace('−', '-'));
+}
+
+/** Qué hay que anotar, sin revelar el resultado. */
+export function answerCue(question: Question): string {
+  const type = question.type;
+  switch (type) {
+    case 'choice':
+      return 'Tocá una opción. No escribas nada: la opción tocada es la respuesta.';
+    case 'text':
+      if (usesNumberPad(question.answer) || isPlainNumber(question.answer)) return 'Escribí solo el número. Si es una fracción, usá a/b. Si pide varios, separalos con coma. Sin intervalo, sin palabras y sin el signo de la operación.';
+      return 'Escribí solo lo que pide el enunciado, en la casilla. No agregues una explicación al lado.';
+    case 'algebra':
+      return 'Escribí la expresión con el teclado. La última línea es la que se corrige.';
+    case 'logic':
+      return 'Armá la fórmula con los símbolos. La última línea es la respuesta.';
+    case 'set':
+      if (/c[oó]digo|regi[oó]n/i.test(question.prompt)) return 'Tocá los códigos de las regiones que cumplen. El primer dígito es A, el segundo B y el tercero C: 1 es adentro y 0 es afuera.';
+      return 'Tocá cada elemento que entra. Si no tocás ninguno, la respuesta es el conjunto vacío.';
+    case 'venn':
+      return 'Tocá las regiones. Cada código es A, B y C: 1 significa adentro y 0 afuera.';
+    case 'table':
+      return 'Completá V o F, en el mismo orden de las filas.';
+    case 'synthetic':
+      return 'Completá la fila de coeficientes. El último número es el resto.';
+    case 'order':
+      return 'Tocá los pasos en el orden en que se hacen.';
+    case 'guidedproof':
+      return 'Escribí cada línea y elegí la regla que la justifica.';
+    case 'examproof':
+      return 'Escribí la traducción o la línea nueva, y marcá la regla.';
+    default: {
+      const never: never = type;
+      return never;
+    }
+  }
+}
+
 export function numericParts(value: string): string[] {
   return value.split(/[;,]/).map(part => part.trim()).filter(Boolean);
 }

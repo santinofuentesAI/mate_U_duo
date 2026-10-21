@@ -140,23 +140,23 @@ export function buildExpandedContent(make:Builder):Lesson[]{
         choose('¿Qué debe definirse al elegir x en un problema?',['Qué cantidad representa y sus unidades','Solo la letra','El resultado antes de resolver'],'Qué cantidad representa y sus unidades','Eso permite traducir y comprobar el modelo.'),
         write('text','Un rectángulo mide x de ancho y x+3 de largo. Su perímetro es 26. Hallá x.','5','2x + 2(x + 3) = 26; 4x = 20; x = 5.')]),
     P('S6 · Inecuaciones','Inecuaciones lineales','S6 3–4',
-      ['Una inecuación lineal equivale a ax + b > 0 (o <, ≤, ≥) con a ≠ 0.', 'Sumar lo mismo conserva el sentido. Multiplicar o dividir por un negativo lo invierte.', 'Si la variable se cancela: desigualdad verdadera ⇒ S = ℝ; falsa ⇒ S = ∅. Una doble −4 < x − 13 ≤ 3 se opera en los tres lados.'],
+      ['No se busca un solo x: se busca un tramo, por ejemplo “todos los x menores que 4”.', 'Sumar no cambia el sentido. Multiplicar o dividir por un negativo sí: el > se vuelve <.', 'Si piden el corte, se escribe solo ese número, como 3 o -1/2. Si muestran el intervalo, se toca esa opción. Si nadie cumple, la opción es ∅.'],
       ['ax+b>0','-4<x-13\\le 3\\quad\\Longrightarrow\\quad 9<x\\le 16'],
-      ['−2x + 3 ≥ 4.', '−2x ≥ 1. Al dividir por −2 se invierte: x ≤ −1/2.', 'S = ]−∞, −1/2].'],[
-        write('text','Resolvé −2x + 3 ≥ 4. Escribí el extremo derecho de S.','-1/2','Dividí por −2 e invertí: x ≤ −1/2.'),
+      ['Mirá primero un caso corto: x + 2 ≤ 5. Restá 2 y queda x ≤ 3.', 'Si piden el número, se escribe 3. Si hay opciones, se toca x ≤ 3.', 'Cuando el número de adelante es negativo, el sentido se da vuelta. El vacío ∅ significa que ninguno cumple.'],[
+        write('text','Resolvé −2x + 3 ≥ 4. Queda x menor o igual que un número. Escribí solo ese número, con signo.','-1/2','Dividí por −2 e invertí el sentido: x ≤ −1/2. En la casilla va -1/2, no el intervalo.'),
         choose('¿Qué conjunto solución tiene 2x + 1 ≤ 3 + 2x?',['ℝ','∅','{0}'],'ℝ','Queda 0 ≤ 2, verdadera para todo real. El folio S6 concluye S = ℝ.'),
         choose('¿Cuál es S para −4 < x − 13 ≤ 3?',[']9, 16]','[9, 16]','ℝ'],']9, 16]','Sumá 13 a los tres lados.')]),
     P('S6 · Inecuaciones','Inecuaciones polinomiales','S6 5',
-      ['Llevá la inecuación a P(x) > 0 (o <, ≤, ≥), factorizá y leé el signo entre raíces.', 'Una raíz de multiplicidad par no cambia el signo: puede quedar un punto aislado si se incluye el cero.', 'La desigualdad estricta deja afuera las raíces. El folio da S = ]−∞, 1] ∪ [2, 3] para x³ + x ≤ 4x² − 6.'],
+      ['Pasá todo a un lado y partí en factores. Cada raíz corta la recta en un punto.', 'Entre dos raíces el signo no cambia. Probá un número de ese tramo y mirá si da positivo o negativo.', 'Si dice > o <, las raíces quedan afuera. Si dice ≥ o ≤, entran. La respuesta se toca: el intervalo ya está escrito en las opciones.'],
       ['(x-3)(x+1)>0','x(x+1)^2(x-2)(-3x+2)\\le 0'],
-      ['x² − 2x − 3 > 0 se factoriza (x − 3)(x + 1) > 0.', 'El producto es positivo fuera de las raíces.', 'S = ]−∞, −1[ ∪ ]3, ∞).'],[
+      ['(x − 2)(x − 5) > 0. Las raíces son 2 y 5.', 'El producto es positivo a la izquierda de 2 y a la derecha de 5.', 'Como es >, el 2 y el 5 no entran. Se toca ]−∞, 2[ ∪ ]5, ∞).'],[
         choose('¿Cuál es S para x² − 2x − 3 > 0?',[']−∞, −1[ ∪ ]3, ∞)','[−1, 3]',']−1, 3['],']−∞, −1[ ∪ ]3, ∞)','(x − 3)(x + 1) es positivo fuera de −1 y 3.'),
         choose('El folio da S para x³ + x ≤ 4x² − 6. ¿Cuál es?',[']−∞, 1] ∪ [2, 3]','[1, 2] ∪ [3, ∞)','ℝ'],']−∞, 1] ∪ [2, 3]','Es el ejemplo publicado en la definición de conjunto solución.'),
         choose('Con x(x + 1)²(x − 2)(−3x + 2) ≤ 0, ¿cuál es S?',['{−1} ∪ [0, 2/3] ∪ [2, ∞)','[−1, 0] ∪ [2/3, 2]',']−∞, 0]'],'{−1} ∪ [0, 2/3] ∪ [2, ∞)','(x + 1)² toca y no cambia signo; 0, 2/3 y 2 sí.')]),
     P('S6 · Inecuaciones','Inecuaciones racionales','S6 5',
-      ['Los ceros del denominador original nunca son solución: hay que excluirlos antes del signo.', 'Un factor que no se anula (discriminante negativo) no aporta raíz; solo puede invertir el signo en todo ℝ.', 'El ejemplo de clase está escrito como producto (x + 2)(−x² + x − 1)(x − 2)(x − 1) ≤ 0; −x² + x − 1 < 0 siempre.'],
+      ['Es una fracción comparada con cero. El número que hace cero abajo nunca es solución.', 'El que hace cero arriba sí puede entrar, si la desigualdad dice menor o igual, o mayor o igual.', 'Se toca el intervalo de las opciones. El corte de abajo queda abierto, como en ]−∞, −2[.'],
       ['\\frac{P(x)}{Q(x)}>0','Q(x)\\ne 0'],
-      ['(x + 2)(−x² + x − 1)(x − 2)(x − 1) ≤ 0.', '−x² + x − 1 nunca es cero y es negativo, así que se pide (x + 2)(x − 2)(x − 1) ≥ 0.', 'S = [−2, 1] ∪ [2, ∞).'],[
+      ['(x − 3)/(x − 1) ≥ 0. El 1 anula el denominador: no entra.', 'El 3 anula el numerador y la desigualdad no es estricta: el 3 sí entra.', 'Se toca ]−∞, 1[ ∪ [3, ∞). El corchete del 1 queda abierto.'],[
         choose('¿Cuál es S para (x + 2)(−x² + x − 1)(x − 2)(x − 1) ≤ 0?',['[−2, 1] ∪ [2, ∞)',']−2, 1[ ∪ ]2, ∞)','[−2, 2]'],'[−2, 1] ∪ [2, ∞)','El cuadrático sin raíces reales invierte el signo y no se anula.'),
         choose('En (x − 1)/(x + 2) ≥ 0, ¿x = −2 es solución?',['No','Sí'],'No','El denominador original se anula: ese punto está fuera del dominio.'),
         choose('¿Cuál es S para (x − 1)/(x + 2) ≥ 0?',[']−∞, −2[ ∪ [1, ∞)','[−2, 1]',']−∞, −2] ∪ [1, ∞)'],']−∞, −2[ ∪ [1, ∞)','Signo positivo a la izquierda de −2 (excluido) y a la derecha de 1 (incluido).')]),
@@ -168,7 +168,7 @@ export function buildExpandedContent(make:Builder):Lesson[]{
         choose('Una persona dice “esta oración es falsa”. ¿Tiene un valor clásico consistente si se interpreta literalmente?',['No','Sí, es verdadera','Sí, es falsa'],'No','Si es verdadera, afirma su falsedad; si es falsa, afirma una falsedad que la haría verdadera.'),
         choose('¿Basta probar tres casos para demostrar una afirmación sobre todos los naturales?',['No','Sí'],'No','Puede fallar en un caso no revisado. Se necesita una demostración general.')]),
     D('S1 · Lógica proposicional','Formas normales','77–80',
-      ['La forma normal disyuntiva es una disyunción de conjunciones de literales.', 'La forma normal conjuntiva es una conjunción de disyunciones de literales.', 'Un literal es una variable o su negación. Eliminá → y ↔ y llevá las negaciones hacia las variables antes de distribuir.'],
+      ['Es otra manera de escribir la misma frase, sin flechas.', 'Conjuntiva: un “y” de varios “o”, como (P o Q) y (no P o R). Disyuntiva: un “o” de varios “y”.', 'Un literal es solo una letra o su negación, como P o ¬P. En el ejercicio se toca la escritura ya armada, o se escribe la fórmula sin la flecha.'],
       ['(P\\land Q)\\lor(\\neg P\\land R)\\quad\\text{FND}','(P\\lor Q)\\land(\\neg P\\lor R)\\quad\\text{FNC}'],
       ['P → (Q ∧ R) equivale a ¬P ∨ (Q ∧ R).', 'Distribuí ∨ sobre ∧.', 'FNC: (¬P ∨ Q) ∧ (¬P ∨ R).'],[
         choose('¿Cuál expresión está en forma normal conjuntiva?',['(P∨Q)∧(¬P∨R)','(P∧Q)∨R','P→Q'],'(P∨Q)∧(¬P∨R)','Es una conjunción exterior de disyunciones de literales.'),

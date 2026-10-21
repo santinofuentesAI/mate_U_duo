@@ -5,8 +5,9 @@ import type { Lesson } from './types';
 import { TopicIcon } from './TopicIcon';
 import { weekHeading } from './weekGroups';
 import { levelBrief } from './levelBrief';
+import { workedExample } from './workedExamples';
 
-type SlideKind = 'what' | 'concept' | 'formula' | 'step';
+type SlideKind = 'what' | 'concept' | 'formula' | 'step' | 'sample';
 
 function slideEyebrow(kind: SlideKind, number?: number): string {
   switch (kind) {
@@ -14,6 +15,7 @@ function slideEyebrow(kind: SlideKind, number?: number): string {
     case 'concept': return 'CÓMO SE USA';
     case 'formula': return 'PARA RECORDAR';
     case 'step': return `EJEMPLO · PASO ${number ?? 1}`;
+    case 'sample': return 'EJEMPLO HECHO';
     default: {
       const never: never = kind;
       return never;
@@ -24,11 +26,13 @@ function slideEyebrow(kind: SlideKind, number?: number): string {
 export function LessonStory({lesson,onStart}:{lesson:Lesson;onStart:()=>void}) {
   const [page,setPage]=useState(0);
   const what=levelBrief(lesson.title);
+  const done=workedExample(lesson.title);
   const slides=[
     ...what.map((body,i)=>({kind:'what' as const,title:i===0?lesson.title:'Cómo se reconoce',body})),
-    ...lesson.theory.map((body,i)=>({kind:'concept' as const,title:i===0?'Cómo se trabaja':'Una idea más',body})),
+    ...lesson.theory.map((body,i)=>({kind:'concept' as const,title:i===0?'En sencillo':'Una idea más',body})),
     ...(lesson.formulas.length?[{kind:'formula' as const,title:'La fórmula',body:''}]:[]),
     ...lesson.example.steps.map((body,i)=>({kind:'step' as const,title:lesson.example.title,body,number:i+1})),
+    ...(done?[{kind:'sample' as const,title:'Mirá cómo queda la respuesta',body:done}]:[]),
   ];
   const current=slides[page];
   if(!current)return <button className="primary" onClick={onStart}>Practicar<ArrowRight size={18}/></button>;
