@@ -53,6 +53,9 @@ test('every level shows a worked answer before the exercises', () => {
       assert.match(answerCue(question), /solo el número/i);
     }
   }
+  assert.match(levelBrief('Conjunto potencia y producto')[0], /subconjuntos/);
+  assert.match(power.questions[0].prompt, /subconjuntos/);
+  assert.match(power.questions[0].prompt, /solo el número/i);
   const endpoint = linear.questions.find(question => question.answer === '-1/2');
   assert.ok(endpoint);
   assert.match(endpoint.prompt, /solo ese número/i);

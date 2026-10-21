@@ -1,220 +1,220 @@
-/** Qué es cada nivel, antes del procedimiento. La clave es el título exacto de la lección. */
+/** Qué es cada nivel, en castellano, antes de los ejercicios. La clave es el título de la lección. */
 const briefs: Record<string, [string, string]> = {
   'Proposiciones y conectores': [
-    'Una proposición es una oración que es verdadera o falsa, y no las dos cosas a la vez. “2 + 2 = 4” es una proposición; “¿cuánto es 2 + 2?” y “cerrá la puerta” no lo son, porque no tienen valor de verdad.',
-    'Los conectores arman proposiciones compuestas. ∧ pide que las dos partes sean verdaderas, ∨ admite una o las dos, y ⊻ pide exactamente una. Negar cambia el valor de una sola proposición.',
+    'Una proposición es una frase que se puede decir si es verdadera o falsa. “2 + 2 = 4” sí. “¿Cuánto es 2 + 2?” no, porque es una pregunta. “Y” pide las dos partes verdaderas. “O” se conforma con una. “No” da vuelta el valor.',
+    'Si ves botones, tocá la frase o el valor V o F. Si te piden armar la frase con símbolos, escribís solo la fórmula. P es una idea, Q es la otra, ∧ es “y”, ∨ es “o” y ¬ es “no”.',
   ],
   'Implicación y bicondicional': [
-    'P → Q se lee “si P, entonces Q”. Solo falla en un caso: P verdadera y Q falsa. No afirma que P cause Q, ni que P sea verdadera.',
-    'P ↔ Q es verdadera cuando P y Q valen lo mismo, las dos verdaderas o las dos falsas. La recíproca Q → P es otra implicación: no siempre dice lo mismo que P → Q.',
+    '“Si llueve, llevo paraguas” se escribe P → Q. Solo falla en un caso: llueve y no llevás paraguas. Si no llueve, la frase no se cae. La flecha al revés, Q → P, es otra frase: “si llevo paraguas, llueve”.',
+    'P ↔ Q es “las dos valen lo mismo”: las dos verdaderas o las dos falsas. En el ejercicio tocás V o F, o escribís la flecha que pide el enunciado. No escribas la explicación al lado.',
   ],
   'Tablas de verdad': [
-    'Una tabla de verdad lista todas las combinaciones de verdadero y falso de las proposiciones atómicas y calcula el valor de la fórmula en cada fila. Con n letras distintas hay 2ⁿ filas.',
-    'Si la columna final es siempre verdadera, la fórmula es una tautología. Si es siempre falsa, es una contradicción. Si aparecen las dos, es una contingencia.',
+    'Una tabla prueba todas las combinaciones. Con una letra hay 2 filas: V y F. Con dos letras hay 4: VV, VF, FV y FF. En cada fila se calcula la fórmula. Si al final siempre da V, es tautología. Si siempre da F, es contradicción.',
+    'Si preguntan cuántas filas, escribís el número. Si preguntan qué clase es, tocás Tautología, Contradicción o Contingencia. Contingencia significa que unas filas dan V y otras F.',
   ],
   'Equivalencias y simplificación': [
-    'Dos fórmulas son equivalentes cuando tienen la misma tabla de verdad: dicen lo mismo, aunque se vean distintas. Una ley de equivalencia reemplaza una por la otra sin cambiar el valor.',
-    'Simplificar es llegar a una fórmula más corta que sigue siendo equivalente. No es “tachar letras”: cada paso tiene que ser una equivalencia, por ejemplo De Morgan o la distributiva.',
+    'Dos fórmulas dicen lo mismo cuando, en todos los casos, dan el mismo V o F. Simplificar es dejar una más corta que sigue diciendo lo mismo. ¬¬P es otra vez P: el “no no” se cancela. ¬(P y Q) es “no P, o no Q”.',
+    'En la casilla escribís la fórmula corta, por ejemplo P o ¬P∨¬Q. No escribas “por De Morgan” al lado. La última línea es la que se corrige.',
   ],
   'Traducción y contraejemplos': [
-    'Traducir es pasar una oración del castellano a símbolos sin cambiar lo que afirma. “Y”, “o”, “si… entonces” y “no” tienen un conector fijo; el resto del trabajo es decidir qué letra es cada idea.',
-    'Un contraejemplo es un caso concreto donde las premisas valen y la conclusión no. Alcanza uno para mostrar que un razonamiento no es válido. Varios ejemplos favorables no demuestran que siempre valga.',
+    'Traducir es pasar la frase del castellano a letras sin cambiar lo que dice. “Si estudio, apruebo” es P → Q. Un contraejemplo es un solo caso donde las premisas salen bien y la conclusión no. Con uno alcanza para mostrar que el razonamiento no siempre vale.',
+    'Si piden la traducción, escribís la fórmula. Si piden el caso que la tumba, tocás esa opción. Varios ejemplos a favor no demuestran un “todos”.',
   ],
   'Circuitos lógicos': [
-    'Un circuito lógico es la misma álgebra de proposiciones, dibujada con compuertas. La compuerta AND es ∧, OR es ∨ y NOT es ¬. La salida es 1 cuando la fórmula es verdadera y 0 cuando es falsa.',
-    'Dos circuitos son equivalentes si, para las mismas entradas, dan la misma salida. Simplificar el circuito es simplificar la fórmula: menos compuertas, el mismo comportamiento.',
+    'Un circuito es la misma lógica, dibujada con interruptores. En serie los dos tienen que estar cerrados: P y Q. En paralelo alcanza con uno: P o Q. La salida es 1 si conduce y 0 si no.',
+    'Si preguntan si conduce, tocás Sí o No. Si piden la salida, escribís la fórmula, por ejemplo P∨Q. No describas el dibujo en la casilla.',
   ],
   'Reglas de inferencia': [
-    'Una regla de inferencia saca una conclusión nueva a partir de premisas que ya están. No transforma una fórmula en otra equivalente: agrega una línea que se sigue de las anteriores.',
-    'Modus ponens, por ejemplo, dice: si tenés P → Q y también P, podés escribir Q. La regla no “elige” la conclusión que te conviene; solo justifica la que el patrón permite.',
+    'Una regla saca una frase nueva de las que ya tenés. Si sabés “si estudio, apruebo” y además sabés “estudio”, podés escribir “apruebo”. Eso se llama modus ponens. No podés elegir la conclusión que te gustaría: solo la que el patrón permite.',
+    'Tocá el nombre de la regla o la frase que sí se concluye. Si el paso no está permitido, la opción es No o Falacia.',
   ],
   'Demostraciones y falacias': [
-    'Una demostración es una lista de líneas donde cada una es una premisa o se obtiene de líneas anteriores por una regla. Llegar a la conclusión con esas reglas es lo que la justifica.',
-    'Una falacia parece una regla y no lo es. Afirmar el consecuente (de P → Q y Q concluir P) es el ejemplo típico: la tabla muestra casos en los que las premisas valen y la conclusión no.',
+    'Una demostración es una lista: cada línea es un dato o sale de líneas de arriba con una regla. Una falacia parece una regla y no lo es. De “si llueve, me mojo” y “me mojo” no sale que llueve: pudo mojarte otra cosa.',
+    'Cuando preguntan si el paso vale, tocás Sí o No. Cuando piden la conclusión, tocás la frase que sí se sigue. No hace falta redactar la prueba entera.',
   ],
   'Predicados y universos': [
-    'Un predicado es una oración con un lugar vacío. P(x): “x es par” no es verdadera ni falsa hasta que se dice qué es x y de qué universo se habla. El universo es el conjunto de objetos que x puede ser.',
-    'En este curso ℕ incluye el 0. Cambiar el universo puede cambiar el valor: “todo x es positivo” es falso en ℤ y no se evalúa igual si el universo fueran solo los naturales positivos.',
+    'P(x): “x es mayor que 2” todavía no es verdadera ni falsa, porque falta decir qué es x. El universo es la bolsa de objetos que x puede ser. En los enteros, P(4) es V y P(1) es F. En este curso los naturales incluyen el 0.',
+    'Tocás V o F cuando ya fijaron el número. Si piden marcar los x que cumplen, tocás esos números y dejás afuera los demás.',
   ],
   'Universal y existencial': [
-    '∀x P(x) dice que todos los elementos del universo cumplen P. Es falsa en cuanto aparece un elemento que no cumple. ∃x P(x) dice que al menos uno cumple; un solo testigo la hace verdadera.',
-    '“Existe” no significa “existe exactamente uno”, ni “existe y es único”. Si hace falta uno solo, eso se escribe aparte. El cuantificador siempre mira el universo que el enunciado fijó.',
+    '“Para todo” pide que todos cumplan. Con un solo caso que falla, ya es falso. “Existe” pide que al menos uno cumpla. Con un solo ejemplo que sirve, ya es verdadero. “Existe” no quiere decir “hay uno solo”.',
+    'En el ejercicio tocás V o F. Leé primero el universo, por ejemplo {1, 2}. Si la frase dice “todos” y ves un elemento que no cumple, es F.',
   ],
   'Negar y distribuir': [
-    'Negar un cuantificador lo cambia y mete la negación adentro. ¬∀x P(x) equivale a ∃x ¬P(x): no todos cumplen si hay alguien que falla. ¬∃x P(x) equivale a ∀x ¬P(x): nadie cumple si todos fallan.',
-    'Distribuir es pasar ∧ o ∨ a través de un cuantificador solo cuando la ley lo permite. ∀x (P(x) ∧ Q(x)) sí se separa en dos universales. ∀x (P(x) ∨ Q(x)) no se separa en “todo cumple P o todo cumple Q”.',
+    'Negar “todos aprobaron” no es “nadie aprobó”. Es “alguien no aprobó”. El “para todo” se vuelve “existe”, y la frase de adentro se niega. Negar “alguien tiene 18” es “nadie tiene 18”.',
+    'Tocá la frase en castellano que dice eso. No armes una fórmula si las opciones ya están escritas.',
   ],
   'Cuantificadores anidados': [
-    'Cuando hay dos “para todo” o “existe” seguidos, se leen de izquierda a derecha. “Para cada persona hay una madre” deja que la madre cambie.',
-    '“Hay una sola madre de todas las personas” pide la misma para todas. No es la misma frase. En el ejercicio se toca V o F.',
+    'Se lee de izquierda a derecha. “Para cada persona hay una madre” deja que la madre cambie: es verdadero. “Hay una madre de todas las personas” pide la misma para todas: es falso. El orden cambia el sentido.',
+    'Tocás V o F. Si el “existe” está adentro, el ejemplo puede depender del de afuera. Si el “existe” está afuera, el ejemplo es uno solo para todos.',
   ],
   'Matrices y patrones': [
-    'Cuando el universo es finito y chico, un predicado de dos variables se puede ver como una tabla: filas un objeto, columnas el otro, y cada celda dice si la relación se cumple.',
-    'La tabla no reemplaza al cuantificador. Sirve para comprobar, en ese universo concreto, si el “para todo” o el “existe” que escribiste es verdadero.',
-  ],
-  'Pertenencia e inclusión': [
-    'x ∈ A significa que x es un elemento de A. A ⊆ B significa que todo elemento de A también está en B. Pertenecer es una relación entre un objeto y un conjunto; incluir es una relación entre dos conjuntos.',
-    '1 y {1} no son el mismo objeto. 1 puede pertenecer a un conjunto; {1} es un conjunto de un elemento. ∅ está incluido en cualquier conjunto, pero ∅ no pertenece a cualquier conjunto.',
-  ],
-  'Operaciones con conjuntos': [
-    'Unión, intersección, diferencia y complemento fabrican un conjunto nuevo. A ∪ B junta, A ∩ B se queda con lo común, A − B se queda con lo de A que no está en B, y Aᶜ es lo del universo que no está en A.',
-    'El complemento solo tiene sentido si hay un universo. La diferencia A − B no necesita universo y no es lo mismo que Aᶜ. El orden de A − B importa; el de la unión y la intersección, no.',
-  ],
-  'Intervalos y fronteras': [
-    'Un intervalo es un conjunto de números reales entre dos extremos. En este curso ]a, b[ no incluye a ni b, y [a, b] sí los incluye. El corchete que mira hacia afuera es el extremo abierto.',
-    '∞ no es un número del conjunto: marca que no hay cota. Por eso se escribe ]−∞, a] y no [−∞, a]. La frontera es el extremo; incluirla o no es exactamente la diferencia entre ≤ y <.',
-  ],
-  'Venn y leyes de conjuntos': [
-    'Un diagrama de Venn dibuja los conjuntos como regiones que se solapan. Cada región es una combinación: solo A, solo B, la intersección, o afuera de los dos. Con tres conjuntos hay ocho regiones, contando el exterior.',
-    'Las leyes de conjuntos son las de la lógica, cambiando ∨ por ∪, ∧ por ∩ y ¬ por complemento. (A ∪ B)ᶜ = Aᶜ ∩ Bᶜ es De Morgan. El dibujo ayuda a verlas; la igualdad se justifica con la ley, no con un dibujo solo.',
-  ],
-  'Aplicaciones e inclusión-exclusión': [
-    'Contar una unión no es sumar los tamaños: los elementos de la intersección estarían dos veces. |A ∪ B| = |A| + |B| − |A ∩ B|. Con tres conjuntos se restan los pares y se vuelve a sumar el triple, que se había restado de más.',
-    '“Solo A” no es |A|. |A| incluye lo que A comparte con otros. Solo A es |A| menos esas intersecciones. Si el enunciado no da un dato, la región que depende de ese dato no se puede calcular.',
-  ],
-  'Regiones de Venn': [
-    'Un diagrama parte a la gente en zonas: solo el primer grupo, solo el segundo, los dos, o ninguno. El número grande de un grupo incluye a los que también están en otro.',
-    '“Solo hipertensión” es el total de hipertensión menos los que además tienen diabetes. La respuesta de estos ejercicios es un número. Si faltara un dato, esa zona no se inventa.',
-  ],
-  'Leyes de conjuntos de clase': [
-    'Una ley dice que dos escrituras son el mismo conjunto, para cualquier A y B. A unido con una parte de A sigue siendo A.',
-    '∅ es el conjunto vacío: no tiene elementos. U es el universo, todo lo que se está mirando. El complemento de “A o B” es “ni A ni B”.',
-  ],
-  'Conjunto potencia y producto': [
-    'P(A) es la lista de todos los subconjuntos de A. Siempre entran el vacío y el propio A. Con n elementos hay 2 elevado a n subconjuntos, porque cada uno entra o no entra.',
-    'A × B son los pares (a, b), uno de A y uno de B. Se cuentan multiplicando. 1 y {1} no son el mismo objeto: uno es un número y el otro es un conjunto.',
-  ],
-  'Cardinalidad y conteo': [
-    '|A| pregunta cuántos elementos distintos hay. El vacío tiene 0. {5} y {√25} son el mismo conjunto, porque √25 es 5, así que ahí hay un solo elemento.',
-    'Unión, potencia y producto se cuentan con los datos que sí están. |P(A)| = 2 elevado a |A|. |A × B| = |A| por |B|. La respuesta es el número, no la lista.',
-  ],
-  'Introducción y razonamiento lógico': [
-    'Razonar, en este curso, es justificar una conclusión a partir de premisas. Un ejemplo a favor ilustra; no demuestra una afirmación sobre todos los casos. Un contraejemplo sí alcanza para rechazar un “todos”.',
-    'Una oración que dice “esta oración es falsa” no se puede clasificar como verdadera ni como falsa sin contradecirse. Por eso no toda cadena de palabras es una proposición clásica.',
-  ],
-  'Formas normales': [
-    'Es una manera fija de escribir una fórmula, sin flechas. Una forma conjuntiva es un “y” de varios “o”. Una disyuntiva es un “o” de varios “y”.',
-    'Decir lo mismo con otra forma no cambia cuándo es verdadera. En el ejercicio se toca la escritura que ya está armada así, o se escribe la fórmula sin la flecha.',
+    'A[m][n] es el número de la fila m y la columna n. Si la fórmula es m + 3n + 4, la casilla de la fila 2 y la columna 0 es 2 + 0 + 4 = 6. Se escribe 6, solo el número. Avanzar una fila suma 1. Avanzar una columna suma 3.',
+    'Escribí el número que pide la casilla. No escribas la fórmula ni la palabra “fila”.',
   ],
   'Inferencias cuantificadas': [
-    'Una inferencia cuantificada aplica una regla a un ∀ o un ∃. De ∀x P(x) se puede afirmar P(c) para un elemento c del universo. De P(c) se puede afirmar ∃x P(x). Al revés no vale: un caso no demuestra el “para todo”.',
-    'La regla universal se usa sobre un elemento cualquiera, sin propiedades escondidas. Si c se eligió porque ya cumplía otra cosa, esa línea no representa a todos.',
+    'Si todos los del grupo practican y Ana está en el grupo, Ana practica. De un solo caso, por ejemplo “Ana practica”, no sale “todos practican”. Un ejemplo sirve para el “existe”. No sirve para el “para todo”.',
+    'Tocás Sí cuando el paso está permitido y No cuando no. No escribas la prueba ni una fórmula nueva.',
   ],
   'Métodos de demostración': [
-    'Demostrar es un método, no una inspiración. Directa: se asume la hipótesis y se llega a la tesis. Por contradicción: se asume lo contrario de la tesis y se llega a un absurdo. Por contrarrecíproco: se prueba ¬Q → ¬P en lugar de P → Q.',
-    'Un ejemplo no es una demostración de un universal. Un contraejemplo sí cierra una afirmación falsa. Elegir el método es decidir qué se asume al empezar, no cambiar lo que hay que probar.',
+    'Para probar que el cuadrado de un par es par, el par se escribe n = 2k, con k entero. Entonces n² = 4k², que también es par. Probar por el contrario es suponer lo opuesto y llegar a un absurdo. Unos pocos ejemplos no prueban un “todos”.',
+    'Tocá la escritura o el método que pide el enunciado, por ejemplo “n = 2k”. No redactes el párrafo de la demostración.',
+  ],
+  'Pertenencia e inclusión': [
+    '1 ∈ A quiere decir que el número 1 está dentro de A. {1} ⊆ A quiere decir que el conjunto de solo el 1 cabe en A. No es lo mismo: 1 es un número y {1} es una bolsa con ese número. El vacío entra como subconjunto de cualquiera, pero no es un elemento de cualquiera.',
+    'Tocás Sí o No. Si preguntan cuántos subconjuntos tiene un conjunto de 3 letras, escribís el número, no la lista.',
+  ],
+  'Operaciones con conjuntos': [
+    'La unión junta, sin repetir. {1, 2} unido con {2, 3} es {1, 2, 3}. La intersección se queda con lo común: {2}. La diferencia A − B se queda con lo de A que no está en B. El complemento es lo del universo que no está en A.',
+    'Si hay botones con números, tocá los que entran. Si no tocás ninguno, la respuesta es el vacío. Si hay opciones escritas, tocá el conjunto.',
+  ],
+  'Intervalos y fronteras': [
+    'Un intervalo es un tramo de la recta. El corchete [ incluye el extremo. El paréntesis ( lo deja afuera. x > 3 se escribe (3, ∞): el 3 no entra y el infinito nunca entra. −1 ≤ x ≤ 2 se escribe [−1, 2]: los dos extremos entran.',
+    'Tocá el intervalo que ya está escrito. No lo armes en una casilla si la pantalla muestra opciones.',
+  ],
+  'Venn y leyes de conjuntos': [
+    'El dibujo parte el universo en zonas. Con dos conjuntos hay 4 zonas, contando la de afuera. El código 100 significa “solo A”: adentro de A, afuera de B y afuera de C. 111 es el centro, adentro de los tres. A unido con su complemento es todo el universo. A cortado con su complemento es el vacío.',
+    'Si ves códigos, tocá los que cumplen. Si ves opciones, tocá el conjunto, por ejemplo el vacío o el universo.',
+  ],
+  'Aplicaciones e inclusión-exclusión': [
+    'Sumar los tamaños cuenta dos veces a la gente que está en los dos grupos. 10 en A, 6 en B y 2 en ambos: los que están en al menos uno son 10 + 6 − 2 = 14. “Solo A” es 10 − 2 = 8, no 10. Se escribe el número, sin la cuenta al lado.',
+    'Escribí solo el número. Si el enunciado no da un dato, esa zona no se inventa ni se deja en blanco con una frase.',
+  ],
+  'Regiones de Venn': [
+    'El número grande de un grupo incluye a quienes también están en otro. 20 tienen alergia al polen y 8 de ellos también al polvo. Solo polen: 20 − 8 = 12. Se escribe 12. “Ninguno” sale del total menos los que están en al menos un grupo.',
+    'Escribí solo el número. “Solo A” no es el total de A: al total se le resta lo compartido.',
+  ],
+  'Leyes de conjuntos de clase': [
+    'Una ley dice que dos escrituras son el mismo conjunto, para cualquier A y B. Unir A con A no agrega nada: sigue siendo A. El vacío no tiene elementos. El universo es todo lo que se está mirando. Estar fuera de “A o B” es estar fuera de A y fuera de B.',
+    'Tocá la opción que quedó: A, B, el vacío o el universo. No escribas una explicación.',
+  ],
+  'Conjunto potencia y producto': [
+    'P(A) junta todos los subconjuntos de A. Siempre entran el vacío y el propio A. Las rayas |P(A)| preguntan cuántos hay, no cuáles. Si A = {1}, hay 2: el vacío y {1}. A × B son los pares, uno de cada conjunto. Si A tiene 2 elementos y B tiene 7, hay 14 pares. Se escribe el número.',
+    'En la casilla va solo el número. No escribas la lista de subconjuntos ni los pares. Si no tocás nada en un ejercicio de botones, eso es el vacío.',
+  ],
+  'Cardinalidad y conteo': [
+    '|A| pregunta cuántos elementos distintos hay. El vacío tiene 0. {5} y {√25} son el mismo conjunto, porque √25 es 5, así que ahí hay uno. Juntar {a} con {b, c, d} da 4 elementos. Si |A| = 2 y |B| = 7, los pares de A × B son 14. Se escribe 14, no la lista.',
+    'Escribí solo el número que pide la pregunta. La coma se usa solo cuando el enunciado pide dos resultados.',
+  ],
+  'Introducción y razonamiento lógico': [
+    'Un ejemplo a favor no prueba un “todos”. “Todos los enteros son positivos” se cae con un solo caso: −1. No hace falta mirar el resto. Varios casos que sí cumplen no cierran la prueba.',
+    'Tocá el caso que refuta, o No cuando preguntan si unos pocos ejemplos alcanzan. No escribas un párrafo.',
+  ],
+  'Formas normales': [
+    'Es otra manera de escribir la misma frase, sin flechas. “Si P, entonces Q” se puede escribir “no P, o Q”. Una forma conjuntiva es un “y” de varios “o”, como (P o Q) y (no P o R). Un literal es solo una letra o su negación, como P o ¬P.',
+    'Tocá la escritura que ya está armada así. Si te piden quitar la flecha, escribís la fórmula, por ejemplo ¬P∨Q.',
   ],
   'Raíces racionales y factores': [
-    'Una raíz de un polinomio P es un número r tal que P(r) = 0. Si los coeficientes son enteros, las raíces racionales posibles, cuando existen, son de la forma ± factor del término independiente sobre factor del coeficiente principal.',
-    'Esos candidatos se prueban; no se adivinan. Si P(r) = 0, entonces (x − r) es un factor. Que un número no esté en la lista de candidatos racionales no impide que haya raíces irracionales.',
+    'Una raíz es un número que, al reemplazar la letra, deja el polinomio en 0. Si P(1) = 0, el 1 es raíz y (x − 1) es factor. Los candidatos racionales se prueban: no todos sirven. Si el número no está en esa lista, puede haber otras raíces que no son fracciones.',
+    'Si piden el factor, tocás x − r, con r la raíz. Si piden factorizar, escribís el producto, por ejemplo (x−2)(x−3).',
   ],
   'División sintética': [
-    'La división sintética divide un polinomio entre x − r usando solo los coeficientes, en orden descendente. Un hueco, como la ausencia de x², se escribe como coeficiente 0. El último número es el resto.',
-    'Resto 0 significa que r es raíz y que x − r divide a P. El resto distinto de 0 significa que no divide. Los números de la fila, salvo el resto, son los coeficientes del cociente.',
+    'Sirve para dividir entre x − r usando solo los números de adelante, de la potencia más alta a la más baja. Si falta un término, su número es 0. Dividir entre x − 3 usa r = 3. Dividir entre x + 2 usa r = −2, porque x + 2 es x − (−2). El último número de la fila es el resto.',
+    'Si piden r, escribís ese número, con signo. Si piden el cociente, escribís el polinomio, por ejemplo x−2, y no la fila completa. Si piden el resto y la división es exacta, escribís 0.',
   ],
   'Factorización completa': [
-    'Factorizar por completo es escribir el polinomio como producto de factores que ya no se pueden partir más dentro de los reales que pide el ejercicio. No es desarrollar: es el camino inverso del producto notable.',
-    'Se empieza por el factor común, si lo hay. Después se reconocen diferencias de cuadrados, trinomios o cubos. Un factor lineal (x − r) corresponde a la raíz r. Dejar un trinomio que todavía se factoriza no es la forma completa.',
+    'Factorizar es escribir el polinomio como producto, no desarrollarlo. x² − 1 = (x − 1)(x + 1). x² + 4 no se parte en factores de primer grado con números reales: no hay un número real que al cuadrado dé −4. Si todavía queda un trinomio que se puede partir, no está completo.',
+    'Escribí el producto. Si preguntan si se puede partir en números reales, tocás Sí o No.',
   ],
   'Fracciones y dominio': [
-    'Una fracción algebraica es un cociente de polinomios. El dominio es el conjunto de valores donde el denominador original no es cero. Esos valores excluidos siguen excluidos aunque, después de simplificar, el denominador nuevo ya no se anule.',
-    'Simplificar es cancelar factores comunes, no términos sumados. En (x² − 1)/(x − 1) se factoriza y se cancela (x − 1), y x ≠ 1 se conserva. Tachar una x de x + 1 no es cancelar.',
+    'El dominio son los números donde el denominador de la fracción original no es cero. 1/(x − 3) no existe en x = 3. Aunque después se simplifique y el 3 “desaparezca”, sigue prohibido. Se cancelan factores, no pedazos de una suma. Tachar la x de x + 1 no vale.',
+    'Si preguntan qué valor se excluye, escribí ese número. Si piden la fracción simplificada, escribí la expresión, por ejemplo x+2, y no la explicación.',
   ],
   'Operar fracciones algebraicas': [
-    'Sumar fracciones exige un denominador común: el producto de los denominadores, o un mínimo común múltiplo si ya están factorizados. Se suman los numeradores nuevos y el denominador común se conserva.',
-    'Multiplicar es multiplicar numeradores entre sí y denominadores entre sí. Dividir es multiplicar por la fracción recíproca. Después se puede simplificar, sin perder las exclusiones de todos los denominadores que aparecieron.',
+    'Para sumar, el denominador tiene que ser el mismo. 1/x + 2/x = 3/x, con x distinto de 0. Para dividir, se multiplica por la fracción dada vuelta. Al final se puede simplificar, pero se conservan todos los números que anulaban algún denominador.',
+    'Escribí la fracción que queda, por ejemplo 3/x. No dejes la cuenta en la casilla.',
   ],
   'Radicales y racionalización': [
-    'La raíz cuadrada principal √a, con a ≥ 0, es el único número no negativo cuyo cuadrado es a. Por eso √(x²) = |x| y no x. La raíz cúbica existe para negativos y no usa valor absoluto.',
-    'Racionalizar es reescribir una fracción para que el denominador no tenga radicales, multiplicando numerador y denominador por la misma expresión. Si el denominador es una suma con raíces, ese compañero es el conjugado. El valor de la fracción no cambia.',
+    '√9 es 3, el número no negativo cuyo cuadrado es 9. Racionalizar es sacar la raíz del denominador. 1/√2 se multiplica arriba y abajo por √2 y queda √2/2. El valor no cambia. Si abajo hay una suma, se multiplica por lo mismo con el signo del medio cambiado.',
+    'Si hay opciones, tocá la fracción ya racionalizada. Si piden un número, escribí solo ese número.',
   ],
   'Conjuntos numéricos': [
-    'Los conjuntos numéricos están encajados. ℕ es el de los naturales y en este curso incluye el 0. ℤ agrega los negativos, ℚ los cocientes de enteros con denominador distinto de cero, y ℝ los puntos de la recta, incluidos los que no son cociente.',
-    'Decir que un resultado “es un número” no alcanza: hay que decir en qué conjunto vive. √2 está en ℝ y no en ℚ. Una división por cero no está en ningún conjunto de números.',
+    'En este curso el 0 es natural. Los enteros agregan los negativos, como −12. Los racionales son cocientes de enteros, como 2/3 o 0,75. √2 no es ese cociente: es irracional. √(16/25) sí es racional, porque es 4/5.',
+    'Tocá el conjunto. Si piden 0,125 como fracción, escribís 1/8, ya simplificada. 2/16 no vale, porque se puede reducir.',
   ],
   'Signos y jerarquía de operaciones': [
-    'La jerarquía fija el orden cuando no hay paréntesis: primero potencias y raíces, después productos y cocientes, al final sumas y restas. Los paréntesis mandan sobre esa jerarquía.',
-    'El signo menos es parte de la operación que le sigue, no un adorno. −3² es −(3²) = −9. (−3)² = 9, porque el paréntesis mete el signo dentro de la potencia. No son la misma expresión.',
+    'Primero lo de adentro del paréntesis, después multiplicar y dividir, al final sumar y restar. −7 + 12 = 5, porque gana el positivo más grande. (−4)(−3) = 12: dos menos dan más. −3² es −9, porque el cuadrado es solo del 3. (−3)² es 9, porque el menos está adentro.',
+    'Escribí solo el número, con su signo. No escribas la cuenta ni las palabras “positivo” o “negativo”.',
   ],
   'Fracciones numéricas': [
-    'Una fracción a/b, con b ≠ 0, es el número que multiplicado por b da a. No es “dos números sueltos”: es un solo racional. Dos fracciones son iguales cuando sus productos cruzados coinciden.',
-    'Sumar es pasar a un denominador común. Multiplicar es multiplicar arriba y abajo. Dividir es multiplicar por el recíproco, que existe solo si el numerador de la segunda fracción no es cero.',
+    'Una fracción es un solo número. 1/2 + 1/3 no se suma “por arriba y por abajo”. El común es 6: 3/6 + 2/6 = 5/6. Multiplicar sí es arriba con arriba y abajo con abajo. Dividir es multiplicar por la dada vuelta.',
+    'Escribí la fracción resultante, por ejemplo 5/6. No escribas el común denominador al lado.',
   ],
   'Leyes de potencias': [
-    'Una potencia aⁿ, con n natural positivo, es a multiplicado n veces. Las leyes dicen cómo se combinan: misma base se suma el exponente en un producto y se resta en un cociente; una potencia de potencia multiplica exponentes.',
-    'a⁰ = 1 si a ≠ 0. a⁻ⁿ es 1/aⁿ, no −aⁿ. El exponente negativo voltea la base, no le cambia el signo. (ab)ⁿ reparte el exponente; aⁿ + bⁿ no se factoriza como (a + b)ⁿ.',
+    'Misma base: al multiplicar se suman los exponentes. x² · x³ = x⁵. Al elevar una potencia, se multiplican: (y²)³ = y⁶. 5⁰ = 1. Un exponente negativo da vuelta la base: 2⁻¹ = 1/2, no −2.',
+    'Si piden un número, escribí ese número. Si piden una letra, escribí la potencia, por ejemplo x^5. No dejes la cuenta.',
   ],
   'Raíces y valor absoluto': [
-    'La raíz enésima pregunta qué número, elevado a n, devuelve el de adentro. Si n es par, el radicando tiene que ser no negativo y la raíz principal es no negativa. Si n es impar, el radicando puede ser negativo.',
-    'El valor absoluto |x| es la distancia de x al 0: x si x ≥ 0, y −x si x < 0. Por eso |x| nunca es negativo y √(x²) = |x|. Quitar las barras sin mirar el signo cambia el resultado.',
+    '√49 = 7, nunca −7: la raíz cuadrada principal no es negativa. |−8| = 8, la distancia al cero. ∛(−27) = −3, porque (−3)³ = −27. Si la raíz es par, lo de adentro no puede ser negativo.',
+    'Escribí el número. Si preguntan para qué x existe la raíz, tocá la opción, por ejemplo x ≥ 5.',
   ],
   'Variables y valor numérico': [
-    'Una variable es un lugar que guarda un número de un conjunto. Una expresión algebraica combina variables y números con operaciones. El valor numérico es lo que queda al sustituir cada variable por un número concreto y operar.',
-    'Sustituir no es “reemplazar la letra y ya”. Hay que respetar la jerarquía y los paréntesis. Si la expresión tiene un denominador, el número elegido no puede anularlo.',
+    'Evaluar es reemplazar la letra por el número y hacer la cuenta. 2x + 1 con x = 3 es 2·3 + 1 = 7. Si x = −4 y la expresión es x², el paréntesis va primero: (−4)² = 16, no −16.',
+    'Escribí solo el número que queda. No escribas la x ni la cuenta que hiciste para llegar.',
   ],
   'Monomios y términos semejantes': [
-    'Un monomio es un producto de un número, el coeficiente, por variables elevadas a exponentes. El grado es la suma de esos exponentes. Dos términos son semejantes cuando tienen exactamente las mismas variables con los mismos exponentes.',
-    'Solo los semejantes se suman o se restan, y se opera el coeficiente. 3x² y 5x² son semejantes. 3x² y 3x no lo son: la potencia es parte de la identidad del término, no un detalle.',
+    'El grado de 4x³ es 3, el exponente. Dos términos se suman solo si tienen la misma letra y el mismo exponente. 3x + 4x = 7x. 2x² y 2x no se juntan. El grado de 9a²bc³ es 2 + 1 + 3 = 6.',
+    'Si piden el grado, escribí el número. Si piden reducir, escribí el término, por ejemplo 7x.',
   ],
   'Suma y resta de polinomios': [
-    'Un polinomio es una suma de monomios. Sumar polinomios es agrupar términos semejantes. Restar es sumar el opuesto: se cambia el signo de cada término del polinomio que se resta.',
-    'El grado del resultado puede bajar si los términos de mayor grado se cancelan. No se “resta grado con grado”: se restan coeficientes de términos que ya son semejantes.',
+    'Sumar es juntar los que se parecen. (x + 2) + (2x + 1) = 3x + 3. Restar cambia todos los signos del segundo antes de juntar. (x + 5) − (x + 2) = 3, porque las x se van.',
+    'Escribí el polinomio que queda, por ejemplo 3x+3. No escribas los paréntesis del enunciado otra vez.',
   ],
   'Multiplicación y productos notables': [
-    'Multiplicar polinomios es distribuir: cada término del primero por cada término del segundo, y después juntar semejantes. Un producto notable es un caso que se puede escribir de una vez, sin distribuir término a término.',
-    '(a + b)² no es a² + b². Falta el doble producto 2ab. (a + b)(a − b) = a² − b², y ahí los términos cruzados sí se cancelan. El nombre “notable” no autoriza a saltearse el término del medio cuando existe.',
+    '(x + 1)² no es x² + 1. Es x² + 2x + 1: el doble del producto, 2x, no se pierde. (x + 2)(x − 2) = x² − 4, y ahí sí se van los del medio. x(x + 3) = x² + 3x.',
+    'Escribí el desarrollo, por ejemplo x^2+2x+1. No dejes el cuadrado del paréntesis sin abrir.',
   ],
   'División de polinomios': [
-    'Dividir polinomios es encontrar un cociente y un resto tales que dividendo = divisor · cociente + resto, con el resto de grado menor que el divisor, o resto cero. Es la misma relación que en los enteros.',
-    'Resto cero significa que el divisor es un factor. Si el divisor es lineal, x − r, la división sintética hace la misma cuenta con los coeficientes. Un término que falta en el dividendo se escribe con coeficiente 0 antes de empezar.',
+    'Dividir busca un cociente y un resto. x² + 3x + 2 dividido entre x + 1 da cociente x + 2, porque (x + 1)(x + 2) vuelve al de arriba. Si el resto es 0, la división es exacta. El resto de un polinomio entre x − 1 es lo que da al poner x = 1.',
+    'Si piden el cociente, escribí el polinomio, por ejemplo x+2. Si piden el resto, escribí el número.',
   ],
   'Factor común y agrupación': [
-    'El factor común es el producto que aparece en todos los términos. Sacarlo es escribir ese producto una vez y dejar, entre paréntesis, lo que quedaba al dividir cada término. Si no está en todos, no es común.',
-    'La agrupación se usa cuando no hay un factor común de todos, pero al partir en grupos sí aparece. Se factoriza cada grupo y después el paréntesis que quedó repetido. El orden de los grupos no cambia el producto final.',
+    'El factor común es lo que está en todos los términos. 3x + 6 = 3(x + 2). Si no está en todos, no es común. Cuando no hay uno solo, se agrupan de a dos y después se saca el paréntesis que quedó repetido.',
+    'Escribí el producto, por ejemplo 3*(x+2). Escribir otra vez 3x+6 no es factorizar.',
   ],
   'Trinomios y diferencias de cuadrados': [
-    'Una diferencia de cuadrados a² − b² es el producto (a − b)(a + b). Hace falta que sea resta y que ambos términos sean cuadrados. a² + b² no se factoriza así en los reales.',
-    'Un trinomio x² + sx + p se parte en (x + r)(x + t) cuando r + t = s y r · t = p. El término del medio tiene que coincidir con esa suma. Si el primer coeficiente no es 1, primero se busca factor común o se prueban parejas de factores.',
+    'x² − 4 es (x − 2)(x + 2): una resta de dos cuadrados. x² + 4 no se parte así. x² + 5x + 6 = (x + 2)(x + 3), porque 2 + 3 = 5 y 2 · 3 = 6. El término del medio tiene que coincidir con esa suma.',
+    'Escribí el producto, no el trinomio otra vez. Un ejemplo de forma es (x-2)*(x+2).',
   ],
   'Suma y diferencia de cubos': [
-    'a³ − b³ = (a − b)(a² + ab + b²). a³ + b³ = (a + b)(a² − ab + b²). El primer factor copia el signo de la suma o la resta. En el segundo, el término del medio lleva el signo contrario, y los cuadrados van siempre positivos.',
-    'No es la misma fórmula que el cuadrado de una suma. (a − b)³ desarrolla tres términos más el cubo; la factorización de una diferencia de cubos deja un trinomio que, en general, no se vuelve a partir con reales.',
+    '2³ = 8. x³ − 1 = (x − 1)(x² + x + 1). x³ + 8 = (x + 2)(x² − 2x + 4): en la suma, el término del medio lleva menos. No es la misma cuenta que (x + 2)³.',
+    'Si preguntan el cubo, tocá el número. Si piden factorizar, escribí el producto completo, los dos factores.',
   ],
   'Ecuaciones lineales y equivalencia': [
-    'Una ecuación es una igualdad con una incógnita. Resolverla es encontrar el conjunto de valores que la hacen verdadera. Una ecuación lineal, escrita ax + b = 0 con a ≠ 0, tiene una sola solución.',
-    'Dos ecuaciones son equivalentes cuando tienen el mismo conjunto solución. Sumar lo mismo de ambos lados, o multiplicar por un número distinto de cero, produce una equivalente. Multiplicar por cero, o por una expresión que a veces es cero, puede no hacerlo.',
+    'Resolver es hallar el número que hace verdadera la igualdad. x + 4 = 9 pasa a x = 5: se resta 4 de los dos lados. Si al despejar queda 0 = 0, todos los reales sirven. Si queda 1 = 2, no hay solución.',
+    'Si piden x, escribí solo el número. Si preguntan el conjunto, tocá Todos los reales, Ninguna, o la opción que muestra el valor.',
   ],
   'Ecuaciones cuadráticas': [
-    'Una ecuación cuadrática es la que se puede escribir ax² + bx + c = 0 con a ≠ 0. El conjunto solución en los reales tiene dos valores, uno, o ninguno, según el discriminante Δ = b² − 4ac.',
-    'Si Δ > 0 hay dos raíces reales distintas. Si Δ = 0 hay una raíz real doble. Si Δ < 0 no hay raíces reales. Factorizar, cuando se puede, muestra las mismas raíces: cada factor lineal igualado a cero aporta una.',
+    'Es una ecuación con x². x² − 5x + 6 = 0 se parte en (x − 2)(x − 3) = 0, así que las soluciones son 2 y 3. El discriminante dice cuántas hay en los reales: positivo, dos; cero, una; negativo, ninguna. x² + 1 = 0 no tiene solución real.',
+    'Si hay botones, tocá cada solución. Si piden el discriminante, escribí el número. Si preguntan cuántas hay, tocá Ninguna, Una o Dos.',
   ],
   'Ecuaciones de grado superior': [
-    'Una ecuación polinomial de grado mayor que 2 se resuelve factorizando, no con una fórmula de tres letras. Cada factor lineal (x − r) aporta la raíz r. Un factor que se repite aporta la misma raíz varias veces; el conjunto solución lista los valores distintos.',
-    'Se pasa todo a un lado antes de factorizar, para tener P(x) = 0. Un producto es cero solo cuando algún factor es cero. Probar candidatos racionales y bajar el grado con la división es el camino cuando no se ve el factor a simple vista.',
+    'Se pasa todo a un lado y se parte en factores. x(x − 2) = 0 tiene dos soluciones: 0 y 2. El 0 no se tira. Cada factor que se puede anular aporta un número. Si un factor nunca es cero en los reales, no aporta solución.',
+    'Tocá cada solución que muestran los botones. Si preguntan cuántas distintas hay, escribí ese número. Una raíz repetida cuenta una vez cuando piden distintas.',
   ],
   'Ecuaciones racionales': [
-    'Una ecuación racional tiene la incógnita en algún denominador. Antes de operar se anotan los valores que anulan cualquier denominador original: están fuera del dominio y no pueden ser solución, aunque más adelante “desaparezcan”.',
-    'En el dominio permitido se multiplica por el denominador común y queda una ecuación polinomial. Sus soluciones son candidatas. Se descarta la que coincida con un valor excluido. El conjunto solución es el de las candidatas que sobreviven.',
+    'La x está abajo, en un denominador. Primero se anota el número prohibido: en 1/(x − 4) el 4 no vale, porque deja cero abajo. Después se despeja. Si el resultado es justo el prohibido, no hay solución. 1/x = 1/2 da x = 2, y 2 no anula el denominador.',
+    'Si preguntan el valor excluido, escribí ese número. Si piden la solución, escribí solo el valor de x. Si no hay, tocá Ninguna o “no tiene solución”.',
   ],
   'Ecuaciones con radicales': [
-    'Una ecuación con radicales tiene la incógnita dentro de una raíz. Primero se escribe el dominio: lo de adentro de una raíz cuadrada es ≥ 0, y si la raíz principal queda igualada a una expresión, esa expresión también es ≥ 0.',
-    'Aislar la raíz y elevar al cuadrado puede inventar soluciones, porque x² = a² no implica x = a. Esas candidatas se sustituyen en la ecuación original. La raíz cúbica no exige radicando positivo y, al ser inyectiva, elevar al cubo no agrega extrañas del mismo modo.',
+    'La x está dentro de una raíz. √x = 3 pasa a x = 9, y hay que comprobar: √9 es 3, así que sirve. Elevar al cuadrado a veces inventa un número que en la ecuación original no funciona. Una raíz cuadrada nunca vale un negativo, así que √(algo) = −1 no tiene solución.',
+    'Escribí solo el valor de x que sí cumple en la ecuación original. Si no hay ninguno, tocá “no hay solución”.',
   ],
   'Plantear problemas de aplicación': [
-    'Un problema de aplicación se traduce a una ecuación. La variable tiene que nombrar una cantidad concreta, con su unidad: “x es el ancho en centímetros”, no “x es la respuesta”.',
-    'La ecuación sale de la relación del enunciado, no del número que parece el resultado. Al final se comprueba en el texto: edades no negativas, cantidades que tengan sentido y unidades que cierren. Un valor que cumple la ecuación y contradice el enunciado no es solución del problema.',
+    'Primero se dice qué es x. Dos enteros seguidos que suman 25: el menor es x y el otro es x + 1. Entonces 2x + 1 = 25 y x = 12. El mayor es 13. Al final se revisa que el número tenga sentido: una edad no es negativa.',
+    'Escribí solo el número que nombra la pregunta. Si piden el menor, no escribas los dos.',
   ],
   'Inecuaciones lineales': [
-    'Acá no se busca un solo x. Se busca un tramo de la recta, por ejemplo “todos los x menores o iguales que −1/2”.',
-    'Sumar no cambia el sentido. Multiplicar por un negativo sí: > pasa a <. Si la x desaparece y queda algo cierto, la solución es todos los reales. Si queda algo falso, es el vacío, ∅. Cuando pidan el corte, se escribe solo ese número.',
+    'No se busca un solo x: se busca un tramo. x + 2 ≤ 5 queda x ≤ 3. Si piden el corte, se escribe 3, no el intervalo. Multiplicar o dividir por un negativo da vuelta el sentido: el “menor” pasa a “mayor”. Si la x se va y queda algo cierto, sirven todos los reales. Si queda algo falso, no sirve ninguno: el vacío.',
+    'Si el enunciado dice “escribí solo ese número”, va el corte, con signo si es negativo. Si hay opciones, tocá el intervalo o la frase.',
   ],
   'Inecuaciones polinomiales': [
-    'Se pasa todo a un lado y se factoriza. Cada raíz parte la recta. Entre dos raíces el signo no cambia: se prueba un número de ese tramo.',
-    'Un factor al cuadrado toca la recta y no cambia el signo. > y < dejan las raíces afuera. ≥ y ≤ las incluyen. La respuesta se toca entre las opciones, con el intervalo ya escrito.',
+    'Se pasa todo a un lado y se parte en factores. (x − 2)(x − 5) > 0 es positivo fuera de 2 y de 5: x < 2 o x > 5. El corchete ]a, b[ deja los extremos afuera. [a, b] los incluye. Si la desigualdad es estricta, las raíces no entran.',
+    'Tocá el intervalo o la frase que ya está en las opciones. No lo escribas a mano si la pantalla lo muestra.',
   ],
   'Inecuaciones racionales': [
-    'Es una fracción comparada con cero. El número que anula el denominador nunca es solución.',
-    'El que anula el numerador sí puede entrar si la desigualdad dice ≤ o ≥. En la opción, ese corte del denominador queda con el corchete abierto.',
+    'Es una fracción comparada con cero. El número que hace cero abajo nunca es solución. El que hace cero arriba sí puede entrar si dice “menor o igual” o “mayor o igual”. En (x − 4)/x > 0, el 0 no entra. En la opción, ese corte queda con el corchete abierto.',
+    'Tocá Sí o No cuando preguntan si un número entra. Si piden el conjunto, tocá el intervalo de las opciones.',
   ],
 };
 

@@ -473,7 +473,7 @@ const practice: Record<string, Seed[]> = {
     ['c','¿A qué equivale X ∩ (Xᶜ ∪ B) si X = A ∪ B?','B','Queda X ∩ B y B ⊆ X.',['B','A ∪ B','∅','Xᶜ']],
   ],
   'Conjunto potencia y producto': [
-    ['t','Calculá |P({a,b})|. Escribí solo el número, no la lista.','4','2² = 4: ∅, {a}, {b}, {a,b}.'],
+    ['t','A = {a, b}. P(A) junta todos los subconjuntos de A, incluido el vacío. ¿Cuántos hay? Escribí solo el número.','4','Cada elemento entra o no entra: 2² = 4. Son ∅, {a}, {b} y {a,b}.'],
     ['t','A={1,3,5,7,9}. ¿Cuántos subconjuntos tienen exactamente 3 elementos? Escribí solo el número.','10','C(5,3) = 10.'],
     ['t','A={a,b}, B={1,2,3}. Calculá |P(A × B)|. Escribí solo el número.','64','6 pares; 2⁶ = 64.'],
     ['t','A={∅,{1}}, B={1,2}. Calculá |B × P(A)|. Escribí solo el número.','8','|P(A)|=4 y |B|=2.'],
@@ -482,7 +482,7 @@ const practice: Record<string, Seed[]> = {
     ['t','A={x,y} y B={1,2,3,4}. ¿Cuántos pares ordenados hay? Escribí solo el número, no la lista.','8','2 · 4 = 8.'],
   ],
   'Cardinalidad y conteo': [
-    ['t','A={1,3,5}, B={2,3,4}. Calculá |A ∪ B|. Escribí solo el número.','5','La unión tiene cinco números: 1, 2, 3, 4 y 5.'],
+    ['t','A = {1, 3, 5} y B = {2, 3, 4}. |A ∪ B| es cuántos números distintos quedan al juntarlos, sin repetir el 3. Escribí solo ese número.','5','La unión tiene cinco números: 1, 2, 3, 4 y 5.'],
     ['t','|A|=3, |B|=4, |C|=2; pares 1, 1 y 0; triple 0. Calculá |A ∪ B ∪ C|. Escribí solo el número.','7','3+4+2 − 1 − 1 − 0 + 0 = 7.'],
     ['t','|A|=3, |B|=4, |A∩B|=1, |C|=2. Calculá |(A ∪ B) × C|. Escribí solo el número.','12','|A ∪ B|=6; 6·2=12.'],
     ['t','A={1,2,5}, B={2,4,6}, C={1,6,9}. Calculá |P(A ∩ B ∩ C)|. Escribí solo el número.','1','La triple es vacía; |P(∅)|=1. No escribas ∅.'],

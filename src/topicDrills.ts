@@ -427,18 +427,18 @@ function cardinalityDrill(variant: number, id: string, difficulty: 1 | 2 | 3): {
   const kind = variant % 5;
   const seq = Math.floor(variant / 5);
   const a = 8 + seq, b = 5 + Math.floor(seq / 2), both = 2 + seq % 4, union = a + b - both;
-  if (kind === 0) return { titles, question: ask(id, 'text', `|A|=${a}, |B|=${b} y |A ∩ B|=${both}. Calculá |A ∪ B|.`, String(union), `${a}+${b}−${both}=${union}.`, { difficulty }) };
+  if (kind === 0) return { titles, question: ask(id, 'text', `|A|=${a}, |B|=${b} y |A ∩ B|=${both}. |A ∪ B| es cuántos elementos tiene la unión. Escribí solo el número.`, String(union), `${a}+${b}−${both}=${union}.`, { difficulty }) };
   if (kind === 1) {
     const total = union + 3 + seq % 5;
     return { titles, question: ask(id, 'text', `En un grupo de ${total}, |A|=${a}, |B|=${b} y |A ∩ B|=${both}. ¿Cuántos no están en A ∪ B?`, String(total - union), `La unión es ${union}; el exterior es ${total}−${union}=${total - union}.`, { difficulty }) };
   }
   if (kind === 2) {
     const n = 3 + seq % 5;
-    return { titles, question: ask(id, 'text', `Un conjunto tiene ${n} elementos. Calculá |P(A)|.`, String(2 ** n), `|P(A)|=2^${n}=${2 ** n}.`, { difficulty }) };
+    return { titles, question: ask(id, 'text', `Un conjunto tiene ${n} elementos. |P(A)| es cuántos subconjuntos tiene, contando el vacío. Escribí solo el número.`, String(2 ** n), `|P(A)|=2^${n}=${2 ** n}.`, { difficulty }) };
   }
   if (kind === 3) {
     const n = 3 + seq % 4, m = 2 + seq % 5;
-    return { titles, question: ask(id, 'text', `Si |A|=${n} y |B|=${m}, calculá |A × B|.`, String(n * m), `La regla del producto da ${n}·${m}=${n * m}.`, { difficulty }) };
+    return { titles, question: ask(id, 'text', `Si |A|=${n} y |B|=${m}, |A × B| es cuántos pares hay. Escribí solo el número.`, String(n * m), `La regla del producto da ${n}·${m}=${n * m}.`, { difficulty }) };
   }
   return { titles, question: ask(id, 'text', `|A|=${a} y |A ∩ B|=${both}. Calculá cuántos elementos hay solo en A.`, String(a - both), `Solo A es ${a}−${both}=${a - both}.`, { difficulty }) };
 }

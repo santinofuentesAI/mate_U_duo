@@ -60,7 +60,8 @@ export function answerCue(question: Question): string {
     case 'choice':
       return 'Tocá una opción. No escribas nada: la opción tocada es la respuesta.';
     case 'text':
-      if (usesNumberPad(question.answer) || isPlainNumber(question.answer)) return 'Escribí solo el número. Si es una fracción, usá a/b. Si pide varios, separalos con coma. Sin intervalo, sin palabras y sin el signo de la operación.';
+      if (isPlainNumber(question.answer) && String(question.answer).includes('/')) return 'Escribí solo el número, en forma a/b si es fracción. No escribas el intervalo ni una frase.';
+      if (usesNumberPad(question.answer) || isPlainNumber(question.answer)) return 'Escribí solo el número. Sin lista, sin intervalo y sin explicación.';
       return 'Escribí solo lo que pide el enunciado, en la casilla. No agregues una explicación al lado.';
     case 'algebra':
       return 'Escribí la expresión con el teclado. La última línea es la que se corrige.';
