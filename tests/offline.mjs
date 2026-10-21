@@ -1,4 +1,5 @@
 import { chromium } from '@playwright/test';
+import { skipIntro } from './seenIntro.mjs';
 import { preview } from 'vite';
 import assert from 'node:assert/strict';
 const server=await preview({preview:{host:'127.0.0.1',port:5174,strictPort:true}});
@@ -7,7 +8,7 @@ const context=await browser.newContext({viewport:{width:390,height:844}});const 
 page.on('pageerror',e=>console.log('PAGE ERROR',e.message));page.on('requestfailed',r=>console.log('REQUEST FAILED',r.url(),r.failure()?.errorText));
 const button=name=>page.getByRole('button',{name,exact:true});
 const nav=async name=>{await page.getByRole('navigation',{name:'Navegación móvil',exact:true}).getByRole('button',{name,exact:true}).click();};
-await page.goto('http://127.0.0.1:5174/');await page.getByRole('heading',{name:'Aprender'}).waitFor();
+await skipIntro(context);await page.goto('http://127.0.0.1:5174/');await page.getByRole('heading',{name:'Aprender'}).waitFor();
 await page.evaluate(async()=>{await navigator.serviceWorker.ready;});await page.reload();
 assert.equal(await page.evaluate(()=>!!navigator.serviceWorker.controller),true);
 await context.setOffline(true);await page.reload();await page.getByRole('heading',{name:'Aprender'}).waitFor();

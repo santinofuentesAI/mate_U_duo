@@ -1,4 +1,5 @@
 import { chromium } from '@playwright/test';
+import { skipIntro } from './seenIntro.mjs';
 import { preview } from 'vite';
 import assert from 'node:assert/strict';
 
@@ -17,7 +18,7 @@ async function select(id) {
 }
 
 try {
-  await page.goto('http://127.0.0.1:5184/');
+  await skipIntro(context);await page.goto('http://127.0.0.1:5184/');
   await page.getByRole('navigation', { name: 'Navegación móvil' }).getByRole('button', { name: 'Practicar' }).click();
   await page.getByRole('button', { name: /Ejercicios del libro/ }).click();
   await page.getByRole('radio', { name: 'Precálculo', exact: true }).click();

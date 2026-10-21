@@ -1,4 +1,5 @@
 import { chromium } from '@playwright/test';
+import { skipIntro } from './seenIntro.mjs';
 import { createServer } from 'vite';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -14,7 +15,7 @@ const button=name=>page.getByRole('button',{name,exact:true});
 const nav=async name=>{const mobile=page.getByRole('navigation',{name:'Navegación móvil',exact:true});await (await mobile.isVisible()?mobile:page.getByRole('navigation',{name:'Navegación principal',exact:true})).getByRole('button',{name,exact:true}).click();};
 const noOverflow=async label=>assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,label);
 try {
-  await page.goto('http://127.0.0.1:5176/');await page.getByRole('heading',{name:'Aprender'}).waitFor();
+  await skipIntro(context);await page.goto('http://127.0.0.1:5176/');await page.getByRole('heading',{name:'Aprender'}).waitFor();
   const route=page.locator('.learning-route');assert.ok(await route.locator('.journey-level').count()>6,'lesson path is visible');
   await page.getByRole('button',{name:/Nivel \d+: Equivalencias y simplificación/}).click();
   await page.getByRole('button',{name:/Ir a los \d+ ejercicios/}).click();

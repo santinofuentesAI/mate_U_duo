@@ -111,3 +111,18 @@
 .course-picker .week-topic-chips button{flex:1;min-width:0;font-size:.72rem}
 .solved-question .example{margin:8px 0}
 @media(min-width:900px){.problem-with-tables{grid-template-columns:minmax(0,1fr) 156px}.session-content:has(.problem-with-tables){max-width:980px}}
+.welcome{max-width:680px;margin:0 auto;padding:36px 20px 56px}
+.welcome-brand{margin:0 0 18px;font-size:1.35rem;font-weight:900;letter-spacing:-.06em;color:var(--text)}
+.welcome-brand b{font-size:.62rem;letter-spacing:.08em;color:var(--purple)}
+.welcome h1{max-width:16ch}
+.welcome>p{max-width:46ch;font-size:1rem;line-height:1.55}
+.welcome-parts{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:10px}
+.welcome-parts li{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--border);border-radius:16px;background:var(--surface)}
+.welcome-parts svg{flex:none;margin-top:2px;color:var(--purple)}
+.welcome-parts b,.welcome-parts span{display:block}
+.welcome-parts b{margin-bottom:3px}
+.welcome-parts span{font-size:.88rem;line-height:1.45;color:var(--text)}
+.welcome-start{padding:18px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+.welcome-start h2{font-size:1.05rem;margin-bottom:12px}
+.welcome-start .primary{width:100%;margin-top:16px;min-height:52px;justify-content:center}
+@media(max-width:700px){.welcome{padding:28px 16px 40px}.welcome h1{font-size:1.7rem}}

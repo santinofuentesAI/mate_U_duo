@@ -1,4 +1,5 @@
 import { chromium } from '@playwright/test';
+import { skipIntro } from './seenIntro.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createServer } from 'vite';
@@ -13,7 +14,7 @@ page.on('dialog',d=>d.accept());
 const url=process.env.TEST_URL||'http://127.0.0.1:5173/';
 const button=name=>page.getByRole('button',{name,exact:true});
 const nav=async name=>{const mobile=page.getByRole('navigation',{name:'Navegación móvil',exact:true});await (await mobile.isVisible()?mobile:page.getByRole('navigation',{name:'Navegación principal',exact:true})).getByRole('button',{name,exact:true}).click();};
-await page.goto(url);await page.getByRole('heading',{name:'Aprender'}).waitFor();await page.getByRole('button',{name:/Nivel \d+: Introducción y razonamiento lógico/}).waitFor();
+await skipIntro(context);await page.goto(url);await page.getByRole('heading',{name:'Aprender'}).waitFor();await page.getByRole('button',{name:/Nivel \d+: Introducción y razonamiento lógico/}).waitFor();
 fs.mkdirSync('tmp/qa',{recursive:true});
 await page.screenshot({path:'tmp/qa/mobile-home.png',fullPage:true});
 assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'mobile overflow');

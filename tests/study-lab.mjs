@@ -1,4 +1,5 @@
 import { chromium } from '@playwright/test';
+import { skipIntro } from './seenIntro.mjs';
 import { createServer } from 'vite';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -13,7 +14,7 @@ fs.mkdirSync('tmp/qa',{recursive:true});
 const button=name=>page.getByRole('button',{name,exact:true});
 const nav=async name=>{const mobile=page.getByRole('navigation',{name:'Navegación móvil',exact:true});await (await mobile.isVisible()?mobile:page.getByRole('navigation',{name:'Navegación principal',exact:true})).getByRole('button',{name,exact:true}).click();};
 try {
-  await page.goto('http://127.0.0.1:5182/');
+  await skipIntro(context);await page.goto('http://127.0.0.1:5182/');
   await nav('Practicar');
   await page.getByRole('heading',{name:'Practicar'}).waitFor();
   await page.getByRole('radio',{name:'Examen'}).waitFor();

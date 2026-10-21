@@ -1,4 +1,5 @@
 import { chromium } from '@playwright/test';
+import { skipIntro } from './seenIntro.mjs';
 import { createServer } from 'vite';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -13,7 +14,7 @@ fs.mkdirSync('tmp/qa',{recursive:true});
 const nav = name => page.getByRole('navigation',{name:'Navegación principal',exact:true}).getByRole('button',{name,exact:true});
 async function noOverflow(label) { assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,label); }
 try {
-  await page.goto('http://127.0.0.1:5175/');
+  await skipIntro(context);await page.goto('http://127.0.0.1:5175/');
   await nav('Ajustes').click();
   await page.getByLabel('Modo oscuro').check();
   await noOverflow('dark settings');

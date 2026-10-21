@@ -1,4 +1,5 @@
 import {chromium} from '@playwright/test';
+import { skipIntro } from './seenIntro.mjs';
 import {preview} from 'vite';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -20,7 +21,7 @@ async function original(c){await page.locator('.book-problem-original>summary').
  }
  await views.first().locator('img').waitFor({timeout:45000});assert.match(await views.first().locator('.original-status').innerText(),/original|verificada/);await views.first().getByRole('button',{name:'Ampliar original',exact:true}).click();await page.getByRole('dialog',{name:'Página de tu copia'}).waitFor();await button('Volver a resolver').click();}
 try{
- await page.goto(live||'http://127.0.0.1:5181/');await page.getByRole('heading',{name:'Tu ruta de aprendizaje'}).waitFor();await overflow('phone home');
+ await skipIntro(context);await page.goto(live||'http://127.0.0.1:5181/');await page.getByRole('heading',{name:'Tu ruta de aprendizaje'}).waitFor();await overflow('phone home');
  await button('Abrir Proposiciones y conectores').click();await page.getByRole('button',{name:'Ahora me toca practicar'}).waitFor();await button('Salir de la lección').click();
  await select('precalculo','1.4','precalculo-18-3a');assert.ok(await page.locator('.book-problem .katex').count());await original('precalculo');
  const editor=page.getByRole('textbox',{name:'Mi desarrollo',exact:true});await editor.fill('Paso 1\nPaso 2');await editor.focus();await editor.press('Enter');await editor.pressSequentially('Paso 3');

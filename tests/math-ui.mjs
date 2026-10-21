@@ -1,4 +1,5 @@
 import { chromium } from '@playwright/test';
+import { skipIntro } from './seenIntro.mjs';
 import { createServer } from 'vite';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -33,7 +34,7 @@ async function openCubes(){
   await button('Insertar paréntesis').waitFor();
 }
 try {
-  await page.goto('http://127.0.0.1:5177/');await openCubes();
+  await skipIntro(context);await page.goto('http://127.0.0.1:5177/');await openCubes();
   await tokens('x^3+2^3');assert.equal(await value(),'x^3+2^3');assert.equal(await page.locator('.math-field sup').count(),2);assert.equal((await page.locator('.math-field').textContent()).includes('^'),false);
   const base=await page.locator('.math-field [data-math-start="0"]').boundingBox(),power=await page.locator('.math-field sup [data-math-start="2"]').boundingBox();assert.ok(power.y+power.height/2<base.y+base.height/2,'actual superscript sits above the base');
   await page.screenshot({path:'tmp/qa/raised-powers-mobile.png',fullPage:true,animations:'disabled'});

@@ -1,6 +1,17 @@
 import type { Progress, Question, Lesson, AnswerDetails } from './types';
 import { validPalette } from './palettes';
 export const STORAGE_KEY = 'mate-u-duo.v1';
+export const INTRO_KEY = 'mate-u-duo.intro.v1';
+
+export function introPending(): boolean {
+  try { return localStorage.getItem(INTRO_KEY) !== '1'; }
+  catch { return false; }
+}
+
+export function markIntroSeen(): void {
+  try { localStorage.setItem(INTRO_KEY, '1'); }
+  catch { /* The visit can continue even if this browser blocks storage. */ }
+}
 export const freshProgress = (): Progress => ({ version: 1, attempts: [], completed: [], skills: {}, xp: 0, days: [], course: 'discreta', dark: false, fontScale: 1, sound: false, reduceMotion: false, goal: 8 });
 const studyDayFormatter=new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Costa_Rica', year: 'numeric', month: '2-digit', day: '2-digit' });
 export function dayKey(now = new Date()) { return studyDayFormatter.format(now); }

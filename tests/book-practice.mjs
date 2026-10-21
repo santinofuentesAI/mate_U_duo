@@ -1,4 +1,5 @@
 import { chromium } from '@playwright/test';
+import { skipIntro } from './seenIntro.mjs';
 import { createServer } from 'vite';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -22,7 +23,7 @@ async function openProblem(course,week,listing){
   await page.getByRole('heading',{name:/Ejercicio|Ejemplo/}).waitFor();
 }
 try{
-  await page.goto('http://127.0.0.1:5180/');await nav('Practicar');
+  await skipIntro(context);await page.goto('http://127.0.0.1:5180/');await nav('Practicar');
   await page.getByRole('heading',{name:'Practicar'}).waitFor();
   await noOverflow('practice hub on phone');
   await page.screenshot({path:'tmp/qa/book-catalog-mobile.png',fullPage:true,animations:'disabled'});
