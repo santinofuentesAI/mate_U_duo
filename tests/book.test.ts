@@ -57,6 +57,11 @@ test('book factorization requires a product and equation tasks reject extraneous
   assert.equal(grade(question('precalculo-libro-63-1h'),['2','-1']).correct,false);
   assert.equal(grade(question('precalculo-libro-63-2a'),['2','18']).correct,false);
   assert.equal(grade(question('precalculo-libro-63-2c'),['4','12']).correct,false);
+  assert.ok(grade(question('precalculo-clase-s5-104b'),['-1','-1/2']).correct);
+  assert.equal(grade(question('precalculo-clase-s5-104b'),['-1']).correct,false);
+  assert.ok(grade(question('precalculo-clase-s5-108'),['1/6']).correct);
+  assert.equal(grade(question('precalculo-clase-s5-108'),['3']).correct,false);
+  assert.equal(grade(question('precalculo-clase-s5-108'),['1/6','3']).correct,false);
   assert.ok(grade(question('precalculo-libro-19-6p'),'2/120').correct);
 });
 test('original cardinality problems distinguish intersections from exactly-one or exactly-two regions',()=>{
