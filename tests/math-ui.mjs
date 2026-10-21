@@ -14,7 +14,7 @@ const field=()=>page.getByRole('textbox',{name:'Editar línea 1',exact:true});
 const value=()=>field().getAttribute('data-value');
 const tokens=async input=>{for(const k of input)await button(k==='^'?'Potencia':k==='*'?'Multiplicar':k==='/'?'Dividir':k==='-'?'−':k).tap();};
 async function openCubes(){
-  await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');
+  await page.getByRole('radio',{name:'Precálculo',exact:true}).click();
   await page.getByRole('button',{name:/Nivel \d+: Suma y diferencia de cubos/}).click();
   await page.getByRole('button',{name:/Ir a los \d+ ejercicios/}).click();
   await page.getByRole('button',{name:'Comprobar',exact:true}).waitFor();
@@ -50,13 +50,13 @@ try {
   await page.getByRole('heading',{name:'Aprender'}).waitFor();
   await nav('Biblioteca');await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('cubos');await page.getByRole('button',{name:'Suma y diferencia de cubos'}).click();await page.getByRole('heading',{name:'Ejemplo paso a paso'}).waitFor();
   await nav('Mi libro');await page.locator('input[type=file]').setInputFiles(pdfFixture());await page.getByText(/PDF guardado/).waitFor();
-  await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');
+  await page.getByRole('radio',{name:'Matemática Discreta',exact:true}).click();
   await nav('Aprender');await page.getByRole('button',{name:/Nivel \d+: Equivalencias y simplificación/}).click();
   await page.getByRole('button',{name:/Ir a los \d+ ejercicios/}).click();
   await page.getByText('Necesito ayuda').click();await button('Ver leyes').click();await page.getByRole('dialog',{name:'Leyes y reglas',exact:true}).waitFor();await page.getByRole('heading',{name:'Leyes lógicas'}).waitFor();await button('Volver al ejercicio').click();
   await button('Salir de la lección').click();
   await page.getByRole('heading',{name:'Aprender'}).waitFor();
-  await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');
+  await page.getByRole('radio',{name:'Precálculo',exact:true}).click();
   for(const size of [{width:390,height:844},{width:800,height:1280},{width:1280,height:800}]){
     await page.setViewportSize(size);await nav('Ajustes');await page.getByLabel('Modo oscuro').check();await page.getByLabel('Tamaño de letra').fill('1.3');await page.getByLabel('Reducir movimiento').check();await nav('Mi libro');await noOverflow(`algebra ${size.width}`);
   }

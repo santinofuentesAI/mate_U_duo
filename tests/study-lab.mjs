@@ -26,7 +26,7 @@ try {
   await button('Tablas a mano').click();
   await page.getByRole('heading',{name:'Llená la columna, no la mires hecha.'}).waitFor();
   await page.getByRole('button',{name:'Fila 1: V'}).click();
-  await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');
+  await page.getByRole('radio',{name:'Precálculo',exact:true}).click();
   await page.getByRole('button',{name:/Abrir explorador/}).click();
   await page.locator('.equation-solution').waitFor();
   await button('División sintética').click();
@@ -47,7 +47,7 @@ try {
   await page.getByRole('radio',{name:'Factorizar'}).click();
   await page.getByRole('radio',{name:'15',exact:true}).click();
   await page.getByRole('button',{name:'Empezar 15 de factorizar'}).waitFor();
-  await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');
+  await page.getByRole('radio',{name:'Matemática Discreta',exact:true}).click();
   await page.getByRole('button',{name:/Estudios de caso/}).click();
   await page.getByRole('heading',{name:'Estudios de caso'}).waitFor();
   await page.getByRole('checkbox',{name:'S4'}).waitFor();

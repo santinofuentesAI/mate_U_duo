@@ -27,7 +27,7 @@ await button('Ver respuesta').click();const revealed=page.getByRole('region',{na
 await page.screenshot({path:'tmp/qa/mobile-keyboard.png',fullPage:true});
 await button('Salir de la lección').click();
 await page.getByRole('heading',{name:'Aprender'}).waitFor();
-await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');
+await page.getByRole('radio',{name:'Precálculo',exact:true}).click();
 await page.getByRole('button',{name:/Nivel \d+: Suma y diferencia de cubos/}).click();
 await page.getByRole('button',{name:/Ir a los \d+ ejercicios/}).click();
 await page.getByRole('button',{name:'Comprobar',exact:true}).waitFor();
@@ -49,11 +49,11 @@ await button('Insertar paréntesis').click();await button('x').click();await but
 assert.equal(await page.getByRole('textbox',{name:'Editar línea 1'}).getAttribute('data-value'),'(x−1)');
 await button('Salir de la lección').click();
 await page.getByRole('heading',{name:'Aprender'}).waitFor();
-await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');
+await page.getByRole('radio',{name:'Matemática Discreta',exact:true}).click();
 await nav('Biblioteca');await page.getByRole('textbox',{name:'Buscar en la biblioteca'}).fill('De Morgan');await page.getByRole('button',{name:'Equivalencias y simplificación'}).click();await page.getByRole('heading',{name:'Ejemplo paso a paso',exact:true}).waitFor();assert.equal(await page.locator('.katex-error').count(),0);await page.screenshot({path:'tmp/qa/mobile-library.png',fullPage:true});
 await nav('Ajustes');await page.getByLabel('Modo oscuro').check();await page.getByLabel('Tamaño de letra').fill('1.3');await page.screenshot({path:'tmp/qa/mobile-settings.png',fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'settings overflow');
 await page.getByLabel('Modo oscuro').uncheck();await page.getByLabel('Tamaño de letra').fill('1');
-await page.setViewportSize({width:1440,height:1000});await page.getByRole('navigation',{name:'Navegación principal',exact:true}).getByRole('button',{name:'Aprender',exact:true}).click();await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');await page.screenshot({path:'tmp/qa/desktop-home.png',fullPage:true});
+await page.setViewportSize({width:1440,height:1000});await page.getByRole('navigation',{name:'Navegación principal',exact:true}).getByRole('button',{name:'Aprender',exact:true}).click();await page.getByRole('radio',{name:'Matemática Discreta',exact:true}).click();await page.screenshot({path:'tmp/qa/desktop-home.png',fullPage:true});
 assert.deepEqual(errors,[],'browser console exceptions');
 console.log('Browser QA passed: mobile lesson, logic and algebra keyboards, laws, library, course switch, settings, desktop.');
 await browser.close();

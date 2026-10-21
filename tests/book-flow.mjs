@@ -12,8 +12,9 @@ fs.mkdirSync('tmp/qa',{recursive:true});
 const button=name=>page.getByRole('button',{name,exact:true});
 async function nav(name){const m=page.getByRole('navigation',{name:'Navegación móvil',exact:true});await (await m.isVisible()?m:page.getByRole('navigation',{name:'Navegación principal',exact:true})).getByRole('button',{name,exact:true}).click();}
 async function overflow(label){assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,label);}
-const course=c=>page.getByRole('combobox',{name:'Elegir curso'}).selectOption(c);
-async function select(c,code,id){await nav('Practicar');await course(c);await page.getByLabel('Semana de Book Exam').selectOption('all');await page.getByLabel('Tema de Book Exam').selectOption('all');await page.getByLabel('Sección de Book Exam').selectOption(code);await page.getByLabel('Problema de Book Exam').selectOption(id);await page.locator('.book-problem').waitFor();}
+const course=c=>page.getByRole('radio',{name:c==='precalculo'?'Precálculo':'Matemática Discreta',exact:true}).click();
+async function pick(name,value){await page.getByRole('button',{name,exact:true}).click();await page.locator(`[role="listbox"][aria-label="${name}"] [data-value="${value}"]`).click();}
+async function select(c,code,id){await nav('Practicar');await course(c);await page.getByRole('button',{name:/Elegir semana o número/}).click();await pick('Semana de Book Exam','all');await page.getByRole('button',{name:'Elegir otro ejercicio',exact:true}).click();await pick('Sección de Book Exam',code);await pick('Problema de Book Exam',id);await page.locator('.book-problem').waitFor();}
 async function original(c){await page.locator('.book-problem-original>summary').click();const views=page.locator('.book-original');await views.first().waitFor();if(!await views.first().locator('img').count()){
  const file=process.env[c==='precalculo'?'TEST_PRECALC_BOOK':'TEST_DISCRETA_BOOK'];assert.ok(file,'Source PDF required for full verification');await views.first().locator('input[type=file]').setInputFiles(file);
  }

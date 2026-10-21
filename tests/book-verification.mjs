@@ -8,13 +8,19 @@ const context = await browser.newContext({ viewport: { width: 390, height: 844 }
 const page = await context.newPage(); const errors = [];
 page.on('pageerror', e => errors.push(e.message));
 const button = name => page.getByRole('button', { name, exact: true });
-async function select(id) { await page.getByLabel('Semana de Book Exam').selectOption('all'); await page.getByLabel('Problema de Book Exam').selectOption(id); }
+async function select(id) {
+  await page.getByRole('button', { name: 'Semana de Book Exam', exact: true }).click();
+  await page.locator('[role="listbox"][aria-label="Semana de Book Exam"] [data-value="all"]').click();
+  await page.getByRole('button', { name: 'Elegir otro ejercicio', exact: true }).click();
+  await page.getByRole('button', { name: 'Problema de Book Exam', exact: true }).click();
+  await page.locator(`[role="listbox"][aria-label="Problema de Book Exam"] [data-value="${id}"]`).click();
+}
 
 try {
   await page.goto('http://127.0.0.1:5184/');
   await page.getByRole('navigation', { name: 'Navegación móvil' }).getByRole('button', { name: 'Practicar' }).click();
   await page.getByRole('button', { name: /Ejercicios del libro/ }).click();
-  await page.getByRole('combobox', { name: 'Elegir curso' }).selectOption('precalculo');
+  await page.getByRole('radio', { name: 'Precálculo', exact: true }).click();
   await select('precalculo-18-1b');
   const final = page.getByRole('textbox', { name: 'Verdadero o falso' });
   await final.fill('V'); await button('Comprobar respuesta').click();
@@ -38,7 +44,7 @@ try {
   await select('precalculo-18-3a');
   assert.equal(await button('Comprobar respuesta').count(), 0);
   await page.getByText(/aún no tiene una solución comprobada/).waitFor();
-  await page.getByRole('combobox', { name: 'Elegir curso' }).selectOption('discreta');
+  await page.getByRole('radio', { name: 'Matemática Discreta', exact: true }).click();
   await page.getByRole('button', { name: /Ejercicios del libro/ }).click();
   await select('discreta-55-2c');
   await page.getByRole('textbox', { name: 'Respuesta final' }).fill('Contingencia');

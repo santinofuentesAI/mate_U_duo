@@ -33,7 +33,7 @@ try {
   await button('Explorar Implicación').click();await noOverflow('logic mobile');
   await button('Conjuntos en vivo').click();await button('A ∩ B').click();assert.equal(await page.locator('.set-result b').textContent(),'{3}');
   await button('A contiene 3').tap();assert.equal(await page.locator('.set-result b').textContent(),'{∅}');await button('Aᶜ').click();assert.equal(await page.locator('.set-result b').textContent(),'{3, 4, 5, 6}');
-  await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('precalculo');await page.getByRole('button',{name:/Abrir explorador/}).click();await page.locator('.equation-solution').waitFor();
+  await page.getByRole('radio',{name:'Precálculo',exact:true}).click();await page.getByRole('button',{name:/Abrir explorador/}).click();await page.locator('.equation-solution').waitFor();
   assert.equal(await page.locator('.root-chips').textContent(),'x = -1x = 3');await button('Una raíz').click();assert.equal(await page.locator('.root-chips').textContent(),'x = 2');
   await button('Sin raíces').click();await page.getByRole('heading',{name:'No hay soluciones reales',exact:true}).waitFor();
   await page.getByRole('slider',{name:'Coeficiente a'}).fill('0');await page.getByRole('slider',{name:'Coeficiente b'}).fill('0');await page.getByRole('slider',{name:'Coeficiente c'}).fill('0');await page.getByRole('heading',{name:'Infinitas soluciones reales',exact:true}).waitFor();

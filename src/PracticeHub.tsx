@@ -9,6 +9,7 @@ import { ExamLobby } from './ExamLobby';
 import { CaseStudio } from './CaseStudy';
 import { weekHeading } from './weekGroups';
 import { clampDrillCount, DRILL_COUNTS, DRILL_MAX, DRILL_MIN, drillsFor, topicPractice, topicTitle, type DrillId } from './topicDrills';
+import { ChoiceList, Fold } from './InApp';
 
 interface Props { progress: Progress; onStart: (items: PracticeItem[], title: string, mode: string) => void; onExam: (units: string[]) => void; onRead: (page: number) => void; initialBookProblem?: string; }
 type Screen = 'home' | 'book' | 'reviewed' | 'errors' | 'cases';
@@ -50,7 +51,7 @@ export function PracticeHub({ progress: p, onStart, onExam, onRead, initialBookP
   return <div className="simple-flow practice-simple"><h1>Practicar</h1><p>Misma rutina: modo, semana, cantidad, empezar. Los casos van después. Más abajo, un solo tema a fondo. El libro, al final.</p>
     <section className="simple-feature motion-in"><div><h2>20 de hoy</h2><p>Fácil a difícil, o examen mezclado. La tira corta son 8 del mismo plan.</p></div>
       <div className="intensity-row" role="radiogroup" aria-label="Dificultad de la práctica">{intensities.map(option => <button key={option.id} type="button" role="radio" aria-checked={intensity === option.id} className={intensity === option.id ? 'selected' : ''} onClick={() => setIntensity(option.id)}><b>{option.label}</b><small>{option.hint}</small></button>)}</div>
-      <label className="practice-topic"><span>Qué repasar</span><select aria-label="Tema a repasar" value={topic} onChange={e => setTopic(e.target.value)}><option value="all">Todos los temas</option>{units.map((unit, index) => <option key={unit} value={unit}>{weekHeading(unit, index)}</option>)}</select></label>
+      <ChoiceList label="Qué repasar" name="Tema a repasar" value={topic} onChange={setTopic} options={[{ value: 'all', label: 'Todos los temas' }, ...units.map((unit, index) => ({ value: unit, label: weekHeading(unit, index) }))]}/>
       <div className="week-topic-chips" role="group" aria-label="Cuántos ejercicios">
         <button type="button" className={length === 20 ? 'selected' : ''} onClick={() => setLength(20)}>20</button>
         <button type="button" className={length === 8 ? 'selected' : ''} onClick={() => setLength(8)}>8 · corta</button>
@@ -67,7 +68,7 @@ export function PracticeHub({ progress: p, onStart, onExam, onRead, initialBookP
       <label className="practice-topic"><span>O escribí cuántos</span><input type="number" min={DRILL_MIN} max={DRILL_MAX} value={drillCount} aria-label="Cantidad de ejercicios del tema" onChange={e => setDrillCount(clampDrillCount(Number(e.target.value)))}/></label>
       <button className="primary" onClick={startTopic}>Empezar {drillCount} de {chosenDrill.label.toLowerCase()} <ArrowRight size={18}/></button>
     </section>
-    <details className="simple-more"><summary>Otras formas de practicar</summary><div className="simple-link-list"><button onClick={() => open('reviewed')}><b>Prácticas corregidas</b><span>Respuesta y explicación comprobadas</span></button><button onClick={() => open('errors')}><b>Volver a intentar</b><span>{errors.length} ejercicios para repasar</span></button><button onClick={() => setExamOpen(true)}><b>Simulacro</b><span>35 desafíos de las lecciones</span></button></div></details>
+    <Fold title="Otras formas de practicar"><div className="simple-link-list"><button onClick={() => open('reviewed')}><b>Prácticas corregidas</b><span>Respuesta y explicación comprobadas</span></button><button onClick={() => open('errors')}><b>Volver a intentar</b><span>{errors.length} ejercicios para repasar</span></button><button onClick={() => setExamOpen(true)}><b>Simulacro</b><span>35 desafíos de las lecciones</span></button></div></Fold>
     <button className="simple-link" onClick={() => open('book')}><BookOpen size={22}/><span><b>Elegir semana o número</b><small>El recorrido del libro, un ejercicio a la vez. No hay clave inventada.</small></span><ArrowRight size={18}/></button>
     {examOpen && <ExamLobby units={units} defaultUnits={units} onClose={() => setExamOpen(false)} onStart={selected => { setExamOpen(false); onExam(selected); }}/>}
   </div>;

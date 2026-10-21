@@ -2,7 +2,7 @@ import { lazy, Suspense, useState } from 'react';
 import { ArrowLeft, ArrowRight, BookOpen, FileText, FlaskConical, NotebookPen, Search, Sigma } from 'lucide-react';
 import katex from 'katex';
 import { lessons } from './content';
-import type { Course, Lesson } from './types';
+import type { Course, Lesson, Question } from './types';
 import { TopicIcon } from './TopicIcon';
 import { MathExpression } from './MathExpression';
 import { weekGroups, weekHeading, weekNumber, weekTitle, type WeekGroup } from './weekGroups';
@@ -10,6 +10,8 @@ import { WeekPdf } from './WeekPdf';
 import { SymbolSheet } from './SymbolSheet';
 import { Explorers } from './Explorers';
 import { ProblemMethod } from './ProblemMethod';
+import { Fold } from './InApp';
+import { solutionSteps } from './solutionSteps';
 const TechnicalBooks = lazy(() => import('./TechnicalBooks').then(m => ({ default: m.TechnicalBooks })));
 const Books = lazy(() => import('./Books').then(m => ({ default: m.Books })));
 const normalize = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -24,6 +26,26 @@ function AxisHead({ n, label }: { n: 1 | 2 | 3; label: string }) {
       <span className="axis-num" aria-hidden="true">{n}</span>
       <small>EJE {n} · {label}</small>
     </header>
+  );
+}
+
+function AnswerText({ question }: { question: Question }) {
+  const answer = question.answer;
+  if (Array.isArray(answer)) return <>{answer.join(' · ')}</>;
+  if (question.type === 'algebra') return <MathExpression value={answer}/>;
+  return <>{answer}</>;
+}
+
+function SolvedExercise({ index, question }: { index: number; question: Question }) {
+  const steps = solutionSteps(question);
+  return (
+    <Fold className="solved-question" title={`Ejercicio ${index + 1} · ${question.prompt}`}>
+      <div className="example" aria-label={`Pasos del ejercicio ${index + 1}`}>
+        {steps.map((step, stepIndex) => <div key={`${question.id}-${stepIndex}`}><span>{stepIndex + 1}</span><p>{step}</p></div>)}
+        <div><span>{steps.length + 1}</span><p><b>Respuesta:</b> <AnswerText question={question}/></p></div>
+      </div>
+      {question.exclusions && <p><b>Restricciones:</b> {question.exclusions.join(', ')}</p>}
+    </Fold>
   );
 }
 
@@ -62,7 +84,7 @@ function LessonArticle({ lesson, onBack, onPractice, showBack = true }: { lesson
           <li><b>¿A qué se parece?</b><p>{idea || 'Buscá la forma: tabla, conjunto, producto o fracción.'}</p></li>
           <li><b>Comprobá en chiquito.</b><p>Una fila, un número, un producto que reconstruye el original.</p></li>
         </ol>
-        <details className="simple-more"><summary>Ver ejercicios explicados ({lesson.questions.length})</summary><p className="notice">Son de la app, para cuando ya lo intentaste. No reemplazan los del libro.</p>{lesson.questions.map((q, i) => <details className="solved-question" key={q.id}><summary>Ejercicio {i + 1} · {q.prompt}</summary><p><b>Respuesta:</b> {Array.isArray(q.answer) ? q.answer.join(' · ') : q.type === 'algebra' ? <MathExpression value={q.answer}/> : q.answer}</p>{q.exclusions && <p><b>Restricciones:</b> {q.exclusions.join(', ')}</p>}<p>{q.explanation}</p></details>)}</details>
+        <Fold title={`Ver ejercicios explicados (${lesson.questions.length})`}><p className="notice">Son de la app, para cuando ya lo intentaste. Cada uno muestra cómo se llega a la respuesta.</p>{lesson.questions.map((q, i) => <SolvedExercise key={q.id} index={i} question={q}/>)}</Fold>
       </section>
       <button className="primary" type="button" onClick={() => onPractice(lesson)}>Practicar este tema <ArrowRight size={18}/></button>
       <small className="source-note">{lesson.source} · páginas {lesson.pages} · explicación adaptada</small>

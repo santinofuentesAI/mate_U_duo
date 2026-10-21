@@ -6,6 +6,7 @@ import { equivalentAlgebra, classify, truthRows } from './engine';
 import { useDraft, validText } from './drafts';
 import { AlgebraRules } from './AlgebraRules';
 import { MathExpression } from './MathExpression';
+import { ChoiceList } from './InApp';
 export function Laws({onClose,mode='logic'}:{onClose:()=>void;mode?:'logic'|'algebra'}) {
   const modal=useRef<HTMLElement>(null),close=useRef(onClose);close.current=onClose;
   useEffect(()=>{
@@ -36,7 +37,7 @@ export function Workbench({compact=false,initialMode:mode='logic',draftPrefix='m
     {draftError&&<p role="alert">{draftError}</p>}<small>Tu trabajo se guarda en este dispositivo.</small>{!lines.length&&<button type="button" className="text-button" onClick={example}>Probar con un ejemplo explicado</button>}
     {lines.length===0?<SymbolInput compact value={start} onChange={setStart} mode={mode} label="Expresión inicial"/>:<div className="proof-line"><span>0</span><code>{mode==="algebra"?<MathExpression value={start}/>:start}</code><small>Inicio</small></div>}
     {lines.map((l,i)=><div className="proof-line" key={i}><span>{i+1}</span><code>{mode==="algebra"?<MathExpression value={l.expr}/>:l.expr}</code><small><Check size={14}/>{l.law}</small></div>)}
-    <SymbolInput value={next} onChange={setNext} mode={mode} label="Siguiente paso" onNextLine={()=>{if(next.trim())add();else setMessage('Escribí el siguiente paso antes de bajar.');}}/>{mode==='logic'&&<label>Ley aplicada<select value={law} onChange={e=>setLaw(e.target.value)}>{laws.map(l=><option key={l.name}>{l.name}</option>)}</select></label>}
+    <SymbolInput value={next} onChange={setNext} mode={mode} label="Siguiente paso" onNextLine={()=>{if(next.trim())add();else setMessage('Escribí el siguiente paso antes de bajar.');}}/>{mode==='logic'&&<ChoiceList layout="list" label="Ley aplicada" name="Ley aplicada" value={law} onChange={setLaw} options={laws.map(l=>({value:l.name,label:l.name}))}/>}
     <div className="row wrap"><button className="primary" disabled={!next.trim()||!start.trim()} onClick={add}><Plus size={18}/>Comprobar paso</button>{lines.length>0&&<button className="secondary" onClick={()=>{const last=lines.at(-1)!;setLines(lines.slice(0,-1));setNext(last.expr);setMessage('Último paso listo para corregir.');}}>Corregir último paso</button>}<button className="secondary" onClick={()=>{setLines([]);setStart('');setNext('');setTable(false);setMessage('Cuaderno despejado. Podés empezar otra transformación.');}}><RotateCcw size={16}/>Empezar de cero</button>{mode==='logic'&&<button className="secondary" aria-expanded={table} onClick={()=>setTable(!table)}>{table?'Ocultar tabla':'Ver tabla de verdad'}</button>}</div><p role="status" className="notice">{message}</p>
     {onUseLine&&lines.length>0&&<button type="button" className="secondary workbench-copy" onClick={()=>onUseLine(lines.at(-1)!.expr,lines.at(-1)!.law)}>Copiar último paso comprobado a mi desarrollo</button>}
     {mode==='algebra'&&<small>Compara identidad algebraica; no comprueba el método ni el dominio. Conservá tus restricciones en el ejercicio.</small>}

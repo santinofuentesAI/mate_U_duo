@@ -10,15 +10,15 @@ const button=name=>page.getByRole('button',{name,exact:true});
 const nav=async name=>{const mobile=page.getByRole('navigation',{name:'Navegación móvil',exact:true});await (await mobile.isVisible()?mobile:page.getByRole('navigation',{name:'Navegación principal',exact:true})).getByRole('button',{name,exact:true}).click();};
 const noOverflow=async label=>assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,label);
 async function openProblem(course,week,listing){
-  await nav('Practicar');await page.getByRole('combobox',{name:'Elegir curso'}).selectOption(course);
+  await nav('Practicar');await page.getByRole('radio',{name:course==='precalculo'?'Precálculo':'Matemática Discreta',exact:true}).click();
   await page.getByRole('button',{name:/Elegir semana o número/}).click();
-  await page.getByLabel('Semana de Book Exam').selectOption(week);
-  await page.getByText('Elegir otro ejercicio').click();
-  const select=page.getByLabel('Problema de Book Exam');
-  const options=await select.locator('option').allTextContents();
-  const match=options.find(text=>text.includes(listing));
-  assert.ok(match,`missing book item ${listing} in ${options.slice(0,8).join(' | ')}`);
-  await select.selectOption({label:match});
+  await page.getByRole('button',{name:'Semana de Book Exam',exact:true}).click();
+  await page.locator('[role="listbox"][aria-label="Semana de Book Exam"] [data-value="'+week+'"]').click();
+  await page.getByRole('button',{name:'Elegir otro ejercicio',exact:true}).click();
+  await page.getByRole('button',{name:'Problema de Book Exam',exact:true}).click();
+  const option=page.locator('[role="listbox"][aria-label="Problema de Book Exam"] [role="option"]').filter({hasText:listing});
+  assert.equal(await option.count(),1,`missing book item ${listing}`);
+  await option.click();
   await page.getByRole('heading',{name:/Ejercicio|Ejemplo/}).waitFor();
 }
 try{
@@ -35,7 +35,7 @@ try{
   await button('Comprobar').click();await page.getByText('¡Correcto!').waitFor();
   await page.screenshot({path:'tmp/qa/book-exercise-tablet.png',fullPage:true,animations:'disabled'});
   await button('Elegir ejercicio').click();
-  await page.getByRole('combobox',{name:'Elegir curso'}).selectOption('discreta');
+  await page.getByRole('radio',{name:'Matemática Discreta',exact:true}).click();
   await openProblem('discreta','S5','S5.1 · ejemplo 2a · folio 5');
   await page.getByLabel('Teclado numérico').waitFor();
   await button('3').tap();await button('3').tap();

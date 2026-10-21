@@ -5,6 +5,8 @@ import type { PracticeItem } from './learning';
 import { BookProblem } from './BookProblem';
 import { assignmentLabel, bookCatalog, readBookPosition, responseStatus, reviewedActivities } from './bookCatalog';
 import { missingCourseWeeks } from './bookStudy';
+import { CourseTables } from './CourseTables';
+import { ChoiceList, Fold } from './InApp';
 
 interface Props { course:Course; items:PracticeItem[]; progress:Progress; onStart:(items:PracticeItem[],title:string,mode:string)=>void; onRead:(page:number)=>void; initialProblem?:string; }
 
@@ -52,16 +54,17 @@ export function BookExam({course,items,progress,onStart,initialProblem}:Props) {
   return <section className="book-exam card book-journey" aria-label="Modo Book Exam">
     {!current?<>
       <header className="book-journey-intro"><span className="book-journey-icon"><BookOpenCheck size={26}/></span><h2>Ejercicios del libro</h2><p>Un ejercicio a la vez. Si hay clave, ves «Resultado correcto». Si no hay clave, queda «Guardado · sin corregir» y tus pasos se conservan.</p></header>
-      <div className="book-journey-start"><label>Elegí la semana<select aria-label="Semana de Book Exam" value={week} onChange={e=>changeWeek(e.target.value)}><option value="all">Todo el alcance</option>{weeks.map(w=><option key={w} value={w}>{assignmentLabel(w)}</option>)}</select></label>
+      <div className="book-journey-start"><ChoiceList label="Elegí la semana" name="Semana de Book Exam" value={week} onChange={changeWeek} options={[{value:'all',label:'Todo el alcance'},...weeks.map(w=>({value:w,label:assignmentLabel(w)}))]}/>
         <button className="primary wide" disabled={!start} onClick={()=>start&&choose(start.id)}>{position&&status(position)!=='validated'?'Continuar mi ejercicio':'Empezar a practicar'}<ArrowRight size={19}/></button>
         {start&&<small>{listing(start)}{status(start)==='submitted'?' · borrador guardado':''}</small>}
       </div>
-      <details className="book-journey-picker"><summary>Elegir otro ejercicio</summary><div><label>Sección<select aria-label="Sección de Book Exam" value={section} onChange={e=>changeSection(e.target.value)}><option value="all">Todas las secciones</option>{sections.map(([code,name])=><option key={code} value={code}>{code} · {name}</option>)}</select></label><label>Inciso<select aria-label="Problema de Book Exam" value="" onChange={e=>e.target.value&&choose(e.target.value)}><option value="">Elegí un inciso</option>{catalog.map(p=><option key={p.id} value={p.id}>{listing(p)}{status(p)==='validated'?' ✓':status(p)==='submitted'?' · guardado':''}</option>)}</select></label></div></details>
+      <Fold className="book-journey-picker" title="Elegir otro ejercicio"><ChoiceList label="Sección" name="Sección de Book Exam" value={section} onChange={changeSection} options={[{value:'all',label:'Todas las secciones'},...sections.map(([code,name])=>({value:code,label:`${code} · ${name}`}))]}/>
+        <ChoiceList layout="list" label="Inciso" name="Problema de Book Exam" value="" onChange={choose} options={catalog.map(p=>({value:p.id,label:`${listing(p)}${status(p)==='validated'?' ✓':status(p)==='submitted'?' · guardado':''}`}))}/></Fold>
       <p className="book-journey-fineprint">Solo los ejercicios con solución revisada se comprueban automáticamente. En los demás podés guardar tus pasos. {missingCourseWeeks(course).length?`Las semanas ${missingCourseWeeks(course).join(' y ')} aparecen aquí cuando llegue ese material.` :''}</p>
     </>:<>
       <div className="book-journey-top"><button className="text-button" onClick={()=>{setSelected(null);setMessage('');}}><ArrowLeft size={18}/> Elegir ejercicio</button><span>{index>=0?`${index+1} de ${catalog.length}`:'Ejercicio del libro'}</span></div>
       {index>=0&&<div className="book-journey-track" role="progressbar" aria-valuenow={index+1} aria-valuemin={1} aria-valuemax={catalog.length} aria-label="Avance en la selección"><span style={{'--progress':String((index+1)/catalog.length)} as CSSProperties}/></div>}
-      <div id="book-exam-current"><BookProblem key={current.id} problem={current} verified={reviewedActivities(current,items)} responseState={status(current)} onVerified={item=>onStart([item],`Book Exam · ${current.sectionCode} · ${current.number}${current.part}`,'book-exam')} onDone={markDone} onEdited={edited} onChecked={()=>refreshChecks(n=>n+1)} onNext={()=>move(1)} onPrevious={()=>move(-1)}/></div>
+      <div className="problem-with-tables" id="book-exam-current"><BookProblem key={current.id} problem={current} verified={reviewedActivities(current,items)} responseState={status(current)} onVerified={item=>onStart([item],`Book Exam · ${current.sectionCode} · ${current.number}${current.part}`,'book-exam')} onDone={markDone} onEdited={edited} onChecked={()=>refreshChecks(n=>n+1)} onNext={()=>move(1)} onPrevious={()=>move(-1)}/><CourseTables key={course} course={course}/></div>
     </>}
     {message&&<p role="status" className="notice">{message}</p>}
   </section>;
