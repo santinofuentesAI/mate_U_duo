@@ -33,7 +33,7 @@ export function Exercise({question:q,course,coins,onSpend,onAttempt,onNext,draft
   return <section className="exercise"><span className="eyebrow">{({choice:'ELEGÍ',logic:'CONSTRUÍ',table:'COMPLETÁ',set:'SELECCIONÁ',order:'ORDENÁ',venn:'EXPLORÁ',algebra:'RESOLVÉ',synthetic:'CALCULÁ',text:'RESPONDÉ'} as Record<string,string>)[q.type]}</span><h2>{q.prompt}</h2>
     {q.math&&<div className="math exercise-formula" dangerouslySetInnerHTML={{__html:katex.renderToString(q.math,{throwOnError:false,strict:false,displayMode:true})}}/>}
     {q.type==='choice'&&<div className="choices">{options.map((o,i)=><button key={o} className={value===o?'selected':''} disabled={!!feedback?.correct} onClick={()=>update(o)}><span>{i+1}</span>{o}{value===o&&<Check size={18}/>}</button>)}</div>}
-    {['logic','algebra'].includes(q.type)&&<StepWorkspace lines={steps} onChange={lines=>{setSteps(lines);update(lines.at(-1)||'');}} mode={q.type==='logic'?'logic':'algebra'} disabled={!!feedback?.correct}/>}
+    {['logic','algebra'].includes(q.type)&&<StepWorkspace lines={steps} onChange={lines=>{setSteps(lines);update(lines.at(-1)||'');}} mode={inputModeFor(q,course)} disabled={!!feedback?.correct}/>}
     {q.type==='text'&&<SymbolInput value={String(value)} onChange={update} mode={inputModeFor(q,course)} disabled={!!feedback?.correct}/>}
     {(q.type==='venn'||q.tag==='Regiones de Venn')&&<VennScratch/>}
     {q.type==='algebra'&&q.exclusions&&<label>Restricciones del dominio<input value={exclusions} onChange={e=>{setExclusions(e.target.value);setFeedback(null);}} placeholder="Ej.: 0, 3 · o x=0, y=0 si se indica" disabled={!!feedback?.correct}/><small>Valores excluidos, separados por coma. Conservá los del problema original.</small></label>}

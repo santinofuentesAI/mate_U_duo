@@ -64,7 +64,7 @@ export function BookExam({course,items,progress,onStart,initialProblem}:Props) {
     </>:<>
       <div className="book-journey-top"><button className="text-button" onClick={()=>{setSelected(null);setMessage('');}}><ArrowLeft size={18}/> Elegir ejercicio</button><span>{index>=0?`${index+1} de ${catalog.length}`:'Ejercicio del libro'}</span></div>
       {index>=0&&<div className="book-journey-track" role="progressbar" aria-valuenow={index+1} aria-valuemin={1} aria-valuemax={catalog.length} aria-label="Avance en la selección"><span style={{'--progress':String((index+1)/catalog.length)} as CSSProperties}/></div>}
-      <div className="problem-with-tables" id="book-exam-current"><BookProblem key={current.id} problem={current} verified={reviewedActivities(current,items)} responseState={status(current)} onVerified={item=>onStart([item],`Book Exam · ${current.sectionCode} · ${current.number}${current.part}`,'book-exam')} onDone={markDone} onEdited={edited} onChecked={()=>refreshChecks(n=>n+1)} onNext={()=>move(1)} onPrevious={()=>move(-1)}/><CourseTables key={course} course={course}/></div>
+      <div className="problem-with-tables" id="book-exam-current"><BookProblem key={current.id} problem={current} verified={reviewedActivities(current,items)} responseState={status(current)} onVerified={item=>onStart([item],`Book Exam · ${current.sectionCode} · ${current.number}${current.part}`,'book-exam')} onDone={markDone} onEdited={edited} onChecked={()=>refreshChecks(n=>n+1)} onNext={()=>move(1)} onPrevious={()=>move(-1)}/><CourseTables key={`${course}-${current.section}`} course={course} topic={`${current.section} ${current.text}`}/></div>
     </>}
     {message&&<p role="status" className="notice">{message}</p>}
   </section>;

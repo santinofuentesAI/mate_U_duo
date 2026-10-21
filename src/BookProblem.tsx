@@ -1,11 +1,11 @@
 import { lazy, Suspense, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, CornerDownLeft, Delete, Undo2, Redo2 } from 'lucide-react';
-import type { BookSource, Course } from './types';
+import type { BookSource } from './types';
 import type { PracticeItem } from './learning';
 import type { OpenBookProblem } from './bookCatalog';
 import { statusLabels } from './bookCatalog';
 import { canCheckFinal, checkBookFinal, clearFinalCheck, finalExample, finalLabel, hasCheckedFinal, readFinalAnswers, saveFinalAnswers, saveFinalCheck, type FinalAnswers } from './bookVerification';
-import { inputModeFor } from './answerKind';
+import { inputModeFor, notebookSymbols } from './answerKind';
 import { SymbolInput } from './Keyboard';
 import { VennScratch } from './VennScratch';
 import { BookFormula } from './BookFormula';
@@ -13,7 +13,6 @@ import type { Question } from './types';
 
 const BookOriginal=lazy(()=>import('./BookOriginal').then(m=>({default:m.BookOriginal})));
 export type { OpenBookProblem } from './bookCatalog';
-const symbols:Record<Course,string[]>={precalculo:['x','y','√()','^2','^3','^()','()/()','(',')','+','−','×','=','≠','±','≤','≥','∈','ℝ'],discreta:['P','Q','R','¬','∧','∨','→','↔','∀','∃','∄','∈','∉','⊆','∪','∩','−','×','△','∅','(',')','{','}','∴']};
 function isBoolQuestion(question: Question) {
   return question.answer === 'Verdadero' || question.answer === 'Falso';
 }
@@ -66,7 +65,7 @@ export function BookProblem({problem,verified,responseState,onVerified,onDone,on
       {guided.length>0&&<div className="book-guided-check"><p>Esta demostración se revisa paso a paso.</p>{guided.map(item=><button className="primary wide" key={item.question.id} onClick={()=>onVerified(item)}>Resolver con corrección<ArrowRight size={18}/></button>)}</div>}
       {!verified.length&&<p className="book-unchecked">Todavía no hay clave revisada. Podés resolverlo y guardar tus pasos.</p>}
       <details className="book-steps" open={!checkable.length}><summary>{checkable.length?'Escribir mis pasos':'Mis pasos'}</summary><label className="book-problem-answer">Desarrollo<textarea ref={input} value={answer} onChange={e=>{edit(e.target.value);cursor.current={start:e.target.selectionStart,end:e.target.selectionEnd};}} onSelect={selection} onKeyUp={selection} onPointerUp={selection} rows={5} spellCheck={false} autoCapitalize="off" placeholder="Una idea por línea. Enter agrega otra línea."/></label><small role="status">{saveState||'Se guarda mientras escribís.'}</small>
-        <details className="book-step-tools"><summary>Teclado y edición</summary><div className="book-editor-tools" role="group" aria-label="Edición de pasos"><button type="button" onPointerDown={e=>e.preventDefault()} onClick={()=>insert('\n')}><CornerDownLeft size={17}/>Línea</button><button type="button" onPointerDown={e=>e.preventDefault()} onClick={erase}><Delete size={17}/>Borrar</button><button type="button" disabled={!history.length} onClick={()=>restore()}><Undo2 size={17}/>Deshacer</button><button type="button" disabled={!future.length} onClick={()=>restore(true)}><Redo2 size={17}/>Rehacer</button></div><div className="book-problem-symbols" role="group" aria-label="Símbolos matemáticos">{symbols[problem.course].map(symbol=><button key={symbol} type="button" onPointerDown={e=>e.preventDefault()} onClick={()=>insert(symbol)}>{symbol}</button>)}</div></details>
+        <details className="book-step-tools"><summary>Teclado y edición</summary><div className="book-editor-tools" role="group" aria-label="Edición de pasos"><button type="button" onPointerDown={e=>e.preventDefault()} onClick={()=>insert('\n')}><CornerDownLeft size={17}/>Línea</button><button type="button" onPointerDown={e=>e.preventDefault()} onClick={erase}><Delete size={17}/>Borrar</button><button type="button" disabled={!history.length} onClick={()=>restore()}><Undo2 size={17}/>Deshacer</button><button type="button" disabled={!future.length} onClick={()=>restore(true)}><Redo2 size={17}/>Rehacer</button></div><div className="book-problem-symbols" role="group" aria-label="Símbolos matemáticos">{notebookSymbols(problem.course,`${problem.section} ${problem.text}`).map(symbol=><button key={symbol} type="button" onPointerDown={e=>e.preventDefault()} onClick={()=>insert(symbol)}>{symbol}</button>)}</div></details>
         {!checkable.length&&<button className="secondary book-mark-worked" onClick={finish}>Marcar como trabajado</button>}
       </details>
       {error&&<p role="alert" className="notice">{error}</p>}

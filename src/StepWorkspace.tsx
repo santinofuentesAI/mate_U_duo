@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { ArrowDown, Check, Trash2 } from 'lucide-react';
-import { SymbolInput } from './Keyboard';
+import { SymbolInput, type KeyboardMode } from './Keyboard';
 import { MathExpression } from './MathExpression';
 import { equivalentAlgebra } from './engine';
 
 type Props={
   lines:string[];
   onChange:(lines:string[])=>void;
-  mode:'logic'|'algebra';
+  mode:KeyboardMode;
   disabled?:boolean;
 };
 
+function showsMath(mode:KeyboardMode){return mode==='algebra'||mode==='inequality'||mode==='radical';}
 export function StepWorkspace({lines,onChange,mode,disabled=false}:Props){
   const [active,setActive]=useState(lines.length-1);
   const [notice,setNotice]=useState('');
@@ -34,12 +35,12 @@ export function StepWorkspace({lines,onChange,mode,disabled=false}:Props){
     <p>Enter o «Bajar línea» abre otro paso. Tocá uno anterior para cambiarlo. La última línea es la respuesta que se corrige.</p>
     <ol className="step-workspace-list">{lines.map((line,i)=><li key={i} className={i===current?'active':''}>
       <button type="button" className="step-workspace-line" aria-current={i===current?'step':undefined} onClick={()=>{setActive(i);setChecked(null);setNotice('');}}>
-        <span className="step-workspace-number">{i+1}</span><span className="step-workspace-expression">{line?mode==='algebra'?<MathExpression value={line}/>:line:<em>{i===lines.length-1?'Tu respuesta va aquí':'Paso pendiente'}</em>}</span><small>{i===lines.length-1?'Respuesta':'Borrador'}</small>
+        <span className="step-workspace-number">{i+1}</span><span className="step-workspace-expression">{line?showsMath(mode)?<MathExpression value={line}/>:line:<em>{i===lines.length-1?'Tu respuesta va aquí':'Paso pendiente'}</em>}</span><small>{i===lines.length-1?'Respuesta':'Borrador'}</small>
       </button>
       {!disabled&&lines.length>1&&<button type="button" className="step-workspace-delete" aria-label={`Borrar línea ${i+1}`} onClick={()=>remove(i)}><Trash2 size={16}/></button>}
     </li>)}</ol>
     <div className="step-workspace-editor"><SymbolInput value={lines[current]} onChange={update} mode={mode} label={`Editar línea ${current+1}`} disabled={disabled} onNextLine={descend}/>
-      {!disabled&&<div className="step-workspace-actions"><button type="button" className="secondary" onClick={descend}><ArrowDown size={18}/>Bajar línea</button>{mode==='algebra'&&current>0&&<button type="button" className="secondary" disabled={!lines[current-1]?.trim()||!lines[current]?.trim()} onClick={checkPrevious}><Check size={17}/>¿Son equivalentes?</button>}</div>}
+      {!disabled&&<div className="step-workspace-actions"><button type="button" className="secondary" onClick={descend}><ArrowDown size={18}/>Bajar línea</button>{showsMath(mode)&&current>0&&<button type="button" className="secondary" disabled={!lines[current-1]?.trim()||!lines[current]?.trim()} onClick={checkPrevious}><Check size={17}/>¿Son equivalentes?</button>}</div>}
       {notice&&<p className={`step-workspace-notice ${checked===current?'checked':''}`} role="status">{notice}</p>}
     </div>
   </section>;

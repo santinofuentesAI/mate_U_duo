@@ -1,5 +1,6 @@
 import type { Course } from './types';
 import { algebraRules } from './algebraRules';
+import { levelBrief } from './levelBrief';
 
 export interface LogicTableSpec {
   id: string;
@@ -20,6 +21,76 @@ export const logicTables: LogicTableSpec[] = [
 export interface TableFamily {
   id: string;
   title: string;
+}
+
+export interface LevelNote { name: string; formula: string; why: string; }
+
+export interface LevelReference {
+  heading: string;
+  about: string[];
+  logicIds: string[];
+  algebraIds: string[];
+  notes: LevelNote[];
+}
+
+const countNotes: LevelNote[] = [
+  { name: 'Conjunto potencia', formula: '|P(A)|=2^{|A|}', why: 'Cada elemento entra o no entra. P(A) incluye el vacío y el propio A.' },
+  { name: 'Producto cartesiano', formula: '|A\\times B|=|A|\\cdot|B|', why: 'Pares ordenados. (a, b) y (b, a) son distintos si a ≠ b.' },
+  { name: 'Diferencia', formula: '|A-B|=|A|-|A\\cap B|', why: 'Se quitan los elementos de A que también están en B.' },
+  { name: 'Unión de tres', formula: '|A\\cup B\\cup C|=|A|+|B|+|C|-|A\\cap B|-|A\\cap C|-|B\\cap C|+|A\\cap B\\cap C|', why: 'Se resta lo contado dos veces y se devuelve el triple, que se había restado de más.' },
+];
+
+const setNotes: LevelNote[] = [
+  { name: 'Unión', formula: 'A\\cup B', why: 'Lo que está en A, en B o en ambos.' },
+  { name: 'Intersección', formula: 'A\\cap B', why: 'Lo que está en los dos a la vez.' },
+  { name: 'Diferencia', formula: 'A-B', why: 'Lo de A que no está en B. No es el complemento.' },
+  { name: 'Complemento', formula: 'A^{c}', why: 'Lo del universo que queda fuera de A.' },
+  { name: 'De Morgan', formula: '(A\\cup B)^{c}=A^{c}\\cap B^{c}', why: 'Estar fuera de la unión es estar fuera de los dos.' },
+  { name: 'Inclusión-exclusión', formula: '|A\\cup B|=|A|+|B|-|A\\cap B|', why: 'La intersección se había contado dos veces.' },
+];
+
+const quantNotes: LevelNote[] = [
+  { name: 'Para todo', formula: '\\forall x\\,P(x)', why: 'Todos los elementos del universo cumplen P. Un contraejemplo lo niega.' },
+  { name: 'Existe', formula: '\\exists x\\,P(x)', why: 'Alcanza un testigo. No significa exactamente uno.' },
+  { name: 'Negar el universal', formula: '\\neg\\forall x\\,P(x)\\equiv\\exists x\\,\\neg P(x)', why: 'No todos cumplen cuando alguien falla.' },
+  { name: 'Negar el existencial', formula: '\\neg\\exists x\\,P(x)\\equiv\\forall x\\,\\neg P(x)', why: 'Nadie cumple cuando todos fallan.' },
+];
+
+const ineqNotes: LevelNote[] = [
+  { name: 'Sentido', formula: 'ax+b>0', why: 'Sumar conserva el sentido. Multiplicar por un negativo lo invierte.' },
+  { name: 'Abierto', formula: ']a,b[', why: 'No incluye los extremos. El corchete hacia afuera es el extremo abierto.' },
+  { name: 'Cerrado', formula: '[a,b]', why: 'Incluye los extremos. La desigualdad no estricta los deja adentro.' },
+  { name: 'Sin cota', formula: ']{-}\\infty,a]', why: '∞ no es un número. El extremo infinito queda abierto.' },
+];
+
+function aboutTopic(topic: string, fallback: string): string[] {
+  const brief = levelBrief(topic);
+  return brief.length ? brief : [fallback];
+}
+
+/** Tablas e información del nivel que se está viendo, no del curso entero. */
+export function referenceFor(course: Course, topic: string): LevelReference {
+  const text = topic.toLowerCase();
+  switch (course) {
+    case 'discreta':
+      if (/potencia|producto|cardinal/.test(text)) return { heading: 'Potencia, producto y cardinal', about: aboutTopic(topic, 'P(A) reúne los subconjuntos de A. A × B reúne los pares ordenados. El cardinal cuenta elementos distintos.'), logicIds: [], algebraIds: [], notes: countNotes };
+      if (/venn|conjunto|pertenencia|inclusi|intervalo|operacion|ley/.test(text)) return { heading: 'Conjuntos', about: aboutTopic(topic, 'Un conjunto junta objetos. Pertenecer es de un elemento; incluir es de un conjunto en otro. Las regiones de Venn separan solo A, la intersección y el exterior.'), logicIds: [], algebraIds: [], notes: setNotes };
+      if (/cuantific|predicado|universal|existencial|anidado|matriz/.test(text)) return { heading: 'Cuantificadores', about: aboutTopic(topic, 'Un predicado tiene un lugar vacío. ∀ dice que todos cumplen; ∃ dice que al menos uno cumple. El universo decide sobre qué objetos se habla.'), logicIds: ['not', 'and', 'or', 'imp'], algebraIds: [], notes: quantNotes };
+      return { heading: 'Lógica', about: aboutTopic(topic, 'Una proposición es verdadera o falsa. Los conectores arman frases compuestas y la tabla lista todos los casos.'), logicIds: logicTables.map(table => table.id), algebraIds: [], notes: [] };
+    case 'precalculo':
+      if (/inecuac/.test(text)) return { heading: 'Inecuaciones', about: aboutTopic(topic, 'Una inecuación pide el conjunto de números que hacen verdadera una desigualdad. El sentido se invierte al multiplicar por un negativo.'), logicIds: [], algebraIds: ['equations'], notes: ineqNotes };
+      if (/radical|racionalizaci|valor absoluto|raíces y valor|raices y valor/.test(text)) return { heading: 'Raíces', about: aboutTopic(topic, 'La raíz cuadrada principal es no negativa. El valor absoluto es la distancia al cero.'), logicIds: [], algebraIds: ['roots'], notes: [] };
+      if (/fraccion/.test(text)) return { heading: 'Fracciones', about: aboutTopic(topic, 'Una fracción es un cociente. El dominio excluye los ceros del denominador original, también después de simplificar.'), logicIds: [], algebraIds: ['fractions'], notes: [] };
+      if (/factor|trinomio|cubo|sint[eé]tica|divisi[oó]n de polinomio|ra[ií]ces racionales/.test(text)) return { heading: 'Factorización', about: aboutTopic(topic, 'Factorizar es escribir una suma como producto. Una raíz r corresponde al factor (x − r).'), logicIds: [], algebraIds: ['factors'], notes: [] };
+      if (/notable|multiplic/.test(text)) return { heading: 'Productos notables', about: aboutTopic(topic, 'Un producto notable es un producto que se puede escribir de una vez. El cuadrado de una suma incluye el doble producto.'), logicIds: [], algebraIds: ['products'], notes: [] };
+      if (/potencia/.test(text)) return { heading: 'Potencias', about: aboutTopic(topic, 'Una potencia repite la base como factor. Misma base: se suman exponentes en un producto y se restan en un cociente.'), logicIds: [], algebraIds: ['powers'], notes: [] };
+      if (/ecuaci[oó]n|plantear|lineal|cuadr[aá]t|grado superior/.test(text)) return { heading: 'Ecuaciones', about: aboutTopic(topic, 'Una ecuación pide los valores que hacen verdadera una igualdad. El conjunto solución puede tener uno, varios o ningún número.'), logicIds: [], algebraIds: ['equations'], notes: [] };
+      return { heading: 'Precálculo', about: aboutTopic(topic, 'Este nivel trabaja expresiones numéricas o algebraicas. La jerarquía y los paréntesis deciden el orden.'), logicIds: [], algebraIds: ['powers'], notes: [] };
+    default: {
+      const never: never = course;
+      return never;
+    }
+  }
 }
 
 export function tableFamilies(course: Course): TableFamily[] {
