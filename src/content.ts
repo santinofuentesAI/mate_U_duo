@@ -202,6 +202,6 @@ export const sourceNotes = [
   'Discreta S5–S6: el material de clase de Bryan Ramírez entra al recorrido, con los ejemplos y el trabajo en clase. S6 confirma el capítulo 2.5 del libro. ℕ incluye 0, y se declara en los ejercicios que lo usan. Si un inciso no da un par, n2 es ilegible o pide una lista enorme, no hay clave automática.',
   'Precálculo S4: los incisos del folio de problemas se pueden consultar ahora en el libro, práctica 3.3.5, páginas PDF 52–53. Los incisos 1g, 2f, 2l y 3k están asignados expresamente. Aún no todos tienen corrección automática. Las respuestas de álgebra se comparan por equivalencia; los nuevos incisos de factorización exigen además una forma de producto, sin certificar cada ley que se usó.',
   'Precálculo S5: el material de Bryan Ramírez confirma ecuaciones (lineal, cuadrática, polinomial, racional, radical). El trabajo en clase es 1c, 1g, 1h y 2h de la práctica 4.6, p.63. Los ejemplos del folio se comprueban, incluido 2(p²+1)=−3p+1 y 2+(x+1)/(x²−3x)=4/(3x−9).',
-  'Precálculo S6: inecuaciones del mismo folio. Los ejemplos de clase tienen clave. El trabajo 2, 3, 5, 11, 14 y 17 es del folleto p.87, que no está en el PDF 1–63: esos incisos quedan abiertos, sin clave inventada.',
+  'Precálculo S6: inecuaciones del mismo folio. El trabajo 2, 3, 5, 11, 14 y 17 es el Ejercicio 4 del libro, impresa 86 (el folio dice p.87). Esas seis inecuaciones se comprueban.',
   'Los PDF originales no se publican en este repositorio. Las páginas indicadas corresponden al orden del documento, no necesariamente a la numeración impresa.',
 ];

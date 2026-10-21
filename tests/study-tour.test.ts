@@ -61,7 +61,9 @@ test('every catalog exercise is in the study tour once, and discrete weeks 5 and
   assert.ok(precS5.length >= 10);
   assert.ok(precS6.length >= 10);
   assert.ok(precS5.every(problem => problem.id.includes('-clase-') && problem.week === 'S5'));
-  assert.ok(precS6.some(problem => [2, 3, 5, 11, 14, 17].includes(problem.number) && !problem.id.includes('101')));
+  const homework = precS6.filter(problem => [2, 3, 5, 11, 14, 17].includes(problem.number) && !problem.id.includes('101'));
+  assert.equal(homework.length, 6);
+  assert.ok(homework.every(problem => problem.review === 'reviewed'));
   assert.ok(bookCatalog.precalculo.some(problem => problem.week === 'S5' && problem.page === 63 && problem.classAssigned));
   for (const lesson of lessons) {
     const problems = bookProblemsForLesson(lesson);
