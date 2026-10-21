@@ -1,12 +1,12 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Delete, ChevronLeft, ChevronRight, Keyboard as KeyboardIcon, ArrowDown } from 'lucide-react';
-import { AlgebraInput } from './AlgebraInput';
+import { AlgebraInput, algebraKeyTokens } from './AlgebraInput';
 export type KeyboardMode = 'logic' | 'algebra' | 'sets' | 'number' | 'cardinality' | 'quantifier' | 'inequality' | 'radical';
 const logic = [['P','Q','R','S','T','U'],['¬','∧','∨','⊻','→','↔'],['(',')','1','0','∀','∃']];
 const algebra = [['x','y','a','b','(',')'],['7','8','9','+','−','^'],['4','5','6','*','/','.'],['1','2','3','0',',','=']];
 const sets = [['A','B','C','Ω','∅','ᶜ'],['∪','∩','−','△','∈','⊆'],['{','}','(',')','[',']'],['×','|','ℕ','P']];
 const numbers = [['7','8','9'],['4','5','6'],['1','2','3'],['0',',','−']];
-const cardinality = [['|','P','×','2^','∪','∩'],['⊆','∈','ℕ','∅','{','}'],['7','8','9','+','−','('],[')','4','5','6','0',',']];
+const cardinality = [['|','P','×','2^','∪','∩'],['⊆','∈','ℕ','∅','{','}'],['7','8','9','4','5','6'],['1','2','3','0',',','−']];
 const quantifier = [['∀','∃','¬','∧','∨','→'],['↔','∈','∉','ℕ','ℤ','ℝ'],['P','Q','x','y','∅','(',')']];
 const names: Record<string, string> = {
   '¬': 'Negación', '∧': 'Conjunción', '∨': 'Disyunción', '→': 'Implicación', '↔': 'Bicondicional', '⊻': 'Disyunción exclusiva',
@@ -30,6 +30,28 @@ function keyRows(mode: KeyboardMode): string[][] {
     }
   }
 }
+/** Caracteres que el teclado inserta solos. 2ⁿ no cuenta como el dígito 2. */
+export function typeableGlyphs(mode: KeyboardMode): string {
+  switch (mode) {
+    case 'algebra':
+      return algebraKeyTokens.map(token => token === 'power' ? '^' : token).join('') + '√';
+    case 'inequality':
+      return algebraKeyTokens.map(token => token === 'power' ? '^' : token).join('') + '√≤≥<>∞∪∅';
+    case 'radical':
+      return algebraKeyTokens.map(token => token === 'power' ? '^' : token).join('') + '√∛|';
+    case 'logic':
+    case 'sets':
+    case 'number':
+    case 'cardinality':
+    case 'quantifier':
+      return keyRows(mode).flat().filter(token => token !== '2^').join('');
+    default: {
+      const never: never = mode;
+      return never;
+    }
+  }
+}
+
 function padLabel(mode: KeyboardMode): string {
   switch (mode) {
     case 'number': return 'Teclado numérico';
