@@ -103,7 +103,7 @@ export function CourseTables({ course, topic }: { course: Course; topic: string 
     return () => document.removeEventListener('keydown', close);
   }, [open]);
   return (
-    <>
+    <div className="table-access">
       <aside className="table-rail"><button type="button" className="table-opener" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>Tablas<small>de este nivel</small></button></aside>
       {open && (
         <>
@@ -117,6 +117,6 @@ export function CourseTables({ course, topic }: { course: Course; topic: string 
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }

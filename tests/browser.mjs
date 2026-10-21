@@ -21,6 +21,17 @@ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window
 await page.getByRole('button',{name:/Nivel \d+: Equivalencias y simplificación/}).click();
 await page.getByRole('button',{name:/Ir a los \d+ ejercicios/}).click();
 await button('Negación').waitFor();
+const tableLayout=await page.evaluate(()=>{
+  const wrap=document.querySelector('.problem-with-tables');
+  const exercise=wrap?.querySelector(':scope > :not(.table-access)');
+  if(!wrap||!exercise)return {ok:false};
+  const wrapBox=wrap.getBoundingClientRect();
+  const exerciseBox=exercise.getBoundingClientRect();
+  return {ok:true,shift:exerciseBox.left-wrapBox.left,widthGap:wrapBox.width-exerciseBox.width};
+});
+assert.equal(tableLayout.ok,true,'session keeps the exercise and tables together');
+assert.ok(Math.abs(tableLayout.shift)<2,'tables must not push the exercise left');
+assert.ok(tableLayout.widthGap<2,'the exercise must keep the full session width');
 assert.equal(await page.getByLabel('Teclado numérico').count(),0,'logic must not show a number pad');
 await page.getByText('Necesito ayuda').click();await button('Ver leyes').click();await page.getByRole('dialog').waitFor();await button('Volver al ejercicio').click();
 await button('P').click();await button('Comprobar').click();await page.getByRole('heading',{name:'¡Bien razonado!'}).waitFor();
