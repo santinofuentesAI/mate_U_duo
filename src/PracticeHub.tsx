@@ -17,7 +17,7 @@ const intensities: { id: PracticeIntensity; label: string; hint: string }[] = [
   { id: 'easy', label: 'Fácil', hint: 'Lo básico' },
   { id: 'medium', label: 'Medio', hint: 'Ritmo de clase' },
   { id: 'hard', label: 'Difícil', hint: 'Lo que traba' },
-  { id: 'exam', label: 'Examen', hint: 'Mezcla real' },
+  { id: 'exam', label: 'Examen', hint: 'Sin ayudas' },
 ];
 export function PracticeHub({ progress: p, onStart, onExam, onRead, initialBookProblem }: Props) {
   const drills = drillsFor(p.course);
@@ -49,7 +49,7 @@ export function PracticeHub({ progress: p, onStart, onExam, onRead, initialBookP
   if (screen === 'errors') return <div className="simple-flow"><button className="text-button" onClick={() => open('home')}><ArrowLeft size={17}/> Volver a Practicar</button><h1>Volver a intentar</h1><p>{errors.length ? `${errors.length} ejercicios para afianzar. Resolvelos de nuevo sin mirar la respuesta.` : 'No tenés ejercicios pendientes por error.'}</p>{errors.length > 0 && <button className="primary" onClick={() => onStart(practicePlan(errors, p, Math.min(3, errors.length)), 'Volver a intentar', 'errors')}>Practicar ahora <ArrowRight size={18}/></button>}</div>;
   if (screen === 'cases') return <div className="simple-flow"><button className="text-button" onClick={() => open('home')}><ArrowLeft size={17}/> Volver a Practicar</button><CaseStudio course={p.course} onStart={(item, title) => onStart([item], title, 'case')}/></div>;
   return <div className="simple-flow practice-simple"><h1>Practicar</h1><p>Misma rutina: modo, semana, cantidad, empezar. Los casos van después. Más abajo, un solo tema a fondo. El libro, al final.</p>
-    <section className="simple-feature motion-in"><div><h2>20 de hoy</h2><p>Fácil a difícil, o examen mezclado. La tira corta son 8 del mismo plan.</p></div>
+    <section className="simple-feature motion-in"><div><h2>20 de hoy</h2><p>Fácil a difícil, o examen: sin pistas y con la nota recién al final. La tira corta son 8 del mismo plan.</p></div>
       <div className="intensity-row" role="radiogroup" aria-label="Dificultad de la práctica">{intensities.map(option => <button key={option.id} type="button" role="radio" aria-checked={intensity === option.id} className={intensity === option.id ? 'selected' : ''} onClick={() => setIntensity(option.id)}><b>{option.label}</b><small>{option.hint}</small></button>)}</div>
       <ChoiceList label="Qué repasar" name="Tema a repasar" value={topic} onChange={setTopic} options={[{ value: 'all', label: 'Todos los temas' }, ...units.map((unit, index) => ({ value: unit, label: weekHeading(unit, index) }))]}/>
       <div className="week-topic-chips" role="group" aria-label="Cuántos ejercicios">
@@ -61,7 +61,7 @@ export function PracticeHub({ progress: p, onStart, onExam, onRead, initialBookP
     <section className="simple-feature motion-in case-feature"><div><h2><ScrollText size={18}/> Estudios de caso</h2><p>Una historia de un negocio, después la matemática de esas semanas. Es lo segundo que más conviene practicar.</p></div>
       <button className="primary" onClick={() => open('cases')}>Estudios de caso <ArrowRight size={18}/></button>
     </section>
-    <section className="simple-feature motion-in drill-feature"><div><h2><Target size={18}/> Un tema, a fondo</h2><p>Elegí el tipo de problema y cuántos querés. Salen todos iguales: simplificar, factorizar, división sintética, inecuaciones o el tema que pida el curso.</p></div>
+    <section className="simple-feature motion-in drill-feature"><div><h2><Target size={18}/> Un tema, a fondo</h2><p>Elegí el tipo y cuántos. En división sintética, potencias, notables, conectores e inferencias elegís entre opciones: lo pensás vos.</p></div>
       <div className="week-topic-chips" role="radiogroup" aria-label="Tema específico">{drills.map(item => <button key={item.id} type="button" role="radio" aria-checked={chosenDrill.id === item.id} className={chosenDrill.id === item.id ? 'selected' : ''} onClick={() => setDrill(item.id)}>{item.label}</button>)}</div>
       <p className="drill-hint">{chosenDrill.hint}</p>
       <div className="week-topic-chips" role="radiogroup" aria-label="Cuántos de este tema">{DRILL_COUNTS.map(n => <button key={n} type="button" role="radio" aria-checked={drillCount === n} className={drillCount === n ? 'selected' : ''} onClick={() => setDrillCount(n)}>{n}</button>)}</div>
