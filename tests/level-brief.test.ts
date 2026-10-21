@@ -17,6 +17,7 @@ test('the side reference follows the level, not the whole course', () => {
   const power = referenceFor('discreta', 'Conjunto potencia y producto');
   assert.deepEqual(power.logicIds, []);
   assert.ok(power.notes.some(note => note.name === 'Conjunto potencia'));
+  assert.ok(power.notes.some(note => note.name === 'Vacío'));
   assert.equal(power.about.length, 2);
 
   const venn = referenceFor('discreta', 'Diagramas de Venn');

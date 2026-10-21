@@ -34,6 +34,7 @@ export interface LevelReference {
 }
 
 const countNotes: LevelNote[] = [
+  { name: 'Vacío', formula: '\\emptyset', why: 'No tiene elementos. |∅| = 0. Está incluido en cualquier conjunto y es uno de los elementos de P(A).' },
   { name: 'Conjunto potencia', formula: '|P(A)|=2^{|A|}', why: 'Cada elemento entra o no entra. P(A) incluye el vacío y el propio A.' },
   { name: 'Producto cartesiano', formula: '|A\\times B|=|A|\\cdot|B|', why: 'Pares ordenados. (a, b) y (b, a) son distintos si a ≠ b.' },
   { name: 'Diferencia', formula: '|A-B|=|A|-|A\\cap B|', why: 'Se quitan los elementos de A que también están en B.' },
@@ -41,6 +42,7 @@ const countNotes: LevelNote[] = [
 ];
 
 const setNotes: LevelNote[] = [
+  { name: 'Vacío', formula: '\\emptyset', why: 'El conjunto sin elementos. ∅ ⊆ A siempre. ∅ ∈ A solo si el vacío es uno de los objetos de A.' },
   { name: 'Unión', formula: 'A\\cup B', why: 'Lo que está en A, en B o en ambos.' },
   { name: 'Intersección', formula: 'A\\cap B', why: 'Lo que está en los dos a la vez.' },
   { name: 'Diferencia', formula: 'A-B', why: 'Lo de A que no está en B. No es el complemento.' },
@@ -61,6 +63,7 @@ const ineqNotes: LevelNote[] = [
   { name: 'Abierto', formula: ']a,b[', why: 'No incluye los extremos. El corchete hacia afuera es el extremo abierto.' },
   { name: 'Cerrado', formula: '[a,b]', why: 'Incluye los extremos. La desigualdad no estricta los deja adentro.' },
   { name: 'Sin cota', formula: ']{-}\\infty,a]', why: '∞ no es un número. El extremo infinito queda abierto.' },
+  { name: 'Vacío', formula: 'S=\\emptyset', why: 'Ningún número cumple. Pasa cuando, al cancelar la variable, queda una falsedad.' },
 ];
 
 function aboutTopic(topic: string, fallback: string): string[] {

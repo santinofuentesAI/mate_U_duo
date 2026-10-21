@@ -30,7 +30,7 @@ export function notebookSymbols(course: Course, topic: string): string[] {
     if (/cuantific|predicado|universal|existencial/.test(text)) return ['∀', '∃', '¬', '∧', '∨', '→', '↔', '∈', '∉', 'ℕ', 'ℤ', 'ℝ', 'P', 'x', '(', ')'];
     return discreteNotebook;
   }
-  if (/inecuac/.test(text)) return ['x', 'y', '≤', '≥', '<', '>', '∞', '∪', '[', ']', '(', ')', '+', '−', '=', '≠'];
+  if (/inecuac/.test(text)) return ['x', 'y', '≤', '≥', '<', '>', '∞', '∪', '∅', '[', ']', '(', ')', '+', '−', '=', '≠'];
   if (/radical|racionalizaci|valor absoluto/.test(text)) return ['x', '√()', '∛()', '|', '^2', '^3', '(', ')', '+', '−', '=', '≠'];
   return precalcNotebook;
 }
