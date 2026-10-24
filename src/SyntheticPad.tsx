@@ -28,6 +28,15 @@ export function SyntheticPad({
     const next = coefficients.map((_, i) => (i === index ? text : cells[i]));
     onChange(next);
   }
+  const nextEmpty = cells.findIndex(cell => cell.trim() === '');
+  const previous = nextEmpty > 0 ? Number(cells[nextEmpty - 1]) : NaN;
+  const why = nextEmpty === 0
+    ? `Bajá el ${fmt(coefficients[0])} tal cual: es el primer coeficiente del cociente. No se multiplica todavía porque el divisor es mónico.`
+    : nextEmpty > 0 && nextEmpty < coefficients.length && Number.isFinite(previous)
+      ? `Esta casilla es ${fmt(coefficients[nextEmpty])} + (${fmt(root)})·(${fmt(previous)}). El producto ${fmt(root * previous)} va en la fila del medio. Se SUMA, no se resta: el signo de r ya trae la resta de la división larga.${nextEmpty === coefficients.length - 1 ? ` El último número es el resto P(${fmt(root)}).` : ''}`
+      : nextEmpty > 0 && nextEmpty < coefficients.length
+        ? 'Completá la casilla de la izquierda primero: cada producto usa el número que acabás de bajar o de sumar.'
+        : `La fila final es el cociente (un grado menos) y el último número es el resto P(${fmt(root)}). Si da 0, x − (${fmt(root)}) divide exacto.`;
   return (
     <div className="synthetic-pad">
       <div className="synthetic-root">
@@ -41,7 +50,7 @@ export function SyntheticPad({
             onChange={e => onRootChange?.(Number(e.target.value))}
           />
         </label>
-        <small>Bajá el primero. Multiplicá por r y sumá al siguiente. El último es el resto P(r).</small>
+        <small>Bajá el primero. Multiplicá por r y sumá al siguiente. El último es el resto P(r). Cada casilla tiene el porqué abajo.</small>
       </div>
       <div className="synthetic-table" role="group" aria-label="Tabla de división sintética">
         <div className="synthetic-row coeffs">
@@ -73,6 +82,7 @@ export function SyntheticPad({
           ))}
         </div>
       </div>
+      <p className="synthetic-why" role="status"><b>Por qué esta casilla.</b> {why}</p>
     </div>
   );
 }

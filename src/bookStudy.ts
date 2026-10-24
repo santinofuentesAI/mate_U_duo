@@ -45,5 +45,5 @@ export function classWeekTour(course: Course, week: string): OpenBookProblem[] {
 
 export function missingCourseWeeks(course: Course) {
   const present = new Set(bookCatalog[course].map(problem => problem.week));
-  return ['S5', 'S6'].filter(week => !present.has(week));
+  return ['S5', 'S6', 'S7'].filter(week => !present.has(week));
 }

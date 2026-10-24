@@ -109,8 +109,8 @@ const briefs: Record<string, [string, string]> = {
     'Si piden el factor, tocás x − r, con r la raíz. Si piden factorizar, escribís el producto, por ejemplo (x−2)(x−3).',
   ],
   'División sintética': [
-    'Sirve para dividir entre x − r usando solo los números de adelante, de la potencia más alta a la más baja. Si falta un término, su número es 0. Dividir entre x − 3 usa r = 3. Dividir entre x + 2 usa r = −2, porque x + 2 es x − (−2). El último número de la fila es el resto.',
-    'Si piden r, escribís ese número, con signo. Si piden el cociente, escribís el polinomio, por ejemplo x−2, y no la fila completa. Si piden el resto y la división es exacta, escribís 0.',
+    'Es el atajo para dividir entre x − r con los coeficientes, de la potencia más alta a la constante. El r va a la izquierda: x − 3 usa 3; x + 2 usa −2, porque x + 2 = x − (−2). Si falta un término, su hueco es 0: x³ − 1 se escribe 1, 0, 0, −1. Bajá el primero tal cual: ya es el coeficiente principal del cociente, porque el divisor es mónico. Cada número se multiplica por r y se SUMA a la columna siguiente: el signo de r ya trae la resta de la división larga. El último es el resto P(r). Si da 0, x − r divide exacto. Ejemplo: 2x³ − 7x² + 2x + 3 entre x − 1. Bajá 2; −7 + 2·1 = −5; 2 + (−5)·1 = −3; 3 + (−3)·1 = 0. Cociente 2x² − 5x − 3 y resto 0. Los pasos de la apertura muestran por qué cada número.',
+    'Si piden r, escribís ese número, con signo. Si piden el cociente, escribís el polinomio, por ejemplo 2x^2-5x-3, y no la fila completa. Si piden el resto y la división es exacta, escribís 0. Si hay casillas, completás la fila de números. Cada casilla explica por qué se suma ese producto.',
   ],
   'Factorización completa': [
     'Factorizar es escribir el polinomio como producto, no desarrollarlo. x² − 1 = (x − 1)(x + 1). x² + 4 no se parte en factores de primer grado con números reales: no hay un número real que al cuadrado dé −4. Si todavía queda un trinomio que se puede partir, no está completo.',
@@ -165,8 +165,8 @@ const briefs: Record<string, [string, string]> = {
     'Escribí el desarrollo, por ejemplo x^2+2x+1. No dejes el cuadrado del paréntesis sin abrir.',
   ],
   'División de polinomios': [
-    'Dividir busca un cociente y un resto. x² + 3x + 2 dividido entre x + 1 da cociente x + 2, porque (x + 1)(x + 2) vuelve al de arriba. Si el resto es 0, la división es exacta. El resto de un polinomio entre x − 1 es lo que da al poner x = 1.',
-    'Si piden el cociente, escribí el polinomio, por ejemplo x+2. Si piden el resto, escribí el número.',
+    'Se ordenan dividendo y divisor de la potencia más alta a la más baja. El primer término del cociente es el cociente de los dos de adelante: en (2x³ − x² − 8x − 2) ÷ (2x + 3) sale 2x³ / 2x = x², porque x² · 2x reproduce el 2x³ que se quiere cancelar. Ese x² se multiplica por TODO el divisor, no solo por el 2x, y da 2x³ + 3x². Se resta: el 2x³ se va si el término está bien. Se baja el siguiente y se repite: −4x² / 2x = −2x, luego −2x / 2x = −1. Se para cuando el resto tiene grado menor que el divisor. Acá el resto es 1. Comprobación: (2x + 3)(x² − 2x − 1) + 1 vuelve al dividendo. Los pasos de la apertura muestran cada resta.',
+    'Si piden el cociente, escribí el polinomio, por ejemplo x^2-2x-1. Si piden el resto, escribí el número, acá 1. No dejes la cuenta larga en la casilla.',
   ],
   'Factor común y agrupación': [
     'El factor común es lo que está en todos los términos. 3x + 6 = 3(x + 2). Si no está en todos, no es común. Cuando no hay uno solo, se agrupan de a dos y después se saca el paréntesis que quedó repetido.',
@@ -215,6 +215,30 @@ const briefs: Record<string, [string, string]> = {
   'Inecuaciones racionales': [
     'Es una fracción comparada con cero. El número que hace cero abajo nunca es solución. El que hace cero arriba sí puede entrar si dice “menor o igual” o “mayor o igual”. En (x − 4)/x > 0, el 0 no entra. En la opción, ese corte queda con el corchete abierto.',
     'Tocá Sí o No cuando preguntan si un número entra. Si piden el conjunto, tocá el intervalo de las opciones.',
+  ],
+  'Relación y gráfico': [
+    'Una relación de A en B es un gráfico G dentro de A × B: pares (a, b). aRb significa que ese par está en G. Un mismo a puede ir a varios b, a uno, o a ninguno: no es una función. El dominio son los de A que salen; el ámbito, los de B que reciben. Ejemplo: A = {1, 3, 4}, B = {2, 5}, a = b − 1 da G = {(1, 2), (4, 5)}.',
+    'Si hay botones de pares, tocá los que entran. Si piden el dominio o el ámbito, tocá esos elementos. Si piden cuántos pares hay, escribí solo el número.',
+  ],
+  'Operaciones con relaciones': [
+    'Unión, intersección y diferencia se hacen con los gráficos, el mismo A y el mismo B. La inversa da vuelta cada par: (1, a) pasa a (a, 1). El complemento es respecto de A × B: entran los pares que no estaban. Ejemplo: G = {(1, a), (2, b)} y H = {(2, b), (3, c)}. La unión tiene tres pares; la intersección solo {(2, b)}; R − S deja {(1, a)}.',
+    'Tocá los pares que pide el enunciado. Si preguntan si R⁻¹ coincide con R, tocá Sí o No. Si piden cuántos pares tiene el complemento, escribí el número.',
+  ],
+  'Composición de relaciones': [
+    'S ∘ R pide un puente: aRb y ese b se relaciona con c por S. El receptor de R tiene que ser el emisor de S. No hace falta que sean funciones. Ejemplo: R = {(1, a), (2, b)} y S = {(a, X), (b, Y)} da {(1, X), (2, Y)}. Si c no tiene salida, ese a no llega. Invertir el camino da (S ∘ R)⁻¹ = R⁻¹ ∘ S⁻¹.',
+    'Tocá los pares compuestos. Si preguntan quién de A no participa, tocá ese elemento. Si preguntan si las inversas coinciden, tocá Sí o No.',
+  ],
+  'Función de variable real': [
+    'Una función asigna a cada x una imagen o ninguna, nunca dos. A trozos, la fórmula cambia según el intervalo: se usa la pieza que contiene a x. Si dice x ≤ 2, el 2 entra ahí, no en 2 < x. Ejemplo del folio: x³ + 8 si x ≤ 2, x² − 6x + 10 si 2 < x < 5, 8 si x ≥ 5. Entonces f(2) = 16 y f(5) = 8. El 1813 que imprime el folio para otro ejemplo no se reproduce y no se usa como clave.',
+    'Si piden f(a), escribí el número. Si preguntan qué pieza usa un x, tocá esa fórmula. El cociente a trozos del trabajo 1 se escribe como fracción, por ejemplo -3/4.',
+  ],
+  'Dominio máximo': [
+    'Si no dicen el dominio, se toma el mayor subconjunto de ℝ donde la fórmula existe. Denominador distinto de cero. Raíz de índice par con radicando ≥ 0. El cubo admite negativos y el 0. Ejemplo: √((x+1)(x−1)(x−2))/x vive donde el cúbico es ≥ 0 y x ≠ 0: [−1, 0) ∪ (0, 1] ∪ [2, ∞). √(x − 3) + 1/(x − 5) pide x ≥ 3 y x ≠ 5.',
+    'Tocá el intervalo de las opciones. Si preguntan si un número entra, tocá Sí o No. No escribas el dominio a mano si la pantalla ya lo muestra.',
+  ],
+  'Lectura de gráficas': [
+    'El dominio se lee en el eje x: hasta dónde hay curva. El ámbito se lee en el eje y. Creciente: al ir a la derecha, sube. Decreciente: baja. Constante: un tramo horizontal. Un cero es un corte con el eje x. f(a) es la altura en x = a. La preimagen de k son los x con esa altura. La figura del folio S7 no está en el texto extraído: esos incisos se guardan a mano.',
+    'Si dan un tramo constante, escribí la altura. Si comparan dos puntos de un tramo creciente, tocá la desigualdad. Un cero se toca como corte con el eje x.',
   ],
 };
 

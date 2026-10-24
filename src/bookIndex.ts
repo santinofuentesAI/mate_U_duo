@@ -16,6 +16,7 @@ export const bookRoutes:Record<Course,{week:string;title:string;page:number;end:
     {week:'S5',title:'Venn y leyes · material de clase S5',page:505,end:510,printed:'S5 5–10'},
     {week:'S6',title:'Cardinalidad · ejercicios 2.5',page:148,end:152,printed:'146–150'},
     {week:'S6',title:'Potencia, producto y cardinalidad · material de clase S6',page:607,end:616,printed:'S6 7–16'},
+    {week:'S7',title:'Relaciones binarias · material de clase S7',page:904,end:915,printed:'S7 4–15'},
   ],
   precalculo:[
     {week:'B1',title:'Números reales · práctica 1.4',page:18,end:19,printed:'18–19'},
@@ -28,6 +29,7 @@ export const bookRoutes:Record<Course,{week:string;title:string;page:number;end:
     {week:'S5',title:'Ecuaciones · práctica 4.6 y material de clase S5',page:63,end:63,printed:'63'},
     {week:'S5',title:'Ecuaciones · material de clase S5',page:704,end:711,printed:'S5 4–8'},
     {week:'S6',title:'Inecuaciones · material de clase S6',page:803,end:806,printed:'S6 3–6'},
+    {week:'S7',title:'Funciones de variable real · material de clase S7',page:1003,end:1007,printed:'S7 3–7'},
   ],
 };
 export const readerPages:Record<Course,{title:string;page:number;end:number}[]>={

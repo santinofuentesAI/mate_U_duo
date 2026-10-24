@@ -48,6 +48,15 @@ const discrete: SymbolGroup[] = [
       { id: 'card', latex: '|A|', name: 'Cardinal', meaning: 'Cuántos elementos distintos hay. ℕ en esta app incluye 0.' },
     ],
   },
+  {
+    id: 'relations',
+    title: 'Relaciones',
+    items: [
+      { id: 'rel', latex: 'aRb', name: 'Relacionado', meaning: '(a, b) está en el gráfico. Un a puede ir a varios b, a uno, o a ninguno.' },
+      { id: 'inv', latex: 'R^{-1}', name: 'Inversa', meaning: 'Da vuelta cada par. El emisor y el receptor se intercambian.' },
+      { id: 'compose', latex: 'S\\circ R', name: 'Composición', meaning: 'Hay un puente: aRb y bSc producen (a, c).' },
+    ],
+  },
 ];
 
 const precalc: SymbolGroup[] = [
@@ -76,6 +85,14 @@ const precalc: SymbolGroup[] = [
     items: [
       { id: 'pr', latex: 'P(r)=0', name: 'Raíz', meaning: 'Si el resto es 0, (x − r) divide a P. Probá candidatos p/q; no adivines r.' },
       { id: 'zeros', latex: 'x^{3}+0x^{2}+x-1', name: 'Ceros que faltan', meaning: 'Potencias descendentes. Un término ausente es un 0 en la fila.' },
+    ],
+  },
+  {
+    id: 'functions',
+    title: 'Funciones',
+    items: [
+      { id: 'fun', latex: 'f:A\\to B', name: 'Función', meaning: 'A cada x le corresponde una imagen o ninguna, nunca dos.' },
+      { id: 'dom', latex: '\\mathrm{Dom}(f)', name: 'Dominio máximo', meaning: 'Denominador ≠ 0. Raíz par con radicando ≥ 0.' },
     ],
   },
 ];

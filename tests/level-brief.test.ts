@@ -61,3 +61,15 @@ test('every level shows a worked answer before the exercises', () => {
   assert.match(endpoint.prompt, /solo ese número/i);
   assert.match(answerCue(endpoint), /fracción/i);
 });
+
+test('polynomial and synthetic division open with a numbered why-for-each-step walkthrough', () => {
+  const long = lessons.find(lesson => lesson.title === 'División de polinomios');
+  const synthetic = lessons.find(lesson => lesson.title === 'División sintética');
+  assert.ok(long && synthetic);
+  assert.ok(long.example.steps.length >= 6, 'long division steps');
+  assert.ok(synthetic.example.steps.length >= 6, 'synthetic steps');
+  assert.match(long.example.steps.join(' '), /¿Por qué/);
+  assert.match(synthetic.example.steps.join(' '), /¿Por qué/);
+  assert.match(long.example.steps.at(-1) ?? '', /Comprobá|vuelve al dividendo|x\^2-2x-1/i);
+  assert.match(synthetic.example.steps.join(' '), /P\(1\)/);
+});

@@ -38,7 +38,7 @@ test('a level needs mostly unaided first answers, and new book keys match the or
   assert.equal(Math.pow(256, 3), 16777216);
 });
 
-test('every catalog exercise is in the study tour once, and discrete weeks 5 and 6 are in the material', () => {
+test('every catalog exercise is in the study tour once, and discrete weeks 5 to 7 are in the material', () => {
   for (const course of ['precalculo', 'discreta'] as const) {
     const tour = studyTour(course);
     assert.equal(tour.length, bookCatalog[course].length);
@@ -52,15 +52,21 @@ test('every catalog exercise is in the study tour once, and discrete weeks 5 and
   assert.ok(bookCatalog.discreta.some(problem => problem.week === 'S6' && problem.id.includes('-clase-')));
   const classS5 = classWeekTour('discreta', 'S5');
   const classS6 = classWeekTour('discreta', 'S6');
+  const classS7 = classWeekTour('discreta', 'S7');
   assert.ok(classS5.length >= 20);
   assert.ok(classS6.length >= 20);
+  assert.ok(classS7.length >= 20);
   assert.ok(classS5.every(problem => problem.id.includes('-clase-') && problem.week === 'S5'));
+  assert.ok(classS7.every(problem => problem.id.includes('-clase-') && problem.week === 'S7'));
   assert.notEqual(classS5[0]?.id, studyTour('discreta')[0]?.id);
   const precS5 = classWeekTour('precalculo', 'S5');
   const precS6 = classWeekTour('precalculo', 'S6');
+  const precS7 = classWeekTour('precalculo', 'S7');
   assert.ok(precS5.length >= 10);
   assert.ok(precS6.length >= 10);
+  assert.ok(precS7.length >= 6);
   assert.ok(precS5.every(problem => problem.id.includes('-clase-') && problem.week === 'S5'));
+  assert.ok(precS7.every(problem => problem.id.includes('-clase-') && problem.week === 'S7'));
   const homework = precS6.filter(problem => [2, 3, 5, 11, 14, 17].includes(problem.number) && !problem.id.includes('101'));
   assert.equal(homework.length, 6);
   assert.ok(homework.every(problem => problem.review === 'reviewed'));

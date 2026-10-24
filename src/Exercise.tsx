@@ -8,6 +8,7 @@ import { SyntheticPad } from './SyntheticPad';
 import { TruthTablePad } from './TruthTablePad';
 import { answerCue, inputModeFor } from './answerKind';
 import { levelBrief } from './levelBrief';
+import { workedExample } from './workedExamples';
 import { VennScratch } from './VennScratch';
 import { Laws } from './Workbench';
 import { AnswerFeedback } from './AnswerFeedback';
@@ -32,7 +33,8 @@ export function Exercise({question:q,course,coins,onSpend,onAttempt,onNext,draft
   function check(){const domains=exclusions.split(/[,;]/).map(s=>s.trim()).filter(Boolean);const result=grade(q,value,domains);if(sealed){onAttempt(result.correct,false,{answer:Array.isArray(value)?[...value]:value,exclusions:domains,error:result.error});onNext();return;}const assisted=hint>0||retried||revealed;setFeedback(result);setEarned(result.correct&&rewardAvailable?(assisted?5:10):0);setCelebrate(result.correct);onAttempt(result.correct,assisted,{answer:Array.isArray(value)?[...value]:value,exclusions:domains,error:result.error});if(!result.correct)setRetried(true);}
   const vennRegions=[{code:'100',x:86,y:89},{code:'010',x:222,y:89},{code:'001',x:155,y:207},{code:'110',x:155,y:77},{code:'101',x:111,y:156},{code:'011',x:200,y:156},{code:'111',x:155,y:129},{code:'000',x:280,y:235}];
   const meaning=!sealed?levelBrief(guideTitle||q.tag)[0]:'';
-  return <section className="exercise"><span className="eyebrow">{({choice:'ELEGÍ',logic:'CONSTRUÍ',table:'COMPLETÁ',set:'SELECCIONÁ',order:'ORDENÁ',venn:'EXPLORÁ',algebra:'RESOLVÉ',synthetic:'CALCULÁ',text:'RESPONDÉ'} as Record<string,string>)[q.type]}</span><h2>{q.prompt}</h2>{meaning&&<aside className="level-help" aria-label="Qué significa este tema"><b>Qué significa</b><p>{meaning}</p></aside>}<p className="answer-cue">{answerCue(q)}</p>
+  const sample=!sealed?workedExample(guideTitle||q.tag):'';
+  return <section className="exercise"><span className="eyebrow">{({choice:'ELEGÍ',logic:'CONSTRUÍ',table:'COMPLETÁ',set:'SELECCIONÁ',order:'ORDENÁ',venn:'EXPLORÁ',algebra:'RESOLVÉ',synthetic:'CALCULÁ',text:'RESPONDÉ'} as Record<string,string>)[q.type]}</span><h2>{q.prompt}</h2>{meaning&&<aside className="level-help" aria-label="Qué significa este tema"><b>Qué significa</b><p>{meaning}</p>{sample&&<details><summary>Ejemplo ya resuelto, con cada paso</summary><p>{sample}</p></details>}</aside>}<p className="answer-cue">{answerCue(q)}</p>
     {q.math&&<div className="math exercise-formula" dangerouslySetInnerHTML={{__html:katex.renderToString(q.math,{throwOnError:false,strict:false,displayMode:true})}}/>}
     {q.type==='choice'&&<div className="choices">{options.map((o,i)=><button key={o} className={value===o?'selected':''} disabled={!!feedback?.correct} onClick={()=>update(o)}><span>{i+1}</span>{o}{value===o&&<Check size={18}/>}</button>)}</div>}
     {['logic','algebra'].includes(q.type)&&<StepWorkspace lines={steps} onChange={lines=>{setSteps(lines);update(lines.at(-1)||'');}} mode={inputModeFor(q,course)} disabled={!!feedback?.correct}/>}

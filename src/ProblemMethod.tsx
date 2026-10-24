@@ -26,11 +26,11 @@ const discreteWorked = [
 ];
 
 const precalcWorked = [
-  ['Forma', 'Polinomio para dividir: x³ − 6x² + 11x − 6.'],
-  ['Orden', 'Coeficientes 1, −6, 11, −6. No falta ninguna potencia.'],
-  ['Prueba', 'Candidatos ±1, ±2, ±3, ±6. Probá r = 1.'],
-  ['Paso', 'Fila final 1, −5, 6, 0. Resto 0: (x − 1) es factor.'],
-  ['Comprobar', 'P(1) = 0 y (x − 1)(x² − 5x + 6) = (x − 1)(x − 2)(x − 3).'],
+  ['Forma', 'Polinomio para dividir: x³ − 6x² + 11x − 6. El divisor que se prueba es x − r.'],
+  ['Orden', 'Coeficientes 1, −6, 11, −6. No falta ninguna potencia: no hay que poner un 0.'],
+  ['Prueba', 'Candidatos ±1, ±2, ±3, ±6. Probá r = 1, a la izquierda, porque el divisor sería x − 1.'],
+  ['Paso', 'Bajá el 1. 1·1 = 1, debajo de −6; −6 + 1 = −5. −5·1 = −5, debajo de 11; 11 − 5 = 6. 6·1 = 6, debajo de −6; −6 + 6 = 0. Se SUMA porque r ya trae la resta. Fila 1, −5, 6, 0.'],
+  ['Comprobar', 'El 0 es P(1): (x − 1) divide exacto. El cociente 1, −5, 6 es x² − 5x + 6 = (x − 2)(x − 3).'],
 ];
 
 function Formula({ value }: { value: string }) {

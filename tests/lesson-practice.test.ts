@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import { lessons } from '../src/content';
 import { grade } from '../src/engine';
 
-test('all 54 lessons offer ten distinct exercises ordered by difficulty', () => {
-  assert.equal(lessons.length, 54);
-  assert.equal(lessons.reduce((sum, lesson) => sum + lesson.questions.length, 0), 540);
+test('all 60 lessons offer ten distinct exercises ordered by difficulty', () => {
+  assert.equal(lessons.length, 60);
+  assert.equal(lessons.reduce((sum, lesson) => sum + lesson.questions.length, 0), 600);
   const ids = new Set<string>();
   for (const lesson of lessons) {
     assert.equal(lesson.questions.length, 10, lesson.title);

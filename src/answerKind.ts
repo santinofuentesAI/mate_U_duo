@@ -25,11 +25,13 @@ const discreteNotebook = ['P', 'Q', 'R', '¬', '∧', '∨', '→', '↔', '∀'
 export function notebookSymbols(course: Course, topic: string): string[] {
   const text = topic.toLowerCase();
   if (course === 'discreta') {
+    if (/relacion|gr[aá]fico|composici/.test(text)) return ['(', ')', ',', '∪', '∩', '−', '×', '∘', '{', '}', '∈', 'A', 'B'];
     if (/potencia|producto|cardinal/.test(text)) return ['|', 'P', '×', '2^', '∪', '∩', '−', '⊆', '∈', 'ℕ', '∅', '{', '}', ',', '(', ')'];
     if (/venn|conjunto|ley|inclusi/.test(text)) return ['A', 'B', 'C', '∪', '∩', '−', 'ᶜ', '⊆', '∈', '|', '∅', 'Ω', '{', '}', '(', ')'];
     if (/cuantific|predicado|universal|existencial/.test(text)) return ['∀', '∃', '¬', '∧', '∨', '→', '↔', '∈', '∉', 'ℕ', 'ℤ', 'ℝ', 'P', 'x', '(', ')'];
     return discreteNotebook;
   }
+  if (/funci[oó]n de variable|dominio m[aá]ximo|lectura de gr[aá]ficas|trozos/.test(text)) return ['x', 'f()', '√()', '(', ')', '[', ']', '∪', '∞', 'ℝ', '≠', '≤', '≥', '+', '−', '/'];
   if (/inecuac/.test(text)) return ['x', 'y', '≤', '≥', '<', '>', '∞', '∪', '∅', '[', ']', '(', ')', '+', '−', '=', '≠'];
   if (/radical|racionalizaci|valor absoluto/.test(text)) return ['x', '√()', '∛()', '|', '^2', '^3', '(', ')', '+', '−', '=', '≠'];
   return precalcNotebook;

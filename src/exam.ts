@@ -54,6 +54,17 @@ function discrete(unit:string,variant:number,id:string,pick:(a:number,b:number)=
     if(slot===3)return {topic:'Regiones de Venn',q:question(id,'text',`|A|=${a}, |B|=${b}, |C|=${c}; |A ∩ B|=${both}, |A ∩ C|=${ac}, |B ∩ C|=${bc}; triple ${abc}. Calculá |A ∪ B ∪ C|.`,String(three),`${a}+${b}+${c} − ${both} − ${ac} − ${bc} + ${abc} = ${three}.`)};
     return {topic:'Leyes de conjuntos de clase',q:question(id,'text',`Si |A|=${a} y |A ∩ B|=${both}, calculá |A ∪ (A ∩ B)|.`,String(a),`Absorción: A ∪ (A ∩ B) = A, de cardinal ${a}.`)};
   }
+  if(unit.startsWith('S7')){
+    const slot=variant%5,n=2+variant,m=n+1,k=n+2;
+    if(slot===0){
+      const last=3+variant,odds=Array.from({length:last},(_,i)=>i+1).filter(x=>x%2===1);
+      return {topic:'Relación y gráfico',q:question(id,'text',`A={1,…,${last}}, B={a,b} y aRb ⇔ a es impar. ¿Cuántos pares tiene el gráfico? Escribí solo el número.`,String(odds.length*2),`Hay ${odds.length} impares y cada uno se empareja con a y con b.`)};
+    }
+    if(slot===1)return {topic:'Relación y gráfico',q:question(id,'set',`GR={(${n},a),(${m},b),(${k},a)}. Tocá el dominio.`,[String(n),String(m),String(k)],'Las primeras componentes son el dominio.',{universe:[String(n),String(m),String(k),'a','b']})};
+    if(slot===2)return {topic:'Operaciones con relaciones',q:question(id,'set',`G={(${n},a),(${m},b)} y H={(${m},b),(${k},c)}. Tocá R ∩ S.`,[`(${m},b)`],'El único par común es el del medio.',{universe:[`(${n},a)`,`(${m},b)`,`(${k},c)`]})};
+    if(slot===3)return {topic:'Operaciones con relaciones',q:question(id,'set',`G={(${n},a),(${m},b)}. Tocá R⁻¹.`,[`(a,${n})`,`(b,${m})`],'Cada par se escribe al revés.',{universe:[`(a,${n})`,`(b,${m})`,`(${n},a)`]})};
+    return {topic:'Composición de relaciones',q:question(id,'set',`R={(${n},a),(${m},b)} y S={(a,X),(b,Y)}. Tocá S ∘ R.`,[`(${n},X)`,`(${m},Y)`],`${n} pasa por a hasta X y ${m} por b hasta Y.`,{universe:[`(${n},X)`,`(${n},Y)`,`(${m},X)`,`(${m},Y)`]})};
+  }
   if(unit.startsWith('S6')){
     const n=3+variant,m=2+variant%5,slot=variant%5,small=4+Math.floor(variant/5);
     if(slot===0)return {topic:'Conjunto potencia y producto',q:question(id,'text',`Si |A|=${n} y |B|=${m}, calculá |A × B|.`,String(n*m),`La regla del producto da ${n}·${m}=${n*m}.`)};
@@ -83,6 +94,13 @@ function precalc(unit:string,variant:number,id:string,pick:(a:number,b:number)=>
   }
   if(unit.startsWith('B4')){
     const a=2+variant%7,b=2+Math.floor(variant/7)%7,middle=b-a,term=middle>=0?`+${middle}x`:`−${-middle}x`;return {topic:'Fracciones y dominio',q:question(id,'algebra',`Simplificá (x²${term}−${a*b})/(x−${a}) e indicá el valor excluido del dominio original.`,`x+${b}`,`Factorizá (x−${a})(x+${b}) y cancelá, pero x=${a} sigue excluido.`,{exclusions:[String(a)]})};
+  }
+  if(unit.startsWith('S7')){
+    const slot=variant%4,cut=2+variant,shift=1+variant,height=3+variant;
+    if(slot===0)return {topic:'Función de variable real',q:question(id,'text',`f(x)=x+${shift} si x≤0 y f(x)=${height} si x>0. Calculá f(0).`,String(shift),`0 entra en x ≤ 0: 0 + ${shift} = ${shift}.`)};
+    if(slot===1)return {topic:'Función de variable real',q:question(id,'text',`f(x)=x+${shift} si x≤0 y f(x)=${height} si x>0. Calculá f(1).`,String(height),`1>0 usa la pieza constante ${height}.`)};
+    if(slot===2)return {topic:'Dominio máximo',q:question(id,'choice',`¿Cuál es el dominio máximo de 1/(x−${cut})?`,`ℝ excepto ${cut}`,`El denominador se anula en ${cut}.`,{options:[`ℝ excepto ${cut}`,'ℝ',`[${cut}, ∞)`]})};
+    return {topic:'Dominio máximo',q:question(id,'choice',`¿Cuál es el dominio máximo de √(x−${cut})?`,`x ≥ ${cut}`,'Raíz par: radicando ≥ 0.',{options:[`x ≥ ${cut}`,`x > ${cut}`,'Cualquier x']})};
   }
   if(unit.startsWith('S6')){
     const slot=variant%4,p=1+variant,q=p+2;
